@@ -15,7 +15,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useAuth } from "@/context/AuthContext";
-import ThemeToggle from "./ThemeToggle"; // New import
+import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -45,6 +45,9 @@ const Header = () => {
         <Link to="/shows" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
           Shows
         </Link>
+        <Link to="/articles" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+          Articles
+        </Link>
         <Link to="/categories" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
           Categories
         </Link>
@@ -72,7 +75,7 @@ const Header = () => {
           <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
         </form>
 
-        <ThemeToggle /> {/* Add ThemeToggle here */}
+        <ThemeToggle />
 
         {isAuthenticated ? (
           <UserNav />
@@ -105,6 +108,9 @@ const Header = () => {
                 <Link to="/shows" className="text-lg font-medium hover:text-red-600 transition-colors">
                   Shows
                 </Link>
+                <Link to="/articles" className="text-lg font-medium hover:text-red-600 transition-colors">
+                  Articles
+                </Link>
                 <Link to="/categories" className="text-lg font-medium hover:text-red-600 transition-colors">
                   Categories
                 </Link>
@@ -128,7 +134,7 @@ const Header = () => {
                   />
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
                 </form>
-                <ThemeToggle /> {/* Add ThemeToggle to mobile menu as well */}
+                <ThemeToggle />
                 {!isAuthenticated && (
                   <Button asChild className="mt-4">
                     <Link to="/login">Login</Link>

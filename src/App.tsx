@@ -22,9 +22,10 @@ import SearchResults from "./pages/SearchResults";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Shows from "./pages/Shows";
+import Articles from "./pages/Articles"; // New import
 import ContentDetailPage from "./pages/ContentDetailPage";
 import Categories from "./pages/Categories";
-import CategoryDetailPage from "./pages/CategoryDetailPage"; // New import
+import CategoryDetailPage from "./pages/CategoryDetailPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ThemeProvider } from "./components/theme-provider";
 
@@ -51,8 +52,9 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/shows" element={<Shows />} />
+              <Route path="/articles" element={<Articles />} /> {/* New route */}
               <Route path="/categories" element={<Categories />} />
-              <Route path="/category/:categoryName" element={<CategoryDetailPage />} /> {/* New route */}
+              <Route path="/category/:categoryName" element={<CategoryDetailPage />} />
               {/* Dynamic routes for content detail pages */}
               <Route path="/shows/:id" element={<ContentDetailPage />} />
               <Route path="/watch/:id" element={<ContentDetailPage />} />

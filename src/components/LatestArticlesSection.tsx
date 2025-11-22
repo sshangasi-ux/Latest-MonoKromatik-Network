@@ -3,6 +3,8 @@
 import React from "react";
 import ContentCard from "./ContentCard";
 import { recentArticles } from "@/data/content"; // Import data
+import { Button } from "@/components/ui/button"; // Import Button component
+import { Link } from "react-router-dom"; // Import Link for navigation
 
 const LatestArticlesSection = () => {
   // Display the first 3 recent articles for this section
@@ -24,6 +26,11 @@ const LatestArticlesSection = () => {
               link={article.link}
             />
           ))}
+        </div>
+        <div className="text-center mt-10">
+          <Button asChild className="bg-red-600 hover:bg-red-700 text-white text-lg px-8 py-6 rounded-lg uppercase font-bold transition-colors">
+            <Link to="/articles">View All Articles</Link>
+          </Button>
         </div>
       </div>
     </section>
