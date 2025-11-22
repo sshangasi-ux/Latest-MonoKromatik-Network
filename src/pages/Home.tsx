@@ -9,9 +9,9 @@ import VideoSpotlightCarousel from "@/components/VideoSpotlightCarousel";
 import ArticleGrid from "@/components/ArticleGrid";
 import UpcomingEventsCarousel from "@/components/UpcomingEventsCarousel";
 import MembershipCTA from "@/components/MembershipCTA";
-import TrendingArticlesSection from "@/components/TrendingArticlesSection"; // New import
+import TrendingArticlesSection from "@/components/TrendingArticlesSection";
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card"; // Import Card components
 
 // Define categories for the home page section
 const homeCategories = [
@@ -57,7 +57,7 @@ const Home = () => {
           </div>
         </section>
 
-        <TrendingArticlesSection /> {/* New section added here */}
+        <TrendingArticlesSection />
         <FeaturedShowsCarousel />
         <VideoSpotlightCarousel />
         <ArticleGrid />
