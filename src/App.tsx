@@ -24,7 +24,8 @@ import Signup from "./pages/Signup";
 import Shows from "./pages/Shows";
 import ContentDetailPage from "./pages/ContentDetailPage";
 import Categories from "./pages/Categories";
-import ProtectedRoute from "./components/ProtectedRoute"; // New import
+import ProtectedRoute from "./components/ProtectedRoute";
+import { ThemeProvider } from "./components/theme-provider"; // New import
 
 const queryClient = new QueryClient();
 
@@ -35,38 +36,40 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/terms" element={<TermsOfService />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/search" element={<SearchResults />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/shows" element={<Shows />} />
-            <Route path="/categories" element={<Categories />} />
-            {/* Dynamic routes for content detail pages */}
-            <Route path="/shows/:id" element={<ContentDetailPage />} />
-            <Route path="/watch/:id" element={<ContentDetailPage />} />
-            <Route path="/news/:id" element={<ContentDetailPage />} />
-            <Route path="/events/:id" element={<ContentDetailPage />} />
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme"> {/* Wrap with ThemeProvider */}
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/logout" element={<Logout />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/search" element={<SearchResults />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/shows" element={<Shows />} />
+              <Route path="/categories" element={<Categories />} />
+              {/* Dynamic routes for content detail pages */}
+              <Route path="/shows/:id" element={<ContentDetailPage />} />
+              <Route path="/watch/:id" element={<ContentDetailPage />} />
+              <Route path="/news/:id" element={<ContentDetailPage />} />
+              <Route path="/events/:id" element={<ContentDetailPage />} />
 
-            {/* Protected Routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/my-feed" element={<MyFeed />} />
-              <Route path="/saved-content" element={<SavedContent />} />
-              <Route path="/settings" element={<UserSettings />} />
-              <Route path="/subscription" element={<Subscription />} />
-              <Route path="/offline-content" element={<OfflineContent />} />
-            </Route>
+              {/* Protected Routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/my-feed" element={<MyFeed />} />
+                <Route path="/saved-content" element={<SavedContent />} />
+                <Route path="/settings" element={<UserSettings />} />
+                <Route path="/subscription" element={<Subscription />} />
+                <Route path="/offline-content" element={<OfflineContent />} />
+              </Route>
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

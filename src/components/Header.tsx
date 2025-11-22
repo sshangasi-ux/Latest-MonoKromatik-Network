@@ -15,6 +15,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useAuth } from "@/context/AuthContext";
+import ThemeToggle from "./ThemeToggle"; // New import
 
 const Header = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -71,6 +72,8 @@ const Header = () => {
           <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
         </form>
 
+        <ThemeToggle /> {/* Add ThemeToggle here */}
+
         {isAuthenticated ? (
           <UserNav />
         ) : (
@@ -125,6 +128,7 @@ const Header = () => {
                   />
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
                 </form>
+                <ThemeToggle /> {/* Add ThemeToggle to mobile menu as well */}
                 {!isAuthenticated && (
                   <Button asChild className="mt-4">
                     <Link to="/login">Login</Link>
