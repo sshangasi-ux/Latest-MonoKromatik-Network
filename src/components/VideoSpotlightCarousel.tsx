@@ -36,8 +36,8 @@ const VideoSpotlightCarousel = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="left-4 bg-neutral-800 text-white hover:bg-neutral-700" />
+          <CarouselNext className="right-4 bg-neutral-800 text-white hover:bg-neutral-700" />
         </Carousel>
       </div>
     </section>
