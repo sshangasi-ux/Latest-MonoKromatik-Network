@@ -55,6 +55,9 @@ const Header = () => {
         <Link to="/videos" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
           Videos
         </Link>
+        <Link to="/events" className="text-gray-300 hover:text-red-500 transition-colors font-medium"> {/* New link */}
+          Events
+        </Link>
         <Link to="/categories" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
           Categories
         </Link>
@@ -110,6 +113,9 @@ const Header = () => {
                 </Link>
                 <Link to="/videos" className="text-lg font-medium hover:text-red-500 transition-colors">
                   Videos
+                </Link>
+                <Link to="/events" className="text-lg font-medium hover:text-red-500 transition-colors"> {/* New link */}
+                  Events
                 </Link>
                 <Link to="/categories" className="text-lg font-medium hover:text-red-500 transition-colors">
                   Categories

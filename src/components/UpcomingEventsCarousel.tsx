@@ -11,6 +11,8 @@ import {
 import ContentCard from "./ContentCard";
 import ContentCardSkeleton from "./ContentCardSkeleton";
 import { fetchContent } from "@/lib/supabase"; // Import fetchContent
+import { Button } from "@/components/ui/button"; // Import Button
+import { Link } from "react-router-dom"; // Import Link
 
 interface ContentItem {
   id: string;
@@ -94,6 +96,11 @@ const UpcomingEventsCarousel = () => {
             <CarouselNext className="right-4 bg-neutral-800 text-white hover:bg-neutral-700" />
           </Carousel>
         )}
+        <div className="text-center mt-10">
+          <Button asChild className="bg-red-600 hover:bg-red-700 text-white text-lg px-8 py-6 rounded-lg uppercase font-bold transition-colors">
+            <Link to="/events">View All Events</Link>
+          </Button>
+        </div>
       </div>
     </section>
   );
