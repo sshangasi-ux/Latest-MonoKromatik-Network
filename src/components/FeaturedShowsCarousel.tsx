@@ -31,8 +31,8 @@ const FeaturedShowsCarousel = () => {
     const getFeaturedShows = async () => {
       try {
         setLoading(true);
-        // Fetch content of type 'show' from Supabase
-        const { data } = await fetchContent('show'); // Destructure data
+        // Fetch content of type 'show' from Supabase, limiting to 6 items
+        const { data } = await fetchContent('show', 6); // Destructure data
         setShows(data as ContentItem[]);
       } catch (err) {
         console.error("Failed to fetch featured shows:", err);

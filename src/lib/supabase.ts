@@ -17,8 +17,10 @@ export const fetchContent = async (type?: string, limit?: number, offset?: numbe
     query = query.eq('type', type);
   }
 
-  if (limit !== undefined && offset !== undefined) {
-    query = query.range(offset, offset + limit - 1);
+  if (limit !== undefined) {
+    const start = offset !== undefined ? offset : 0;
+    const end = start + limit - 1;
+    query = query.range(start, end);
   }
 
   const { data, error, count } = await query.order('created_at', { ascending: false });

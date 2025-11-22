@@ -26,9 +26,8 @@ const TrendingArticlesSection = () => {
     const getArticles = async () => {
       try {
         setLoading(true);
-        const { data } = await fetchContent('article'); // Destructure data
-        // For "trending", we'll just take the first 3 for now, similar to static data.
-        setArticles((data as ContentItem[]).slice(0, 3));
+        const { data } = await fetchContent('article', 3); // Destructure data, limit to 3 for trending section
+        setArticles(data as ContentItem[]);
       } catch (err) {
         console.error("Failed to fetch trending articles:", err);
         setError("Failed to load trending articles. Please try again later.");

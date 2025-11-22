@@ -31,7 +31,7 @@ const UpcomingEventsCarousel = () => {
     const getEvents = async () => {
       try {
         setLoading(true);
-        const { data } = await fetchContent('event'); // Destructure data
+        const { data } = await fetchContent('event', 6); // Destructure data, limit to 6
         setEvents(data as ContentItem[]);
       } catch (err) {
         console.error("Failed to fetch upcoming events:", err);
