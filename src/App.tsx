@@ -22,12 +22,13 @@ import SearchResults from "./pages/SearchResults";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Shows from "./pages/Shows";
-import Articles from "./pages/Articles"; // New import
+import Articles from "./pages/Articles";
 import ContentDetailPage from "./pages/ContentDetailPage";
 import Categories from "./pages/Categories";
 import CategoryDetailPage from "./pages/CategoryDetailPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ThemeProvider } from "./components/theme-provider";
+import ScrollToTopButton from "./components/ScrollToTopButton"; // New import
 
 const queryClient = new QueryClient();
 
@@ -52,7 +53,7 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/shows" element={<Shows />} />
-              <Route path="/articles" element={<Articles />} /> {/* New route */}
+              <Route path="/articles" element={<Articles />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/category/:categoryName" element={<CategoryDetailPage />} />
               {/* Dynamic routes for content detail pages */}
@@ -73,6 +74,7 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <ScrollToTopButton /> {/* Render the scroll to top button */}
           </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
