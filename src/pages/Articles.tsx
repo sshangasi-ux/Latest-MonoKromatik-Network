@@ -19,9 +19,9 @@ const Articles = () => {
               type="article"
               title={article.title}
               description={article.description}
-              imageUrl={article.imageUrl}
+              imageUrl={article.image_url} // Use image_url
               category={article.category}
-              link={article.link}
+              link={`/news/${article.link_slug}`} // Construct link
             />
           ))}
         </div>

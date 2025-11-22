@@ -16,7 +16,6 @@ import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import { Button } from "@/components/ui/button";
 import {
-  featuredShows,
   videoSpotlights,
   recentArticles,
   upcomingEvents,

@@ -8,3 +8,20 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Function to fetch content from the 'content' table
+export const fetchContent = async (type?: string) => {
+  let query = supabase.from('content').select('*');
+
+  if (type) {
+    query = query.eq('type', type);
+  }
+
+  const { data, error } = await query.order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching content:', error);
+    throw error;
+  }
+  return data;
+};

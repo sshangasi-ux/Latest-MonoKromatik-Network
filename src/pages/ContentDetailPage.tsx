@@ -1,15 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
-  featuredShows,
   videoSpotlights,
   recentArticles,
   upcomingEvents,
 } from "@/data/content";
+import { fetchContent } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Share2 } from "lucide-react";
@@ -18,44 +18,109 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import ContentCard from "@/components/ContentCard"; // Import ContentCard for related content
+import ContentCard from "@/components/ContentCard";
+
+interface ContentItem {
+  id: string;
+  title: string;
+  description: string;
+  image_url: string;
+  category: string;
+  link_slug: string;
+  type: "show" | "video" | "article" | "event";
+  full_content?: string;
+}
 
 const ContentDetailPage = () => {
   const { type, id } = useParams<{ type: string; id: string }>();
+  const [contentItem, setContentItem] = useState<ContentItem | undefined>(undefined);
+  const [allContent, setAllContent] = useState<ContentItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  let contentItem:
-    | {
-        id: string;
-        title: string;
-        description: string;
-        imageUrl: string;
-        category: string;
-        link: string;
-        fullContent?: string;
+  useEffect(() => {
+    const fetchContentData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        let fetchedItem: ContentItem | undefined;
+        let fetchedAllContent: ContentItem[] = [];
+
+        const showsData = await fetchContent('show');
+        const showsMapped = (showsData as ContentItem[]).map(item => ({ ...item, link: `/shows/${item.link_slug}` }));
+
+        fetchedAllContent = [
+          ...showsMapped,
+          ...videoSpotlights.map(item => ({ ...item, link: `/watch/${item.link_slug}` })),
+          ...recentArticles.map(item => ({ ...item, link: `/news/${item.link_slug}` })),
+          ...upcomingEvents.map(item => ({ ...item, link: `/events/${item.link_slug}` })),
+        ];
+
+        switch (type) {
+          case "shows":
+            fetchedItem = showsMapped.find((item) => item.link_slug === id);
+            break;
+          case "watch":
+            fetchedItem = videoSpotlights.find((item) => item.link_slug === id);
+            break;
+          case "news":
+            fetchedItem = recentArticles.find((item) => item.link_slug === id);
+            break;
+          case "events":
+            fetchedItem = upcomingEvents.find((item) => item.link_slug === id);
+            break;
+          default:
+            fetchedItem = undefined;
+        }
+        
+        setContentItem(fetchedItem);
+        setAllContent(fetchedAllContent);
+      } catch (err) {
+        console.error("Failed to fetch content detail:", err);
+        setError("Failed to load content. Please try again later.");
+      } finally {
+        setLoading(false);
       }
-    | undefined;
+    };
 
-  let allContent: any[] = [];
+    fetchContentData();
+  }, [type, id]);
 
-  switch (type) {
-    case "shows":
-      contentItem = featuredShows.find((item) => item.link.endsWith(`/${id}`));
-      allContent = featuredShows.map(item => ({ ...item, type: "show" }));
-      break;
-    case "watch":
-      contentItem = videoSpotlights.find((item) => item.link.endsWith(`/${id}`));
-      allContent = videoSpotlights.map(item => ({ ...item, type: "video" }));
-      break;
-    case "news":
-      contentItem = recentArticles.find((item) => item.link.endsWith(`/${id}`));
-      allContent = recentArticles.map(item => ({ ...item, type: "article" }));
-      break;
-    case "events":
-      contentItem = upcomingEvents.find((item) => item.link.endsWith(`/${id}`));
-      allContent = upcomingEvents.map(item => ({ ...item, type: "event" }));
-      break;
-    default:
-      contentItem = undefined;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-black text-white">
+        <Header />
+        <main className="flex-grow container mx-auto p-8">
+          <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden border border-neutral-800">
+            <div className="w-full h-64 md:h-96 bg-neutral-800 animate-pulse"></div>
+            <div className="p-6">
+              <div className="h-6 w-24 bg-neutral-700 rounded mb-4 animate-pulse"></div>
+              <div className="h-10 w-3/4 bg-neutral-700 rounded mb-4 animate-pulse"></div>
+              <div className="h-6 w-full bg-neutral-800 rounded mb-6 animate-pulse"></div>
+              <div className="h-6 w-5/6 bg-neutral-800 rounded mb-8 animate-pulse"></div>
+              <div className="h-40 w-full bg-neutral-800 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col bg-black text-white">
+        <Header />
+        <main className="flex-grow container mx-auto p-8 text-center">
+          <h1 className="text-4xl font-bold mb-4 text-white">Error</h1>
+          <p className="text-xl text-red-500 mb-4">{error}</p>
+          <Link to="/" className="text-red-500 hover:text-red-400 underline">
+            Return to Home
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   if (!contentItem) {
@@ -78,7 +143,8 @@ const ContentDetailPage = () => {
     );
   }
 
-  const shareUrl = `${window.location.origin}${contentItem.link}`;
+  const contentLink = `/${type}/${contentItem.link_slug}`; // Construct link
+  const shareUrl = `${window.location.origin}${contentLink}`;
   const shareText = `Check out this ${type} on MonoKromatik Network: ${contentItem.title}`;
 
   // Filter for related content (same category, exclude current item)
@@ -93,7 +159,7 @@ const ContentDetailPage = () => {
       <main className="flex-grow container mx-auto p-8">
         <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden border border-neutral-800">
           <img
-            src={contentItem.imageUrl}
+            src={contentItem.image_url} // Use image_url
             alt={contentItem.title}
             className="w-full h-64 object-cover md:h-96"
           />
@@ -143,10 +209,10 @@ const ContentDetailPage = () => {
               </Popover>
             </div>
 
-            {contentItem.fullContent && (
+            {contentItem.full_content && (
               <div
                 className="prose dark:prose-invert max-w-none text-gray-200 prose-p:text-gray-200 prose-h3:text-white prose-h2:text-white prose-a:text-red-500 hover:prose-a:text-red-400"
-                dangerouslySetInnerHTML={{ __html: contentItem.fullContent }}
+                dangerouslySetInnerHTML={{ __html: contentItem.full_content }}
               />
             )}
           </div>
@@ -164,9 +230,9 @@ const ContentDetailPage = () => {
                   type={item.type}
                   title={item.title}
                   description={item.description}
-                  imageUrl={item.imageUrl}
+                  imageUrl={item.image_url} // Use image_url
                   category={item.category}
-                  link={item.link}
+                  link={`/${item.type === 'show' ? 'shows' : item.type === 'video' ? 'watch' : item.type === 'article' ? 'news' : 'events'}/${item.link_slug}`} // Construct link
                 />
               ))}
             </div>

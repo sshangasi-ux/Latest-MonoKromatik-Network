@@ -29,9 +29,9 @@ const UpcomingEventsCarousel = () => {
                   type="event"
                   title={event.title}
                   description={event.description}
-                  imageUrl={event.imageUrl}
+                  imageUrl={event.image_url} // Use image_url
                   category={event.category}
-                  link={event.link}
+                  link={`/events/${event.link_slug}`} // Construct link
                 />
               </CarouselItem>
             ))}

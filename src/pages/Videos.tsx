@@ -19,9 +19,9 @@ const Videos = () => {
               type="video"
               title={video.title}
               description={video.description}
-              imageUrl={video.imageUrl}
+              imageUrl={video.image_url} // Use image_url
               category={video.category}
-              link={video.link}
+              link={`/watch/${video.link_slug}`} // Construct link
             />
           ))}
         </div>
