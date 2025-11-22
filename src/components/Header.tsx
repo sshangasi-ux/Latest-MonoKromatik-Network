@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sheet"; // Import Sheet components
 
 const Header = () => {
-  const isAuthenticated = true; // For demonstration, assume user is authenticated
+  const isAuthenticated = false; // Set to false for now to show login button
   const [searchTerm, setSearchTerm] = React.useState("");
   const navigate = useNavigate();
 
@@ -67,7 +67,9 @@ const Header = () => {
         {isAuthenticated ? (
           <UserNav />
         ) : (
-          <Button variant="outline" className="hidden md:inline-flex">Login</Button>
+          <Button asChild variant="outline" className="hidden md:inline-flex">
+            <Link to="/login">Login</Link>
+          </Button>
         )}
 
         {/* Mobile Menu */}
