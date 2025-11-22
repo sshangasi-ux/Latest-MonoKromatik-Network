@@ -8,6 +8,8 @@ import LiveTicker from "@/components/LiveTicker";
 import FeaturedShowsCarousel from "@/components/FeaturedShowsCarousel";
 import VideoSpotlightCarousel from "@/components/VideoSpotlightCarousel";
 import ArticleGrid from "@/components/ArticleGrid";
+import UpcomingEventsCarousel from "@/components/UpcomingEventsCarousel"; // Import new component
+import MembershipCTA from "@/components/MembershipCTA"; // Import new component
 
 const Home = () => {
   return (
@@ -27,7 +29,15 @@ const Home = () => {
         <FeaturedShowsCarousel />
         <VideoSpotlightCarousel />
         <ArticleGrid />
-        {/* More content sections like upcoming events, AI-driven picks, and membership CTA will go here */}
+        <UpcomingEventsCarousel /> {/* Add Upcoming Events Carousel */}
+        <MembershipCTA /> {/* Add Membership CTA */}
+        {/* Placeholder for AI-driven "Smart Picks for You" - will require backend integration */}
+        <section className="py-12 bg-black text-white text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 uppercase">Smart Picks for You (Coming Soon!)</h2>
+          <p className="text-lg text-gray-400">
+            Our AI will soon learn your preferences to deliver personalized content.
+          </p>
+        </section>
       </main>
       <Footer />
       <MadeWithDyad />
