@@ -21,7 +21,8 @@ import FAQ from "./pages/FAQ";
 import SearchResults from "./pages/SearchResults";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Shows from "./pages/Shows"; // New import
+import Shows from "./pages/Shows";
+import ContentDetailPage from "./pages/ContentDetailPage"; // New import
 
 const queryClient = new QueryClient();
 
@@ -49,7 +50,12 @@ const App = () => (
             <Route path="/search" element={<SearchResults />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/shows" element={<Shows />} /> {/* New route */}
+            <Route path="/shows" element={<Shows />} />
+            {/* Dynamic routes for content detail pages */}
+            <Route path="/shows/:id" element={<ContentDetailPage />} />
+            <Route path="/watch/:id" element={<ContentDetailPage />} />
+            <Route path="/news/:id" element={<ContentDetailPage />} />
+            <Route path="/events/:id" element={<ContentDetailPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
