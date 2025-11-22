@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { MadeWithDyad } from "@/components/made-with-dyad";
@@ -9,15 +9,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner"; // Import toast for notifications
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would handle user registration logic
-    console.log("Signup form submitted");
-    // For now, just navigate to login or home
-    // showSuccess("Account created successfully! Please log in.");
-    // navigate("/login");
+    // In a real app, this would handle user registration logic with a backend
+    console.log("Signup form submitted with:", { name, email, password });
+    toast.success("Account created successfully! Please log in.");
+    navigate("/login"); // Redirect to login after successful signup
   };
 
   return (
@@ -38,6 +43,8 @@ const Signup = () => {
                   type="text"
                   placeholder="John Doe"
                   required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
@@ -48,6 +55,8 @@ const Signup = () => {
                   type="email"
                   placeholder="m@example.com"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
@@ -57,6 +66,8 @@ const Signup = () => {
                   id="password"
                   type="password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
                 />
               </div>

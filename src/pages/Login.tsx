@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -9,15 +9,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/AuthContext"; // Fixed import path
+import { useAuth } from "@/context/AuthContext";
 
 const Login = () => {
-  const { login } = useAuth(); // Use the login function from AuthContext
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you'd validate credentials here
-    console.log("Login form submitted");
+    // In a real app, you'd send these credentials to a backend for validation
+    console.log("Login form submitted with:", { email, password });
     login(); // Simulate successful login
   };
 
@@ -39,6 +41,8 @@ const Login = () => {
                   type="email"
                   placeholder="m@example.com"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
@@ -48,6 +52,8 @@ const Login = () => {
                   id="password"
                   type="password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
