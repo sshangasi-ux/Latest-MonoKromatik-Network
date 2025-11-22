@@ -13,8 +13,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext"; // New import
 
 const UserNav = () => {
+  const { logout } = useAuth(); // Use the logout function from AuthContext
   // In a real application, user data would come from an authentication context
   const user = {
     name: "John Doe",
@@ -60,8 +62,8 @@ const UserNav = () => {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link to="/logout">Log out</Link>
+        <DropdownMenuItem onClick={logout}> {/* Call logout function */}
+          Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
