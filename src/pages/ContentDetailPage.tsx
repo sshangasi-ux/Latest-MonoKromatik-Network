@@ -12,41 +12,39 @@ import {
 } from "@/data/content";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Share2, CalendarDays, MapPin } from "lucide-react";
+import { Share2 } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-// Define a union type for all possible content items
-type ContentItem =
-  | (typeof featuredShows)[0] & { type: "show"; videoUrl?: string }
-  | (typeof videoSpotlights)[0] & { type: "video"; videoUrl?: string }
-  | (typeof recentArticles)[0] & { type: "article"; fullContent?: string }
-  | (typeof upcomingEvents)[0] & { type: "event"; date?: string; location?: string };
-
 const ContentDetailPage = () => {
   const { type, id } = useParams<{ type: string; id: string }>();
 
-  let contentItem: ContentItem | undefined;
+  let contentItem:
+    | {
+        id: string;
+        title: string;
+        description: string;
+        imageUrl: string;
+        category: string;
+        link: string;
+      }
+    | undefined;
 
   switch (type) {
     case "shows":
-      contentItem = featuredShows.find((item) => item.id === id) as ContentItem;
-      if (contentItem) contentItem.type = "show";
+      contentItem = featuredShows.find((item) => item.id === id);
       break;
     case "watch":
-      contentItem = videoSpotlights.find((item) => item.id === id) as ContentItem;
-      if (contentItem) contentItem.type = "video";
+      contentItem = videoSpotlights.find((item) => item.id === id);
       break;
     case "news":
-      contentItem = recentArticles.find((item) => item.id === id) as ContentItem;
-      if (contentItem) contentItem.type = "article";
+      contentItem = recentArticles.find((item) => item.id === id);
       break;
     case "events":
-      contentItem = upcomingEvents.find((item) => item.id === id) as ContentItem;
-      if (contentItem) contentItem.type = "event";
+      contentItem = upcomingEvents.find((item) => item.id === id);
       break;
     default:
       contentItem = undefined;
@@ -73,38 +71,21 @@ const ContentDetailPage = () => {
   }
 
   const shareUrl = `${window.location.origin}${contentItem.link}`;
-  const shareText = `Check out this ${contentItem.type} on MonoKromatik Network: ${contentItem.title}`;
-
-  // Use direct type checks in JSX for correct type narrowing
-  const isVideoContent = contentItem.type === "show" || contentItem.type === "video";
-  const isArticleContent = contentItem.type === "article";
-  const isEventContent = contentItem.type === "event";
+  const shareText = `Check out this ${type} on MonoKromatik Network: ${contentItem.title}`;
 
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden border border-neutral-800">
-          {(contentItem.type === "show" || contentItem.type === "video") && contentItem.videoUrl ? (
-            <div className="relative w-full aspect-video bg-black">
-              <video
-                src={contentItem.videoUrl}
-                controls
-                className="w-full h-full object-contain"
-                poster={contentItem.imageUrl} // Use image as poster
-              >
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          ) : (
+        <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden md:flex border border-neutral-800">
+          <div className="md:w-1/2">
             <img
               src={contentItem.imageUrl}
               alt={contentItem.title}
-              className="w-full h-64 object-cover md:h-96"
+              className="w-full h-64 md:h-full object-cover"
             />
-          )}
-
-          <div className="p-6">
+          </div>
+          <div className="md:w-1/2 p-6 flex flex-col justify-center">
             <Badge className="bg-red-600 hover:bg-red-700 text-white uppercase text-sm px-3 py-1 self-start mb-4">
               {contentItem.category}
             </Badge>
@@ -114,39 +95,10 @@ const ContentDetailPage = () => {
             <p className="text-lg text-gray-300 mb-6">
               {contentItem.description}
             </p>
-
-            {contentItem.type === "event" && (
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 text-gray-300">
-                {contentItem.date && (
-                  <div className="flex items-center text-lg">
-                    <CalendarDays className="h-5 w-5 mr-2 text-red-500" />
-                    <span>{contentItem.date}</span>
-                  </div>
-                )}
-                {contentItem.location && (
-                  <div className="flex items-center text-lg">
-                    <MapPin className="h-5 w-5 mr-2 text-red-500" />
-                    <span>{contentItem.location}</span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {contentItem.type === "article" && contentItem.fullContent && (
-              <div
-                className="prose dark:prose-invert max-w-none text-gray-200 mb-6 prose-p:text-gray-200 prose-a:text-red-500 hover:prose-a:text-red-400"
-                dangerouslySetInnerHTML={{ __html: contentItem.fullContent }}
-              />
-            )}
-
-            <div className="flex flex-wrap gap-4">
-              {(contentItem.type === "show" || contentItem.type === "video") && contentItem.videoUrl && (
-                <a href={contentItem.videoUrl} target="_blank" rel="noopener noreferrer">
-                  <Button className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
-                    Watch Now
-                  </Button>
-                </a>
-              )}
+            <div className="flex space-x-4">
+              <Button className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
+                Watch Now
+              </Button>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="border-neutral-700 text-white hover:bg-neutral-800 text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
