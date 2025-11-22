@@ -18,6 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import ContentCard from "@/components/ContentCard"; // Import ContentCard for related content
 
 const ContentDetailPage = () => {
   const { type, id } = useParams<{ type: string; id: string }>();
@@ -30,22 +31,28 @@ const ContentDetailPage = () => {
         imageUrl: string;
         category: string;
         link: string;
-        fullContent?: string; // Added fullContent property
+        fullContent?: string;
       }
     | undefined;
+
+  let allContent: any[] = [];
 
   switch (type) {
     case "shows":
       contentItem = featuredShows.find((item) => item.link.endsWith(`/${id}`));
+      allContent = featuredShows.map(item => ({ ...item, type: "show" }));
       break;
     case "watch":
       contentItem = videoSpotlights.find((item) => item.link.endsWith(`/${id}`));
+      allContent = videoSpotlights.map(item => ({ ...item, type: "video" }));
       break;
     case "news":
       contentItem = recentArticles.find((item) => item.link.endsWith(`/${id}`));
+      allContent = recentArticles.map(item => ({ ...item, type: "article" }));
       break;
     case "events":
       contentItem = upcomingEvents.find((item) => item.link.endsWith(`/${id}`));
+      allContent = upcomingEvents.map(item => ({ ...item, type: "event" }));
       break;
     default:
       contentItem = undefined;
@@ -74,6 +81,12 @@ const ContentDetailPage = () => {
   const shareUrl = `${window.location.origin}${contentItem.link}`;
   const shareText = `Check out this ${type} on MonoKromatik Network: ${contentItem.title}`;
 
+  // Filter for related content (same category, exclude current item)
+  const relatedContent = allContent.filter(
+    (item) =>
+      item.category === contentItem?.category && item.id !== contentItem?.id
+  ).slice(0, 3); // Show up to 3 related items
+
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
@@ -96,7 +109,7 @@ const ContentDetailPage = () => {
             </p>
             <div className="flex space-x-4 mb-8">
               <Button className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
-                {type === "article" ? "Read Article" : "Watch Now"}
+                {type === "news" ? "Read Article" : "Watch Now"}
               </Button>
               <Popover>
                 <PopoverTrigger asChild>
@@ -138,6 +151,28 @@ const ContentDetailPage = () => {
             )}
           </div>
         </div>
+
+        {relatedContent.length > 0 && (
+          <section className="mt-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">
+              More Like This
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {relatedContent.map((item) => (
+                <ContentCard
+                  key={`${item.type}-${item.id}`}
+                  type={item.type}
+                  title={item.title}
+                  description={item.description}
+                  imageUrl={item.imageUrl}
+                  category={item.category}
+                  link={item.link}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
         <div className="mt-8 text-center">
           <Link to="/" className="text-red-500 hover:text-red-400 underline">
             Back to Home
