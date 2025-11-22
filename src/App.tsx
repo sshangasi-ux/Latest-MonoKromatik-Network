@@ -24,13 +24,13 @@ import Signup from "./pages/Signup";
 import Shows from "./pages/Shows";
 import Articles from "./pages/Articles";
 import Videos from "./pages/Videos";
-import Events from "./pages/Events"; // New import
+import Events from "./pages/Events";
 import ContentDetailPage from "./pages/ContentDetailPage";
 import Categories from "./pages/Categories";
 import CategoryDetailPage from "./pages/CategoryDetailPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ThemeProvider } from "./components/theme-provider";
-import ScrollToTopButton from "./components/ScrollToTopButton";
+import ScrollToTopButton from "./components/ScrollToTopButton"; // New import
 
 const queryClient = new QueryClient();
 
@@ -57,7 +57,7 @@ const App = () => (
               <Route path="/shows" element={<Shows />} />
               <Route path="/articles" element={<Articles />} />
               <Route path="/videos" element={<Videos />} />
-              <Route path="/events" element={<Events />} /> {/* New route */}
+              <Route path="/events" element={<Events />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/category/:categoryName" element={<CategoryDetailPage />} />
               {/* Dynamic routes for content detail pages */}
