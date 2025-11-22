@@ -24,8 +24,9 @@ import Signup from "./pages/Signup";
 import Shows from "./pages/Shows";
 import ContentDetailPage from "./pages/ContentDetailPage";
 import Categories from "./pages/Categories";
+import CategoryDetailPage from "./pages/CategoryDetailPage"; // New import
 import ProtectedRoute from "./components/ProtectedRoute";
-import { ThemeProvider } from "./components/theme-provider"; // New import
+import { ThemeProvider } from "./components/theme-provider";
 
 const queryClient = new QueryClient();
 
@@ -36,7 +37,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme"> {/* Wrap with ThemeProvider */}
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/logout" element={<Logout />} />
@@ -51,6 +52,7 @@ const App = () => (
               <Route path="/signup" element={<Signup />} />
               <Route path="/shows" element={<Shows />} />
               <Route path="/categories" element={<Categories />} />
+              <Route path="/category/:categoryName" element={<CategoryDetailPage />} /> {/* New route */}
               {/* Dynamic routes for content detail pages */}
               <Route path="/shows/:id" element={<ContentDetailPage />} />
               <Route path="/watch/:id" element={<ContentDetailPage />} />
