@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"; // Import Link for navigation
 
 const HeroSection = () => {
   return (
-    <section className="relative h-[60vh] md:h-[80vh] bg-black flex items-center justify-center text-white overflow-hidden">
+    <section className="relative h-[60vh] md:h-[80vh] bg-black flex items-center text-white overflow-hidden">
       {/* Background Image/Video Placeholder */}
       <div className="absolute inset-0 z-0">
         <img
@@ -18,7 +18,7 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
       </div>
 
-      <div className="relative z-10 text-center p-4 max-w-4xl mx-auto">
+      <div className="relative z-10 p-4 max-w-4xl mx-auto md:ml-16 md:mr-auto text-center md:text-left">
         <h1 className="text-5xl md:text-7xl font-extrabold uppercase mb-4 leading-tight">
           Experience the Pulse of Africa
         </h1>
