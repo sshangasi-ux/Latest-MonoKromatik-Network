@@ -91,6 +91,21 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Global link hover effect */
+  a {
+    @apply transition-colors duration-200;
+  }
+  a:hover {
+    @apply text-red-500; /* Default hover for links */
+  }
+
+  /* Consistent focus ring for inputs */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply ring-2 ring-red-600 ring-offset-2 ring-offset-background;
+  }
 }
 
 @keyframes marquee {

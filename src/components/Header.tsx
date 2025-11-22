@@ -34,29 +34,29 @@ const Header = () => {
   return (
     <header className="bg-black text-white shadow-sm p-4 flex items-center justify-between relative z-50">
       <div className="flex items-center">
-        <Link to="/" className="text-2xl font-extrabold uppercase text-red-600">
+        <Link to="/" className="text-2xl font-extrabold uppercase text-red-600 hover:text-red-500">
           MonoKromatik
         </Link>
       </div>
 
       {/* Desktop Navigation */}
       <nav className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-6">
-        <Link to="/" className="text-gray-300 hover:text-white transition-colors font-medium">
+        <Link to="/" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
           Home
         </Link>
-        <Link to="/shows" className="text-gray-300 hover:text-white transition-colors font-medium">
+        <Link to="/shows" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
           Shows
         </Link>
-        <Link to="/articles" className="text-gray-300 hover:text-white transition-colors font-medium">
+        <Link to="/articles" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
           Articles
         </Link>
-        <Link to="/categories" className="text-gray-300 hover:text-white transition-colors font-medium">
+        <Link to="/categories" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
           Categories
         </Link>
-        <Link to="/about" className="text-gray-300 hover:text-white transition-colors font-medium">
+        <Link to="/about" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
           About
         </Link>
-        <Link to="/contact" className="text-gray-300 hover:text-white transition-colors font-medium">
+        <Link to="/contact" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
           Contact
         </Link>
       </nav>
@@ -78,7 +78,7 @@ const Header = () => {
               <Input
                 type="text"
                 placeholder="Search..."
-                className="pl-3 pr-8 py-2 rounded-md bg-neutral-800 border border-neutral-700 text-white focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                className="pl-3 pr-8 py-2 rounded-md bg-neutral-800 border border-neutral-700 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-red-600 focus:border-transparent"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 autoFocus
@@ -118,22 +118,22 @@ const Header = () => {
                 </SheetDescription>
               </SheetHeader>
               <nav className="flex flex-col gap-4 mt-8">
-                <Link to="/" className="text-lg font-medium hover:text-red-600 transition-colors">
+                <Link to="/" className="text-lg font-medium hover:text-red-500 transition-colors">
                   Home
                 </Link>
-                <Link to="/shows" className="text-lg font-medium hover:text-red-600 transition-colors">
+                <Link to="/shows" className="text-lg font-medium hover:text-red-500 transition-colors">
                   Shows
                 </Link>
-                <Link to="/articles" className="text-lg font-medium hover:text-red-600 transition-colors">
+                <Link to="/articles" className="text-lg font-medium hover:text-red-500 transition-colors">
                   Articles
                 </Link>
-                <Link to="/categories" className="text-lg font-medium hover:text-red-600 transition-colors">
+                <Link to="/categories" className="text-lg font-medium hover:text-red-500 transition-colors">
                   Categories
                 </Link>
-                <Link to="/about" className="text-lg font-medium hover:text-red-600 transition-colors">
+                <Link to="/about" className="text-lg font-medium hover:text-red-500 transition-colors">
                   About
                 </Link>
-                <Link to="/contact" className="text-lg font-medium hover:text-red-600 transition-colors">
+                <Link to="/contact" className="text-lg font-medium hover:text-red-500 transition-colors">
                   Contact
                 </Link>
                 {/* Mobile Search within the sheet */}
@@ -141,7 +141,7 @@ const Header = () => {
                   <Input
                     type="text"
                     placeholder="Search..."
-                    className="pl-3 pr-8 py-2 rounded-md bg-neutral-800 border border-neutral-700 text-white focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                    className="pl-3 pr-8 py-2 rounded-md bg-neutral-800 border border-neutral-700 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-red-600 focus:border-transparent"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
