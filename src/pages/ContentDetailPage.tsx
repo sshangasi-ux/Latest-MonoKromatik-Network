@@ -30,21 +30,22 @@ const ContentDetailPage = () => {
         imageUrl: string;
         category: string;
         link: string;
+        fullContent?: string; // Added fullContent property
       }
     | undefined;
 
   switch (type) {
     case "shows":
-      contentItem = featuredShows.find((item) => item.id === id);
+      contentItem = featuredShows.find((item) => item.link.endsWith(`/${id}`));
       break;
     case "watch":
-      contentItem = videoSpotlights.find((item) => item.id === id);
+      contentItem = videoSpotlights.find((item) => item.link.endsWith(`/${id}`));
       break;
     case "news":
-      contentItem = recentArticles.find((item) => item.id === id);
+      contentItem = recentArticles.find((item) => item.link.endsWith(`/${id}`));
       break;
     case "events":
-      contentItem = upcomingEvents.find((item) => item.id === id);
+      contentItem = upcomingEvents.find((item) => item.link.endsWith(`/${id}`));
       break;
     default:
       contentItem = undefined;
@@ -77,15 +78,13 @@ const ContentDetailPage = () => {
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden md:flex border border-neutral-800">
-          <div className="md:w-1/2">
-            <img
-              src={contentItem.imageUrl}
-              alt={contentItem.title}
-              className="w-full h-64 md:h-full object-cover"
-            />
-          </div>
-          <div className="md:w-1/2 p-6 flex flex-col justify-center">
+        <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden border border-neutral-800">
+          <img
+            src={contentItem.imageUrl}
+            alt={contentItem.title}
+            className="w-full h-64 object-cover md:h-96"
+          />
+          <div className="p-6">
             <Badge className="bg-red-600 hover:bg-red-700 text-white uppercase text-sm px-3 py-1 self-start mb-4">
               {contentItem.category}
             </Badge>
@@ -95,9 +94,9 @@ const ContentDetailPage = () => {
             <p className="text-lg text-gray-300 mb-6">
               {contentItem.description}
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 mb-8">
               <Button className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
-                Watch Now
+                {type === "article" ? "Read Article" : "Watch Now"}
               </Button>
               <Popover>
                 <PopoverTrigger asChild>
@@ -130,6 +129,13 @@ const ContentDetailPage = () => {
                 </PopoverContent>
               </Popover>
             </div>
+
+            {contentItem.fullContent && (
+              <div
+                className="prose dark:prose-invert max-w-none text-gray-200 prose-p:text-gray-200 prose-h3:text-white prose-h2:text-white prose-a:text-red-500 hover:prose-a:text-red-400"
+                dangerouslySetInnerHTML={{ __html: contentItem.fullContent }}
+              />
+            )}
           </div>
         </div>
         <div className="mt-8 text-center">
