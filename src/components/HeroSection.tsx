@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom"; // Import Link for navigation
 
 const HeroSection = () => {
   return (
@@ -24,8 +25,8 @@ const HeroSection = () => {
         <p className="text-lg md:text-xl text-gray-300 mb-8">
           Your hub for cutting-edge sports, culture, music, fashion, and lifestyle.
         </p>
-        <Button className="bg-red-600 hover:bg-red-700 text-white text-lg px-8 py-6 rounded-lg uppercase font-bold transition-colors">
-          Explore Now
+        <Button asChild className="bg-red-600 hover:bg-red-700 text-white text-lg px-8 py-6 rounded-lg uppercase font-bold transition-colors">
+          <Link to="/shows">Explore Now</Link>
         </Button>
       </div>
     </section>
