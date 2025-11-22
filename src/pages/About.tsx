@@ -9,11 +9,19 @@ const About = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
       <Header />
-      <main className="flex-grow container mx-auto p-8 text-center">
-        <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">About Us</h1>
-        <p className="text-xl text-gray-600 dark:text-gray-300">
-          Learn more about MonoKromatik Network and our mission. (Content Coming Soon!)
-        </p>
+      <main className="flex-grow container mx-auto p-8">
+        <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white uppercase">About Us</h1>
+        <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-gray-900 dark:text-white">
+          <p className="text-lg mb-4">
+            Welcome to MonoKromatik Network, your premier destination for the vibrant pulse of Africa. We are dedicated to bringing you the most compelling stories, cutting-edge trends, and rich cultural experiences from across the continent.
+          </p>
+          <p className="text-lg mb-4">
+            Our mission is to showcase the dynamic spirit of Africa through diverse content spanning sports, culture, music, fashion, and lifestyle. We believe in celebrating the innovation, creativity, and resilience that define the African narrative.
+          </p>
+          <p className="text-lg">
+            Join us on a journey to explore the untold stories, discover emerging talents, and connect with the heart of Africa. MonoKromatik Network is more than just a platform; it's a community dedicated to fostering understanding and appreciation for the continent's profound impact on the global stage.
+          </p>
+        </div>
       </main>
       <Footer />
       <MadeWithDyad />
