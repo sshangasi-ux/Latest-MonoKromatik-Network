@@ -9,17 +9,25 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 const Login = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you'd send these credentials to a backend for validation
-    console.log("Login form submitted with:", { email, password });
-    login(); // Simulate successful login
+    setIsLoading(true);
+    try {
+      await login(email, password);
+    } catch (error) {
+      // toast.error is already handled in AuthContext
+      console.error("Login failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -56,8 +64,8 @@ const Login = () => {
                   className="bg-neutral-800 border-neutral-700 text-white placeholder:text-gray-500 focus:ring-red-600"
                 />
               </div>
-              <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white">
-                Login
+              <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white" disabled={isLoading}>
+                {isLoading ? "Logging in..." : "Login"}
               </Button>
             </form>
             <div className="mt-4 text-center text-sm">

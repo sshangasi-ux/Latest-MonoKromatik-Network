@@ -13,15 +13,18 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext"; // New import
+import { useAuth } from "@/context/AuthContext";
 
 const UserNav = () => {
-  const { logout } = useAuth(); // Use the logout function from AuthContext
-  // In a real application, user data would come from an authentication context
-  const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    avatar: "https://github.com/shadcn.png", // Placeholder avatar
+  const { logout, user } = useAuth();
+
+  // Use Supabase user data if available, otherwise fallback to placeholder
+  const userName = user?.user_metadata?.full_name || user?.email || "Guest";
+  const userEmail = user?.email || "N/A";
+  const userAvatar = user?.user_metadata?.avatar_url || "https://github.com/shadcn.png"; // Placeholder or actual avatar URL from Supabase
+
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
   return (
@@ -29,17 +32,17 @@ const UserNav = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.avatar} alt="@shadcn" />
-            <AvatarFallback>{user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+            <AvatarImage src={userAvatar} alt={userName} />
+            <AvatarFallback>{getInitials(userName)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.name}</p>
+            <p className="text-sm font-medium leading-none">{userName}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user.email}
+              {userEmail}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -62,7 +65,7 @@ const UserNav = () => {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}> {/* Call logout function */}
+        <DropdownMenuItem onClick={logout}>
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

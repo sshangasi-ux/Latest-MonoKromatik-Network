@@ -1,27 +1,34 @@
 "use client";
 
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner"; // Import toast for notifications
+import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
 
 const Signup = () => {
-  const navigate = useNavigate();
+  const { signup } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would handle user registration logic with a backend
-    console.log("Signup form submitted with:", { name, email, password });
-    toast.success("Account created successfully! Please log in.");
-    navigate("/login"); // Redirect to login after successful signup
+    setIsLoading(true);
+    try {
+      await signup(email, password, name);
+    } catch (error) {
+      // toast.error is already handled in AuthContext
+      console.error("Signup failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -70,8 +77,8 @@ const Signup = () => {
                   className="bg-neutral-800 border-neutral-700 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-red-600 focus:border-transparent"
                 />
               </div>
-              <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white">
-                Sign Up
+              <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white" disabled={isLoading}>
+                {isLoading ? "Signing up..." : "Sign Up"}
               </Button>
             </form>
             <div className="mt-4 text-center text-sm">
