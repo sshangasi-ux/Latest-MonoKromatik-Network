@@ -1,13 +1,23 @@
 "use client";
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import UserNav from "./UserNav"; // Import the new UserNav component
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import UserNav from "./UserNav";
 
 const Header = () => {
-  // This state would typically come from an authentication context
   const isAuthenticated = true; // For demonstration, assume user is authenticated
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
 
   return (
     <header className="bg-white dark:bg-gray-900 shadow-sm p-4 flex items-center justify-between">
@@ -31,6 +41,16 @@ const Header = () => {
         </Link>
       </nav>
       <div className="flex items-center space-x-4">
+        <form onSubmit={handleSearch} className="relative hidden md:block">
+          <Input
+            type="text"
+            placeholder="Search..."
+            className="pl-8 pr-2 py-1 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-600 focus:border-transparent"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
+        </form>
         {isAuthenticated ? (
           <UserNav />
         ) : (

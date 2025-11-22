@@ -11,12 +11,13 @@ import UserSettings from "./pages/UserSettings";
 import Subscription from "./pages/Subscription";
 import OfflineContent from "./pages/OfflineContent";
 import Logout from "./pages/Logout";
-import About from "./pages/About"; // New import
-import Contact from "./pages/Contact"; // New import
-import Services from "./pages/Services"; // New import
-import PrivacyPolicy from "./pages/PrivacyPolicy"; // New import
-import TermsOfService from "./pages/TermsOfService"; // New import
-import FAQ from "./pages/FAQ"; // New import
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Services from "./pages/Services";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import FAQ from "./pages/FAQ";
+import SearchResults from "./pages/SearchResults"; // New import
 
 const queryClient = new QueryClient();
 
@@ -34,12 +35,13 @@ const App = () => (
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/offline-content" element={<OfflineContent />} />
           <Route path="/logout" element={<Logout />} />
-          <Route path="/about" element={<About />} /> {/* New route */}
-          <Route path="/contact" element={<Contact />} /> {/* New route */}
-          <Route path="/services" element={<Services />} /> {/* New route */}
-          <Route path="/privacy" element={<PrivacyPolicy />} /> {/* New route */}
-          <Route path="/terms" element={<TermsOfService />} /> {/* New route */}
-          <Route path="/faq" element={<FAQ />} /> {/* New route */}
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/search" element={<SearchResults />} /> {/* New route */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
