@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Menu } from "lucide-react";
+import { Search, Menu, X } from "lucide-react"; // Added X icon for closing search
 import UserNav from "./UserNav";
 import {
   Sheet,
@@ -18,69 +18,85 @@ import { useAuth } from "@/context/AuthContext";
 import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
-  const { isAuthenticated, logout } = useAuth();
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const { isAuthenticated } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false); // State for search bar visibility
   const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
+      setIsSearchOpen(false); // Close search bar after search
     }
   };
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-sm p-4 flex items-center justify-between">
+    <header className="bg-black text-white shadow-sm p-4 flex items-center justify-between relative z-50">
       <div className="flex items-center">
-        <Link to="/" className="text-2xl font-bold text-gray-900 dark:text-white">
-          MonoKromatik Network
+        <Link to="/" className="text-2xl font-extrabold uppercase text-red-600">
+          MonoKromatik
         </Link>
       </div>
 
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex space-x-6">
-        <Link to="/" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+      <nav className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-6">
+        <Link to="/" className="text-gray-300 hover:text-white transition-colors font-medium">
           Home
         </Link>
-        <Link to="/shows" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+        <Link to="/shows" className="text-gray-300 hover:text-white transition-colors font-medium">
           Shows
         </Link>
-        <Link to="/articles" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+        <Link to="/articles" className="text-gray-300 hover:text-white transition-colors font-medium">
           Articles
         </Link>
-        <Link to="/categories" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+        <Link to="/categories" className="text-gray-300 hover:text-white transition-colors font-medium">
           Categories
         </Link>
-        <Link to="/about" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+        <Link to="/about" className="text-gray-300 hover:text-white transition-colors font-medium">
           About
         </Link>
-        <Link to="/services" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-          Services
-        </Link>
-        <Link to="/contact" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+        <Link to="/contact" className="text-gray-300 hover:text-white transition-colors font-medium">
           Contact
         </Link>
       </nav>
 
-      <div className="flex items-center space-x-4">
-        {/* Desktop Search */}
-        <form onSubmit={handleSearch} className="relative hidden md:block">
-          <Input
-            type="text"
-            placeholder="Search..."
-            className="pl-8 pr-2 py-1 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-600 focus:border-transparent"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
-        </form>
+      <div className="flex items-center space-x-2 md:space-x-4">
+        {/* Desktop Search Toggle */}
+        <div className="relative hidden md:block">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSearchOpen(!isSearchOpen)}
+            className="text-gray-300 hover:text-white"
+          >
+            {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+            <span className="sr-only">Toggle Search</span>
+          </Button>
+          {isSearchOpen && (
+            <form onSubmit={handleSearch} className="absolute right-0 top-full mt-2 w-64">
+              <Input
+                type="text"
+                placeholder="Search..."
+                className="pl-3 pr-8 py-2 rounded-md bg-neutral-800 border border-neutral-700 text-white focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                autoFocus
+              />
+              <Button type="submit" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 bg-transparent hover:bg-neutral-700 text-gray-300">
+                <Search className="h-4 w-4" />
+                <span className="sr-only">Submit Search</span>
+              </Button>
+            </form>
+          )}
+        </div>
 
         <ThemeToggle />
 
         {isAuthenticated ? (
           <UserNav />
         ) : (
-          <Button asChild variant="outline" className="hidden md:inline-flex">
+          <Button asChild variant="outline" className="hidden md:inline-flex border-red-600 text-red-600 hover:bg-red-600 hover:text-white">
             <Link to="/login">Login</Link>
           </Button>
         )}
@@ -89,15 +105,15 @@ const Header = () => {
         <div className="md:hidden">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent side="right" className="bg-black text-white border-neutral-800">
               <SheetHeader>
-                <SheetTitle>MonoKromatik Network</SheetTitle>
-                <SheetDescription>
+                <SheetTitle className="text-2xl font-extrabold uppercase text-red-600">MonoKromatik</SheetTitle>
+                <SheetDescription className="text-gray-400">
                   Explore the pulse of Africa.
                 </SheetDescription>
               </SheetHeader>
@@ -117,9 +133,6 @@ const Header = () => {
                 <Link to="/about" className="text-lg font-medium hover:text-red-600 transition-colors">
                   About
                 </Link>
-                <Link to="/services" className="text-lg font-medium hover:text-red-600 transition-colors">
-                  Services
-                </Link>
                 <Link to="/contact" className="text-lg font-medium hover:text-red-600 transition-colors">
                   Contact
                 </Link>
@@ -128,15 +141,18 @@ const Header = () => {
                   <Input
                     type="text"
                     placeholder="Search..."
-                    className="pl-8 pr-2 py-1 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                    className="pl-3 pr-8 py-2 rounded-md bg-neutral-800 border border-neutral-700 text-white focus:ring-2 focus:ring-red-600 focus:border-transparent"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
-                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  <Button type="submit" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 bg-transparent hover:bg-neutral-700 text-gray-300">
+                    <Search className="h-4 w-4" />
+                    <span className="sr-only">Submit Search</span>
+                  </Button>
                 </form>
                 <ThemeToggle />
                 {!isAuthenticated && (
-                  <Button asChild className="mt-4">
+                  <Button asChild className="mt-4 bg-red-600 hover:bg-red-700 text-white">
                     <Link to="/login">Login</Link>
                   </Button>
                 )}
