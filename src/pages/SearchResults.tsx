@@ -7,11 +7,6 @@ import Footer from "@/components/Footer";
 import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import { fetchContent } from "@/lib/supabase";
-import {
-  videoSpotlights,
-  recentArticles,
-  upcomingEvents,
-} from "@/data/content";
 
 interface ContentItem {
   id: string;
@@ -20,9 +15,9 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event"; // Explicit literal union type
+  type: "show" | "video" | "article" | "event";
   full_content?: string;
-  link: string; // Added link property
+  link: string;
 }
 
 const SearchResults = () => {
@@ -37,17 +32,22 @@ const SearchResults = () => {
       setLoading(true);
       setError(null);
       try {
-        const showsData = await fetchContent('show');
-        const allContent: ContentItem[] = [
-          ...(showsData as ContentItem[]).map(item => ({ ...item, type: "show", link: `/shows/${item.link_slug}` })),
-          ...videoSpotlights.map(item => ({ ...item, type: "video", link: `/watch/${item.link_slug}` })),
-          ...recentArticles.map(item => ({ ...item, type: "article", link: `/news/${item.link_slug}` })),
-          ...upcomingEvents.map(item => ({ ...item, type: "event", link: `/events/${item.link_slug}` })),
-        ];
+        const allSupabaseContent = await fetchContent(); // Fetch all content types
+        const mappedContent: ContentItem[] = (allSupabaseContent as ContentItem[]).map(item => {
+          let linkPrefix = '';
+          switch (item.type) {
+            case 'show': linkPrefix = '/shows'; break;
+            case 'video': linkPrefix = '/watch'; break;
+            case 'article': linkPrefix = '/news'; break;
+            case 'event': linkPrefix = '/events'; break;
+            default: linkPrefix = '';
+          }
+          return { ...item, link: `${linkPrefix}/${item.link_slug}` };
+        });
 
         if (query) {
           const lowerCaseQuery = query.toLowerCase();
-          const results = allContent.filter(
+          const results = mappedContent.filter(
             (item) =>
               item.title.toLowerCase().includes(lowerCaseQuery) ||
               item.description.toLowerCase().includes(lowerCaseQuery) ||
@@ -114,7 +114,7 @@ const SearchResults = () => {
                 description={item.description}
                 imageUrl={item.image_url}
                 category={item.category}
-                link={item.link} // Now 'link' exists on ContentItem
+                link={item.link}
               />
             ))}
           </div>
