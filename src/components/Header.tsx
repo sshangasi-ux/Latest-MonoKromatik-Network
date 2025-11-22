@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Menu, X } from "lucide-react"; // Added X icon for closing search
+import { Menu, X, Search } from "lucide-react"; // Re-added Search icon
 import UserNav from "./UserNav";
 import {
   Sheet,
@@ -16,18 +16,20 @@ import {
 } from "@/components/ui/sheet";
 import { useAuth } from "@/context/AuthContext";
 import ThemeToggle from "./ThemeToggle";
+import SearchDialog from "./SearchDialog"; // New import
 
 const Header = () => {
   const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const [isSearchOpen, setIsSearchOpen] = useState(false); // State for search bar visibility
+  // Removed isSearchOpen state as search is now handled by SearchDialog
   const navigate = useNavigate();
 
-  const handleSearch = (e: React.FormEvent) => {
+  // Removed handleSearch as search is now handled by SearchDialog or SearchResults page
+  const handleMobileSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
-      setIsSearchOpen(false); // Close search bar after search
+      // No need to close search bar here, as it's part of the mobile sheet
     }
   };
 
@@ -50,7 +52,7 @@ const Header = () => {
         <Link to="/articles" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
           Articles
         </Link>
-        <Link to="/videos" className="text-gray-300 hover:text-red-500 transition-colors font-medium"> {/* New link */}
+        <Link to="/videos" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
           Videos
         </Link>
         <Link to="/categories" className="text-gray-300 hover:text-red-500 transition-colors font-medium">
@@ -65,33 +67,9 @@ const Header = () => {
       </nav>
 
       <div className="flex items-center space-x-2 md:space-x-4">
-        {/* Desktop Search Toggle */}
-        <div className="relative hidden md:block">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-            className="text-gray-300 hover:text-white"
-          >
-            {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
-            <span className="sr-only">Toggle Search</span>
-          </Button>
-          {isSearchOpen && (
-            <form onSubmit={handleSearch} className="absolute right-0 top-full mt-2 w-64">
-              <Input
-                type="text"
-                placeholder="Search..."
-                className="pl-3 pr-8 py-2 rounded-md bg-neutral-800 border border-neutral-700 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                autoFocus
-              />
-              <Button type="submit" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 bg-transparent hover:bg-neutral-700 text-gray-300">
-                <Search className="h-4 w-4" />
-                <span className="sr-only">Submit Search</span>
-              </Button>
-            </form>
-          )}
+        {/* Desktop Search Dialog Trigger */}
+        <div className="hidden md:block">
+          <SearchDialog />
         </div>
 
         <ThemeToggle />
@@ -130,7 +108,7 @@ const Header = () => {
                 <Link to="/articles" className="text-lg font-medium hover:text-red-500 transition-colors">
                   Articles
                 </Link>
-                <Link to="/videos" className="text-lg font-medium hover:text-red-500 transition-colors"> {/* New link */}
+                <Link to="/videos" className="text-lg font-medium hover:text-red-500 transition-colors">
                   Videos
                 </Link>
                 <Link to="/categories" className="text-lg font-medium hover:text-red-500 transition-colors">
@@ -142,8 +120,8 @@ const Header = () => {
                 <Link to="/contact" className="text-lg font-medium hover:text-red-500 transition-colors">
                   Contact
                 </Link>
-                {/* Mobile Search within the sheet */}
-                <form onSubmit={handleSearch} className="relative mt-4">
+                {/* Mobile Search within the sheet - kept for mobile consistency */}
+                <form onSubmit={handleMobileSearch} className="relative mt-4">
                   <Input
                     type="text"
                     placeholder="Search..."
