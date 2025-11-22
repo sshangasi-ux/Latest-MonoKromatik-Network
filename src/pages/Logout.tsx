@@ -18,11 +18,11 @@ const Logout = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8 text-center flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Logged Out</h1>
-        <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
+        <h1 className="text-4xl font-bold mb-4 text-white">Logged Out</h1>
+        <p className="text-xl text-gray-300 mb-6">
           You have been successfully logged out.
         </p>
         <Button asChild className="bg-red-600 hover:bg-red-700 text-white">

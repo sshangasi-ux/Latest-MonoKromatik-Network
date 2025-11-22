@@ -6,11 +6,11 @@ import Footer from "@/components/Footer";
 
 const PrivacyPolicy = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white uppercase">Privacy Policy</h1>
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-gray-900 dark:text-white prose dark:prose-invert max-w-none">
+        <h1 className="text-4xl font-bold mb-8 text-center text-white uppercase">Privacy Policy</h1>
+        <div className="bg-neutral-900 p-6 rounded-lg shadow-md text-white prose dark:prose-invert max-w-none">
           <p>
             This Privacy Policy describes how MonoKromatik Network ("we," "us," or "our") collects, uses, and discloses your personal information when you visit or make a purchase from our website.
           </p>

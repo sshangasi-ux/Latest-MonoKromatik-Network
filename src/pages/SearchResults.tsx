@@ -40,18 +40,18 @@ const SearchResults = () => {
   }, [query]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white uppercase">
+        <h1 className="text-4xl font-bold mb-8 text-center text-white uppercase">
           Search Results
         </h1>
         {query ? (
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-6 text-center">
+          <p className="text-xl text-gray-300 mb-6 text-center">
             Showing results for: "<span className="font-semibold">{query}</span>"
           </p>
         ) : (
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-6 text-center">
+          <p className="text-xl text-gray-300 mb-6 text-center">
             Please enter a search query.
           </p>
         )}
@@ -72,7 +72,7 @@ const SearchResults = () => {
           </div>
         ) : (
           query && (
-            <p className="text-xl text-gray-600 dark:text-gray-300 text-center">
+            <p className="text-xl text-gray-300 text-center">
               No results found for "{query}".
             </p>
           )

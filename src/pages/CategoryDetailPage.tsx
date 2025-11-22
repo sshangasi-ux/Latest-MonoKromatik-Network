@@ -43,10 +43,10 @@ const CategoryDetailPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white uppercase">
+        <h1 className="text-4xl font-bold mb-8 text-center text-white uppercase">
           {categoryName ? formatCategoryName(categoryName) : "Category"} Content
         </h1>
 
@@ -65,12 +65,12 @@ const CategoryDetailPage = () => {
             ))}
           </div>
         ) : (
-          <p className="text-xl text-gray-600 dark:text-gray-300 text-center">
+          <p className="text-xl text-gray-300 text-center">
             No content found for this category.
           </p>
         )}
         <div className="mt-8 text-center">
-          <Link to="/categories" className="text-blue-500 hover:text-blue-700 underline">
+          <Link to="/categories" className="text-red-500 hover:text-red-400 underline">
             Back to Categories
           </Link>
         </div>

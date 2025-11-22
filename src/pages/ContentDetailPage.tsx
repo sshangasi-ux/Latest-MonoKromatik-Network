@@ -46,16 +46,16 @@ const ContentDetailPage = () => {
 
   if (!contentItem) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+      <div className="min-h-screen flex flex-col bg-black text-white">
         <Header />
         <main className="flex-grow container mx-auto p-8 text-center">
-          <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+          <h1 className="text-4xl font-bold mb-4 text-white">
             Content Not Found
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-4">
+          <p className="text-xl text-gray-300 mb-4">
             The content you are looking for does not exist.
           </p>
-          <Link to="/" className="text-blue-500 hover:text-blue-700 underline">
+          <Link to="/" className="text-red-500 hover:text-red-400 underline">
             Return to Home
           </Link>
         </main>
@@ -65,10 +65,10 @@ const ContentDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden md:flex">
+        <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden md:flex border border-neutral-800">
           <div className="md:w-1/2">
             <img
               src={contentItem.imageUrl}
@@ -80,24 +80,24 @@ const ContentDetailPage = () => {
             <Badge className="bg-red-600 hover:bg-red-700 text-white uppercase text-sm px-3 py-1 self-start mb-4">
               {contentItem.category}
             </Badge>
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h1 className="text-4xl font-bold text-white mb-4">
               {contentItem.title}
             </h1>
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
+            <p className="text-lg text-gray-300 mb-6">
               {contentItem.description}
             </p>
             <div className="flex space-x-4">
               <Button className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
                 Watch Now
               </Button>
-              <Button variant="outline" className="border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
+              <Button variant="outline" className="border-neutral-700 text-white hover:bg-neutral-800 text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
                 Share
               </Button>
             </div>
           </div>
         </div>
         <div className="mt-8 text-center">
-          <Link to="/" className="text-blue-500 hover:text-blue-700 underline">
+          <Link to="/" className="text-red-500 hover:text-red-400 underline">
             Back to Home
           </Link>
         </div>

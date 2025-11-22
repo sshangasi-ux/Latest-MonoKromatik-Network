@@ -6,11 +6,11 @@ import Footer from "@/components/Footer";
 
 const Contact = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white uppercase">Contact Us</h1>
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-gray-900 dark:text-white">
+        <h1 className="text-4xl font-bold mb-8 text-center text-white uppercase">Contact Us</h1>
+        <div className="bg-neutral-900 p-6 rounded-lg shadow-md text-white">
           <p className="text-lg mb-4">
             We'd love to hear from you! Whether you have a question, feedback, or a partnership inquiry, please don't hesitate to reach out.
           </p>

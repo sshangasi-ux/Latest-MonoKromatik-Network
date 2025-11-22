@@ -20,19 +20,19 @@ const categories = [
 
 const Categories = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white uppercase">Content Categories</h1>
+        <h1 className="text-4xl font-bold mb-8 text-center text-white uppercase">Content Categories</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
             <Link to={category.link} key={category.name}>
-              <Card className="h-full flex flex-col justify-between bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:shadow-lg transition-shadow duration-300">
+              <Card className="h-full flex flex-col justify-between bg-neutral-900 text-white border-neutral-800 hover:shadow-lg transition-shadow duration-300">
                 <CardHeader>
                   <CardTitle className="text-2xl font-semibold">{category.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 dark:text-gray-300">{category.description}</p>
+                  <p className="text-gray-300">{category.description}</p>
                 </CardContent>
               </Card>
             </Link>

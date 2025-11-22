@@ -6,11 +6,11 @@ import Footer from "@/components/Footer";
 
 const TermsOfService = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white uppercase">Terms of Service</h1>
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-gray-900 dark:text-white prose dark:prose-invert max-w-none">
+        <h1 className="text-4xl font-bold mb-8 text-center text-white uppercase">Terms of Service</h1>
+        <div className="bg-neutral-900 p-6 rounded-lg shadow-md text-white prose dark:prose-invert max-w-none">
           <p>
             Welcome to MonoKromatik Network. By accessing or using our website and services, you agree to be bound by these Terms of Service ("Terms"). Please read them carefully.
           </p>

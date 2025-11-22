@@ -37,13 +37,15 @@ const Home = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Explore Categories</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {homeCategories.map((category) => (
-                <Link to={category.link} key={category.name}>
-                  <Card className="h-full flex flex-col justify-center items-center p-4 bg-neutral-900 text-white border-neutral-800 hover:shadow-lg transition-shadow duration-300">
-                    <CardTitle className="text-lg font-semibold text-center">{category.name}</CardTitle>
-                    <CardContent className="p-0 text-sm text-gray-400 text-center mt-1">
-                      {category.description}
-                    </CardContent>
-                  </Card>
+                <Link
+                  to={category.link}
+                  key={category.name}
+                  className="flex flex-col justify-center items-center p-4 bg-neutral-900 text-white border border-neutral-800 rounded-lg hover:bg-neutral-800 transition-colors duration-300 h-full"
+                >
+                  <h3 className="text-lg font-semibold text-center">{category.name}</h3>
+                  <p className="text-sm text-gray-400 text-center mt-1">
+                    {category.description}
+                  </p>
                 </Link>
               ))}
             </div>

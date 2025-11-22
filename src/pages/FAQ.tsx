@@ -39,18 +39,18 @@ const faqItems = [
 
 const FAQ = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white uppercase">Frequently Asked Questions</h1>
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-gray-900 dark:text-white">
+        <h1 className="text-4xl font-bold mb-8 text-center text-white uppercase">Frequently Asked Questions</h1>
+        <div className="bg-neutral-900 p-6 rounded-lg shadow-md text-white">
           <Accordion type="single" collapsible className="w-full">
             {faqItems.map((item, index) => (
               <AccordionItem value={`item-${index + 1}`} key={index}>
                 <AccordionTrigger className="text-left text-lg font-semibold hover:no-underline">
                   {item.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-base text-gray-700 dark:text-gray-300">
+                <AccordionContent className="text-base text-gray-300">
                   {item.answer}
                 </AccordionContent>
               </AccordionItem>

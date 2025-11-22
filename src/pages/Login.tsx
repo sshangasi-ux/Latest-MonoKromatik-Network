@@ -23,13 +23,13 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
       <main className="flex-grow flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+        <Card className="w-full max-w-md bg-neutral-900 text-white border-neutral-800">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold">Login</CardTitle>
-            <CardDescription>Enter your credentials to access your account.</CardDescription>
+            <CardDescription className="text-gray-300">Enter your credentials to access your account.</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -42,7 +42,7 @@ const Login = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
+                  className="bg-neutral-800 border-neutral-700 text-white placeholder:text-gray-500 focus:ring-red-600"
                 />
               </div>
               <div className="grid gap-2">
@@ -53,7 +53,7 @@ const Login = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
+                  className="bg-neutral-800 border-neutral-700 text-white placeholder:text-gray-500 focus:ring-red-600"
                 />
               </div>
               <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white">
