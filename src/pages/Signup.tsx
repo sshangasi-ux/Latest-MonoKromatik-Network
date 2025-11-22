@@ -44,7 +44,7 @@ const Signup = () => {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="bg-neutral-800 border-neutral-700 text-white placeholder:text-gray-500 focus:ring-red-600"
+                  className="bg-neutral-800 border-neutral-700 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-red-600 focus:border-transparent"
                 />
               </div>
               <div className="grid gap-2">
@@ -56,7 +56,7 @@ const Signup = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-neutral-800 border-neutral-700 text-white placeholder:text-gray-500 focus:ring-red-600"
+                  className="bg-neutral-800 border-neutral-700 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-red-600 focus:border-transparent"
                 />
               </div>
               <div className="grid gap-2">
@@ -67,7 +67,7 @@ const Signup = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-neutral-800 border-neutral-700 text-white placeholder:text-gray-500 focus:ring-red-600"
+                  className="bg-neutral-800 border-neutral-700 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-red-600 focus:border-transparent"
                 />
               </div>
               <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white">
