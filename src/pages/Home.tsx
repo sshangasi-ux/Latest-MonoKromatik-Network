@@ -9,7 +9,7 @@ import VideoSpotlightCarousel from "@/components/VideoSpotlightCarousel";
 import ArticleGrid from "@/components/ArticleGrid";
 import UpcomingEventsCarousel from "@/components/UpcomingEventsCarousel";
 import MembershipCTA from "@/components/MembershipCTA";
-import TrendingArticlesSection from "@/components/TrendingArticlesSection";
+import TrendingArticlesSection from "@/components/TrendingArticlesSection"; // New import
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
@@ -57,7 +57,7 @@ const Home = () => {
           </div>
         </section>
 
-        <TrendingArticlesSection />
+        <TrendingArticlesSection /> {/* New section added here */}
         <FeaturedShowsCarousel />
         <VideoSpotlightCarousel />
         <ArticleGrid />
