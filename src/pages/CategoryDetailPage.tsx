@@ -20,8 +20,9 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event";
+  type: "show" | "video" | "article" | "event"; // Explicit literal union type
   full_content?: string;
+  link: string; // Added link property
 }
 
 const CategoryDetailPage = () => {
@@ -36,13 +37,13 @@ const CategoryDetailPage = () => {
       setError(null);
       try {
         const showsData = await fetchContent('show');
-        const showsMapped = (showsData as ContentItem[]).map(item => ({ ...item, link: `/shows/${item.link_slug}` }));
+        const showsMapped = (showsData as ContentItem[]).map(item => ({ ...item, type: "show", link: `/shows/${item.link_slug}` }));
 
         const allContent: ContentItem[] = [
           ...showsMapped,
-          ...videoSpotlights.map(item => ({ ...item, link: `/watch/${item.link_slug}` })),
-          ...recentArticles.map(item => ({ ...item, link: `/news/${item.link_slug}` })),
-          ...upcomingEvents.map(item => ({ ...item, link: `/events/${item.link_slug}` })),
+          ...videoSpotlights.map(item => ({ ...item, type: "video", link: `/watch/${item.link_slug}` })),
+          ...recentArticles.map(item => ({ ...item, type: "article", link: `/news/${item.link_slug}` })),
+          ...upcomingEvents.map(item => ({ ...item, type: "event", link: `/events/${item.link_slug}` })),
         ];
 
         if (categoryName) {
@@ -107,9 +108,9 @@ const CategoryDetailPage = () => {
                 type={item.type}
                 title={item.title}
                 description={item.description}
-                imageUrl={item.image_url} // Use image_url
+                imageUrl={item.image_url}
                 category={item.category}
-                link={`/${item.type === 'show' ? 'shows' : item.type === 'video' ? 'watch' : item.type === 'article' ? 'news' : 'events'}/${item.link_slug}`} // Construct link
+                link={item.link} // Now 'link' exists on ContentItem
               />
             ))}
           </div>

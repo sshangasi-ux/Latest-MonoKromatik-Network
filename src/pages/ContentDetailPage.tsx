@@ -27,8 +27,9 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event";
+  type: "show" | "video" | "article" | "event"; // Explicit literal union type
   full_content?: string;
+  link: string; // Added link property
 }
 
 const ContentDetailPage = () => {
@@ -47,13 +48,13 @@ const ContentDetailPage = () => {
         let fetchedAllContent: ContentItem[] = [];
 
         const showsData = await fetchContent('show');
-        const showsMapped = (showsData as ContentItem[]).map(item => ({ ...item, link: `/shows/${item.link_slug}` }));
+        const showsMapped = (showsData as ContentItem[]).map(item => ({ ...item, type: "show", link: `/shows/${item.link_slug}` }));
 
         fetchedAllContent = [
           ...showsMapped,
-          ...videoSpotlights.map(item => ({ ...item, link: `/watch/${item.link_slug}` })),
-          ...recentArticles.map(item => ({ ...item, link: `/news/${item.link_slug}` })),
-          ...upcomingEvents.map(item => ({ ...item, link: `/events/${item.link_slug}` })),
+          ...videoSpotlights.map(item => ({ ...item, type: "video", link: `/watch/${item.link_slug}` })),
+          ...recentArticles.map(item => ({ ...item, type: "article", link: `/news/${item.link_slug}` })),
+          ...upcomingEvents.map(item => ({ ...item, type: "event", link: `/events/${item.link_slug}` })),
         ];
 
         switch (type) {
@@ -143,8 +144,7 @@ const ContentDetailPage = () => {
     );
   }
 
-  const contentLink = `/${type}/${contentItem.link_slug}`; // Construct link
-  const shareUrl = `${window.location.origin}${contentLink}`;
+  const shareUrl = `${window.location.origin}${contentItem.link}`;
   const shareText = `Check out this ${type} on MonoKromatik Network: ${contentItem.title}`;
 
   // Filter for related content (same category, exclude current item)
@@ -159,7 +159,7 @@ const ContentDetailPage = () => {
       <main className="flex-grow container mx-auto p-8">
         <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden border border-neutral-800">
           <img
-            src={contentItem.image_url} // Use image_url
+            src={contentItem.image_url}
             alt={contentItem.title}
             className="w-full h-64 object-cover md:h-96"
           />
@@ -230,9 +230,9 @@ const ContentDetailPage = () => {
                   type={item.type}
                   title={item.title}
                   description={item.description}
-                  imageUrl={item.image_url} // Use image_url
+                  imageUrl={item.image_url}
                   category={item.category}
-                  link={`/${item.type === 'show' ? 'shows' : item.type === 'video' ? 'watch' : item.type === 'article' ? 'news' : 'events'}/${item.link_slug}`} // Construct link
+                  link={item.link} // Now 'link' exists on ContentItem
                 />
               ))}
             </div>
