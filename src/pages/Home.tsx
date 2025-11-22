@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
@@ -11,7 +12,16 @@ import UpcomingEventsCarousel from "@/components/UpcomingEventsCarousel";
 import MembershipCTA from "@/components/MembershipCTA";
 import TrendingArticlesSection from "@/components/TrendingArticlesSection";
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardTitle } from "@/components/ui/card"; // Import Card components
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import ContentCard from "@/components/ContentCard";
+import ContentCardSkeleton from "@/components/ContentCardSkeleton";
+import { Button } from "@/components/ui/button"; // Added Button import
+import {
+  featuredShows,
+  videoSpotlights,
+  recentArticles,
+  upcomingEvents,
+} from "@/data/content";
 
 // Define categories for the home page section
 const homeCategories = [
@@ -24,6 +34,35 @@ const homeCategories = [
 ];
 
 const Home = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate data fetching
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500); // 1.5 second loading delay
+    return () => clearTimeout(timer);
+  }, []);
+
+  const renderContentCards = (contentArray: any[], type: "show" | "video" | "article" | "event") => {
+    if (loading) {
+      return Array.from({ length: 3 }).map((_, index) => (
+        <ContentCardSkeleton key={index} />
+      ));
+    }
+    return contentArray.slice(0, 3).map((item) => (
+      <ContentCard
+        key={item.id}
+        type={type}
+        title={item.title}
+        description={item.description}
+        imageUrl={item.imageUrl}
+        category={item.category}
+        link={item.link}
+      />
+    ));
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-black">
       <Header />
@@ -57,11 +96,79 @@ const Home = () => {
           </div>
         </section>
 
-        <TrendingArticlesSection />
-        <FeaturedShowsCarousel />
-        <VideoSpotlightCarousel />
-        <ArticleGrid />
-        <UpcomingEventsCarousel />
+        {/* Trending Articles Section */}
+        <section className="py-12 bg-black text-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Trending Articles This Week</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {renderContentCards(recentArticles, "article")}
+            </div>
+            <div className="text-center mt-10">
+              <Button asChild className="bg-red-600 hover:bg-red-700 text-white text-lg px-8 py-6 rounded-lg uppercase font-bold transition-colors">
+                <Link to="/articles">View All Articles</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Shows Carousel */}
+        <section className="py-12 bg-black text-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Featured Shows</h2>
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <ContentCardSkeleton key={index} />
+                ))}
+              </div>
+            ) : (
+              <FeaturedShowsCarousel />
+            )}
+          </div>
+        </section>
+
+        {/* Video Spotlight Carousel */}
+        <section className="py-12 bg-neutral-900 text-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Video Spotlight</h2>
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <ContentCardSkeleton key={index} />
+                ))}
+              </div>
+            ) : (
+              <VideoSpotlightCarousel />
+            )}
+          </div>
+        </section>
+
+        {/* Article Grid */}
+        <section className="py-12 bg-black text-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Recent Articles</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {renderContentCards(recentArticles, "article")}
+            </div>
+          </div>
+        </section>
+
+        {/* Upcoming Events Carousel */}
+        <section className="py-12 bg-neutral-900 text-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Upcoming Events</h2>
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <ContentCardSkeleton key={index} />
+                ))}
+              </div>
+            ) : (
+              <UpcomingEventsCarousel />
+            )}
+          </div>
+        </section>
+
         <MembershipCTA />
         {/* Placeholder for AI-driven "Smart Picks for You" - will require backend integration */}
         <section className="py-12 bg-black text-white text-center">
