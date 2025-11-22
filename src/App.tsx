@@ -22,7 +22,8 @@ import SearchResults from "./pages/SearchResults";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Shows from "./pages/Shows";
-import ContentDetailPage from "./pages/ContentDetailPage"; // New import
+import ContentDetailPage from "./pages/ContentDetailPage";
+import Categories from "./pages/Categories"; // New import
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/shows" element={<Shows />} />
+            <Route path="/categories" element={<Categories />} /> {/* New route */}
             {/* Dynamic routes for content detail pages */}
             <Route path="/shows/:id" element={<ContentDetailPage />} />
             <Route path="/watch/:id" element={<ContentDetailPage />} />

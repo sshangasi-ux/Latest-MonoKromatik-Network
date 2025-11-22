@@ -44,6 +44,9 @@ const Header = () => {
         <Link to="/shows" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
           Shows
         </Link>
+        <Link to="/categories" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+          Categories
+        </Link>
         <Link to="/about" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
           About
         </Link>
@@ -98,6 +101,9 @@ const Header = () => {
                 </Link>
                 <Link to="/shows" className="text-lg font-medium hover:text-red-600 transition-colors">
                   Shows
+                </Link>
+                <Link to="/categories" className="text-lg font-medium hover:text-red-600 transition-colors">
+                  Categories
                 </Link>
                 <Link to="/about" className="text-lg font-medium hover:text-red-600 transition-colors">
                   About
