@@ -26,7 +26,7 @@ const Articles = () => {
     const getArticles = async () => {
       try {
         setLoading(true);
-        const data = await fetchContent('article');
+        const { data } = await fetchContent('article'); // Destructure data
         setArticles(data as ContentItem[]);
       } catch (err) {
         console.error("Failed to fetch articles:", err);

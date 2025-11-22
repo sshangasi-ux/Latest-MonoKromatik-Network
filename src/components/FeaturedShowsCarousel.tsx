@@ -32,7 +32,7 @@ const FeaturedShowsCarousel = () => {
       try {
         setLoading(true);
         // Fetch content of type 'show' from Supabase
-        const data = await fetchContent('show');
+        const { data } = await fetchContent('show'); // Destructure data
         setShows(data as ContentItem[]);
       } catch (err) {
         console.error("Failed to fetch featured shows:", err);

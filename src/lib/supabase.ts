@@ -9,19 +9,23 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Function to fetch content from the 'content' table
-export const fetchContent = async (type?: string) => {
-  let query = supabase.from('content').select('*');
+// Function to fetch content from the 'content' table with optional type, limit, and offset for pagination
+export const fetchContent = async (type?: string, limit?: number, offset?: number) => {
+  let query = supabase.from('content').select('*', { count: 'exact' }); // Request exact count for pagination
 
   if (type) {
     query = query.eq('type', type);
   }
 
-  const { data, error } = await query.order('created_at', { ascending: false });
+  if (limit !== undefined && offset !== undefined) {
+    query = query.range(offset, offset + limit - 1);
+  }
+
+  const { data, error, count } = await query.order('created_at', { ascending: false });
 
   if (error) {
     console.error('Error fetching content:', error);
     throw error;
   }
-  return data;
+  return { data, count }; // Return data and count for pagination
 };

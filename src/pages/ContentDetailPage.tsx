@@ -39,8 +39,10 @@ const ContentDetailPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const allSupabaseContent = await fetchContent(); // Fetch all content types
-        const mappedContent: ContentItem[] = (allSupabaseContent as ContentItem[]).map(item => {
+        let fetchedItem: ContentItem | undefined;
+        
+        const { data: allSupabaseContentData } = await fetchContent(); // Destructure data
+        const mappedContent: ContentItem[] = (allSupabaseContentData as ContentItem[]).map(item => {
           let linkPrefix = '';
           switch (item.type) {
             case 'show': linkPrefix = '/shows'; break;

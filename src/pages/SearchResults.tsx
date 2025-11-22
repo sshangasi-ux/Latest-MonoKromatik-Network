@@ -15,9 +15,9 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event";
+  type: "show" | "video" | "article" | "event"; // Explicit literal union type
   full_content?: string;
-  link: string;
+  link: string; // Added link property
 }
 
 const SearchResults = () => {
@@ -32,8 +32,8 @@ const SearchResults = () => {
       setLoading(true);
       setError(null);
       try {
-        const allSupabaseContent = await fetchContent(); // Fetch all content types
-        const mappedContent: ContentItem[] = (allSupabaseContent as ContentItem[]).map(item => {
+        const { data: allSupabaseContentData } = await fetchContent(); // Destructure data
+        const mappedContent: ContentItem[] = (allSupabaseContentData as ContentItem[]).map(item => {
           let linkPrefix = '';
           switch (item.type) {
             case 'show': linkPrefix = '/shows'; break;
@@ -114,7 +114,7 @@ const SearchResults = () => {
                 description={item.description}
                 imageUrl={item.image_url}
                 category={item.category}
-                link={item.link}
+                link={item.link} // Now 'link' exists on ContentItem
               />
             ))}
           </div>

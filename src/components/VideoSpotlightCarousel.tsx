@@ -31,7 +31,7 @@ const VideoSpotlightCarousel = () => {
     const getVideos = async () => {
       try {
         setLoading(true);
-        const data = await fetchContent('video');
+        const { data } = await fetchContent('video'); // Destructure data
         setVideos(data as ContentItem[]);
       } catch (err) {
         console.error("Failed to fetch video spotlights:", err);

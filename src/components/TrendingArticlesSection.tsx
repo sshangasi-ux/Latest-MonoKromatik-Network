@@ -26,7 +26,7 @@ const TrendingArticlesSection = () => {
     const getArticles = async () => {
       try {
         setLoading(true);
-        const data = await fetchContent('article');
+        const { data } = await fetchContent('article'); // Destructure data
         // For "trending", we'll just take the first 3 for now, similar to static data.
         setArticles((data as ContentItem[]).slice(0, 3));
       } catch (err) {
