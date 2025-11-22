@@ -10,7 +10,8 @@ import VideoSpotlightCarousel from "@/components/VideoSpotlightCarousel";
 import ArticleGrid from "@/components/ArticleGrid";
 import UpcomingEventsCarousel from "@/components/UpcomingEventsCarousel";
 import MembershipCTA from "@/components/MembershipCTA";
-import LatestArticlesSection from "@/components/LatestArticlesSection"; // New import
+import LatestArticlesSection from "@/components/LatestArticlesSection";
+import TrendingArticlesSection from "@/components/TrendingArticlesSection"; // New import
 
 const Home = () => {
   return (
@@ -27,10 +28,11 @@ const Home = () => {
             Your hub for cutting-edge sports, culture, music, fashion, and lifestyle.
           </p>
         </div>
+        <TrendingArticlesSection /> {/* Add the new trending section here */}
         <FeaturedShowsCarousel />
         <VideoSpotlightCarousel />
         <ArticleGrid />
-        <LatestArticlesSection /> {/* Add the new section here */}
+        <LatestArticlesSection />
         <UpcomingEventsCarousel />
         <MembershipCTA />
         {/* Placeholder for AI-driven "Smart Picks for You" - will require backend integration */}
