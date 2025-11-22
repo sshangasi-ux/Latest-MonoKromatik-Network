@@ -10,7 +10,7 @@ const TermsOfService = () => {
       <Header />
       <main className="flex-grow container mx-auto p-8">
         <h1 className="text-4xl font-bold mb-8 text-center text-white uppercase">Terms of Service</h1>
-        <div className="bg-neutral-900 p-6 rounded-lg shadow-md text-white prose dark:prose-invert max-w-none">
+        <div className="bg-neutral-900 p-6 rounded-lg shadow-md text-white prose dark:prose-invert max-w-none prose-a:text-red-500 hover:prose-a:text-red-400">
           <p>
             Welcome to MonoKromatik Network. By accessing or using our website and services, you agree to be bound by these Terms of Service ("Terms"). Please read them carefully.
           </p>

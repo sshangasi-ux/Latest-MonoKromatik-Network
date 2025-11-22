@@ -40,7 +40,7 @@ const Home = () => {
                 <Link
                   to={category.link}
                   key={category.name}
-                  className="flex flex-col justify-center items-center p-4 bg-neutral-900 text-white border border-neutral-800 rounded-lg hover:bg-neutral-800 transition-colors duration-300 h-full"
+                  className="flex flex-col justify-center items-center p-4 bg-neutral-900 text-white border border-neutral-800 rounded-lg hover:bg-neutral-800 hover:text-red-500 transition-colors duration-300 h-full"
                 >
                   <h3 className="text-lg font-semibold text-center">{category.name}</h3>
                   <p className="text-sm text-gray-400 text-center mt-1">

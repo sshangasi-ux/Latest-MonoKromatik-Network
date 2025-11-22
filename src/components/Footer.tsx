@@ -22,19 +22,19 @@ const Footer = () => {
         {/* Quick Links */}
         <div className="flex flex-col items-center md:items-start space-y-2 md:col-span-1">
           <h3 className="text-lg font-semibold mb-2">Quick Links</h3>
-          <Link to="/about" className="text-gray-400 hover:text-white transition-colors text-sm">
+          <Link to="/about" className="text-gray-400 hover:text-red-500 transition-colors text-sm">
             About Us
           </Link>
-          <Link to="/contact" className="text-gray-400 hover:text-white transition-colors text-sm">
+          <Link to="/contact" className="text-gray-400 hover:text-red-500 transition-colors text-sm">
             Contact Us
           </Link>
-          <Link to="/privacy" className="text-gray-400 hover:text-white transition-colors text-sm">
+          <Link to="/privacy" className="text-gray-400 hover:text-red-500 transition-colors text-sm">
             Privacy Policy
           </Link>
-          <Link to="/terms" className="text-gray-400 hover:text-white transition-colors text-sm">
+          <Link to="/terms" className="text-gray-400 hover:text-red-500 transition-colors text-sm">
             Terms of Service
           </Link>
-          <Link to="/faq" className="text-gray-400 hover:text-white transition-colors text-sm">
+          <Link to="/faq" className="text-gray-400 hover:text-red-500 transition-colors text-sm">
             FAQ
           </Link>
         </div>
