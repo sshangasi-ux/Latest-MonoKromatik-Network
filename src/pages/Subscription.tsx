@@ -3,7 +3,6 @@
 import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 
 const Subscription = () => {
   return (
@@ -16,7 +15,6 @@ const Subscription = () => {
         </p>
       </main>
       <Footer />
-      <MadeWithDyad />
     </div>
   );
 };

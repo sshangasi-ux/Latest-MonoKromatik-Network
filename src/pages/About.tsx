@@ -3,7 +3,6 @@
 import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 
 const About = () => {
   return (
@@ -24,7 +23,6 @@ const About = () => {
         </div>
       </main>
       <Footer />
-      <MadeWithDyad />
     </div>
   );
 };

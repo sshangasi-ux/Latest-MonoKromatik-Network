@@ -1,6 +1,5 @@
 "use client";
 
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
@@ -10,10 +9,9 @@ import VideoSpotlightCarousel from "@/components/VideoSpotlightCarousel";
 import ArticleGrid from "@/components/ArticleGrid";
 import UpcomingEventsCarousel from "@/components/UpcomingEventsCarousel";
 import MembershipCTA from "@/components/MembershipCTA";
-import LatestArticlesSection from "@/components/LatestArticlesSection";
 import TrendingArticlesSection from "@/components/TrendingArticlesSection";
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
 // Define categories for the home page section
 const homeCategories = [
@@ -27,7 +25,7 @@ const homeCategories = [
 
 const Home = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-black">
+    <div className="min-h-screen flex flex-col bg-black">
       <Header />
       <main className="flex-grow">
         <LiveTicker />
@@ -72,7 +70,6 @@ const Home = () => {
         </section>
       </main>
       <Footer />
-      <MadeWithDyad />
     </div>
   );
 };

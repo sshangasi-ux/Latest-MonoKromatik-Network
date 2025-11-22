@@ -3,7 +3,6 @@
 import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import ContentCard from "@/components/ContentCard";
 import { recentArticles } from "../data/content"; // Import all recent articles
 
@@ -28,7 +27,6 @@ const Articles = () => {
         </div>
       </main>
       <Footer />
-      <MadeWithDyad />
     </div>
   );
 };

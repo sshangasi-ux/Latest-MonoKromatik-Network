@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -71,7 +70,6 @@ const Login = () => {
         </Card>
       </main>
       <Footer />
-      <MadeWithDyad />
     </div>
   );
 };

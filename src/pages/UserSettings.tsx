@@ -3,7 +3,6 @@
 import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 
 const UserSettings = () => {
   return (
@@ -16,7 +15,6 @@ const UserSettings = () => {
         </p>
       </main>
       <Footer />
-      <MadeWithDyad />
     </div>
   );
 };

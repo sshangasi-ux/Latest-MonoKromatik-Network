@@ -4,7 +4,6 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import {
   featuredShows,
   videoSpotlights,
@@ -61,7 +60,6 @@ const ContentDetailPage = () => {
           </Link>
         </main>
         <Footer />
-        <MadeWithDyad />
       </div>
     );
   }
@@ -105,7 +103,6 @@ const ContentDetailPage = () => {
         </div>
       </main>
       <Footer />
-      <MadeWithDyad />
     </div>
   );
 };

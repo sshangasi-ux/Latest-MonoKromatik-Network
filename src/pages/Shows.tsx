@@ -3,7 +3,6 @@
 import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import ContentCard from "@/components/ContentCard";
 import { featuredShows } from "../data/content"; // Updated import path
 
@@ -28,7 +27,6 @@ const Shows = () => {
         </div>
       </main>
       <Footer />
-      <MadeWithDyad />
     </div>
   );
 };
