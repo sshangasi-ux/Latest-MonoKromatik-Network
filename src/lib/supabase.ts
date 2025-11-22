@@ -43,3 +43,17 @@ export const fetchTickerMessages = async () => {
   }
   return data.map(item => item.message);
 };
+
+// Function to fetch hero content from the 'hero_content' table
+export const fetchHeroContent = async () => {
+  const { data, error } = await supabase
+    .from('hero_content')
+    .select('*')
+    .single(); // Assuming there's only one main hero content item
+
+  if (error) {
+    console.error('Error fetching hero content:', error);
+    throw error;
+  }
+  return data;
+};
