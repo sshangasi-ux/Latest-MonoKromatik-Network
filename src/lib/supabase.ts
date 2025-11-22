@@ -45,3 +45,22 @@ export const fetchTickerMessages = async () => {
   }
   return data.map(item => item.message);
 };
+
+// New function to search content by title, description, or category
+export const searchContent = async (query: string, limit: number = 5) => {
+  if (!query) {
+    return { data: [], error: null };
+  }
+
+  const { data, error } = await supabase
+    .from('content')
+    .select('*')
+    .or(`title.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`)
+    .limit(limit);
+
+  if (error) {
+    console.error('Error searching content:', error);
+    throw error;
+  }
+  return { data, error };
+};

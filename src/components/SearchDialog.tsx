@@ -20,7 +20,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
-import { fetchContent } from "@/lib/supabase";
+import { searchContent } from "@/lib/supabase"; // Changed import to searchContent
 
 interface ContentItem {
   id: string;
@@ -35,45 +35,34 @@ interface ContentItem {
 const SearchDialog = () => {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [allContent, setAllContent] = useState<ContentItem[]>([]);
   const [filteredResults, setFilteredResults] = useState<ContentItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Set to false initially, loading only on search
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Fetch all content once when the component mounts
+  // Perform search on Supabase when searchTerm changes
   useEffect(() => {
-    const getAllContent = async () => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (searchTerm.trim() === "") {
+        setFilteredResults([]);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        const { data } = await fetchContent();
-        setAllContent(data as ContentItem[]);
+        const { data } = await searchContent(searchTerm.trim(), 5); // Limit to 5 suggestions
+        setFilteredResults(data as ContentItem[]);
       } catch (err) {
-        console.error("Failed to fetch all content for search:", err);
-        setError("Failed to load search data.");
+        console.error("Failed to search content:", err);
+        setError("Failed to load search results.");
       } finally {
         setLoading(false);
       }
-    };
-    getAllContent();
-  }, []);
+    }, 300); // Debounce search input
 
-  // Filter results based on search term
-  useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setFilteredResults([]);
-      return;
-    }
-
-    const lowerCaseQuery = searchTerm.toLowerCase();
-    const results = allContent.filter(
-      (item) =>
-        item.title.toLowerCase().includes(lowerCaseQuery) ||
-        item.description.toLowerCase().includes(lowerCaseQuery) ||
-        item.category.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredResults(results.slice(0, 5)); // Limit to top 5 suggestions
-  }, [searchTerm, allContent]);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
 
   // Handle keyboard shortcuts for opening the dialog
   useEffect(() => {
@@ -129,7 +118,7 @@ const SearchDialog = () => {
             className="h-12 bg-neutral-800 border-b border-neutral-700 placeholder:text-gray-500 focus:ring-0 focus:ring-offset-0"
           />
           <CommandList className="max-h-[300px] overflow-y-auto">
-            {loading && <CommandEmpty>Loading content...</CommandEmpty>}
+            {loading && <CommandEmpty>Searching...</CommandEmpty>}
             {error && <CommandEmpty className="text-red-500">{error}</CommandEmpty>}
             {!loading && !error && searchTerm.trim() === "" && (
               <CommandEmpty>Start typing to search.</CommandEmpty>
