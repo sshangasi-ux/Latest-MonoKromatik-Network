@@ -4,7 +4,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Menu } from "lucide-react"; // Import Menu icon
+import { Search, Menu } from "lucide-react";
 import UserNav from "./UserNav";
 import {
   Sheet,
@@ -13,10 +13,11 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"; // Import Sheet components
+} from "@/components/ui/sheet";
+import { useAuth } from "@/context/AuthContext"; // Fixed import path
 
 const Header = () => {
-  const isAuthenticated = false; // Set to false for now to show login button
+  const { isAuthenticated, logout } = useAuth();
   const [searchTerm, setSearchTerm] = React.useState("");
   const navigate = useNavigate();
 

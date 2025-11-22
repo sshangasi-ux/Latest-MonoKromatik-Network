@@ -9,15 +9,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext"; // Fixed import path
 
 const Login = () => {
+  const { login } = useAuth(); // Use the login function from AuthContext
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would handle authentication logic
+    // In a real app, you'd validate credentials here
     console.log("Login form submitted");
-    // For now, just navigate to home or show a toast
-    // showSuccess("Logged in successfully!");
-    // navigate("/");
+    login(); // Simulate successful login
   };
 
   return (
