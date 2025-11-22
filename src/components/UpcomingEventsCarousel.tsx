@@ -9,49 +9,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import ContentCard from "./ContentCard";
-
-const upcomingEvents = [
-  {
-    id: "1",
-    title: "AfroTech Summit 2024",
-    description: "Join leaders and innovators at Africa's premier technology conference.",
-    imageUrl: "https://via.placeholder.com/400x250/1F1F1F/FFFFFF?text=AfroTech+Summit",
-    category: "Tech Event",
-    link: "/events/afrotech-summit",
-  },
-  {
-    id: "2",
-    title: "Pan-African Music Festival",
-    description: "A celebration of African music, featuring top artists from across the continent.",
-    imageUrl: "https://via.placeholder.com/400x250/C1272D/FFFFFF?text=Music+Festival",
-    category: "Music Event",
-    link: "/events/music-festival",
-  },
-  {
-    id: "3",
-    title: "Lagos Fashion Week",
-    description: "Discover the latest trends and designers at the most anticipated fashion event.",
-    imageUrl: "https://via.placeholder.com/400x250/3A3A3A/FFFFFF?text=Lagos+Fashion+Week",
-    category: "Fashion Event",
-    link: "/events/lagos-fashion-week",
-  },
-  {
-    id: "4",
-    title: "African Film Showcase",
-    description: "Experience compelling stories from African filmmakers.",
-    imageUrl: "https://via.placeholder.com/400x250/000000/FFFFFF?text=Film+Showcase",
-    category: "Culture Event",
-    link: "/events/film-showcase",
-  },
-  {
-    id: "5",
-    title: "Sports Gala & Awards Night",
-    description: "Honoring the achievements of African athletes and sports personalities.",
-    imageUrl: "https://via.placeholder.com/400x250/C1272D/FFFFFF?text=Sports+Gala",
-    category: "Sports Event",
-    link: "/events/sports-gala",
-  },
-];
+import { upcomingEvents } from "../data/content"; // Updated import path
 
 const UpcomingEventsCarousel = () => {
   return (

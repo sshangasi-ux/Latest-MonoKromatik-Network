@@ -14,7 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useAuth } from "@/context/AuthContext"; // Fixed import path
+import { useAuth } from "@/context/AuthContext";
 
 const Header = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -40,6 +40,9 @@ const Header = () => {
       <nav className="hidden md:flex space-x-6">
         <Link to="/" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
           Home
+        </Link>
+        <Link to="/shows" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+          Shows
         </Link>
         <Link to="/about" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
           About
@@ -92,6 +95,9 @@ const Header = () => {
               <nav className="flex flex-col gap-4 mt-8">
                 <Link to="/" className="text-lg font-medium hover:text-red-600 transition-colors">
                   Home
+                </Link>
+                <Link to="/shows" className="text-lg font-medium hover:text-red-600 transition-colors">
+                  Shows
                 </Link>
                 <Link to="/about" className="text-lg font-medium hover:text-red-600 transition-colors">
                   About

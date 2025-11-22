@@ -9,49 +9,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import ContentCard from "./ContentCard";
-
-const featuredShows = [
-  {
-    id: "1",
-    title: "The African Beat: A Music Journey",
-    description: "Explore the vibrant rhythms and stories behind Africa's most influential music genres.",
-    imageUrl: "https://via.placeholder.com/400x250/C1272D/FFFFFF?text=African+Beat",
-    category: "Music",
-    link: "/shows/african-beat",
-  },
-  {
-    id: "2",
-    title: "Future Forward: Tech Innovations in Africa",
-    description: "Dive into the groundbreaking technological advancements shaping the continent's future.",
-    imageUrl: "https://via.placeholder.com/400x250/1F1F1F/FFFFFF?text=African+Tech",
-    category: "Tech",
-    link: "/shows/future-forward",
-  },
-  {
-    id: "3",
-    title: "Fashion Frontiers: African Design Unveiled",
-    description: "A look at the bold designers and trends defining contemporary African fashion.",
-    imageUrl: "https://via.placeholder.com/400x250/3A3A3A/FFFFFF?text=African+Fashion",
-    category: "Fashion",
-    link: "/shows/fashion-frontiers",
-  },
-  {
-    id: "4",
-    title: "Sports Legends: Untold Stories",
-    description: "Celebrating the iconic athletes and their impact on African sports history.",
-    imageUrl: "https://via.placeholder.com/400x250/000000/FFFFFF?text=Sports+Legends",
-    category: "Sports",
-    link: "/shows/sports-legends",
-  },
-  {
-    id: "5",
-    title: "Culinary Africa: A Taste Tour",
-    description: "Journey through the diverse and rich culinary traditions of Africa.",
-    imageUrl: "https://via.placeholder.com/400x250/C1272D/FFFFFF?text=African+Food",
-    category: "Culture",
-    link: "/shows/culinary-africa",
-  },
-];
+import { featuredShows } from "../data/content"; // Updated import path
 
 const FeaturedShowsCarousel = () => {
   return (
