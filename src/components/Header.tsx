@@ -3,8 +3,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import UserNav from "./UserNav"; // Import the new UserNav component
 
 const Header = () => {
+  // This state would typically come from an authentication context
+  const isAuthenticated = true; // For demonstration, assume user is authenticated
+
   return (
     <header className="bg-white dark:bg-gray-900 shadow-sm p-4 flex items-center justify-between">
       <div className="flex items-center">
@@ -27,7 +31,11 @@ const Header = () => {
         </Link>
       </nav>
       <div className="flex items-center space-x-4">
-        <Button variant="outline" className="hidden md:inline-flex">Login</Button>
+        {isAuthenticated ? (
+          <UserNav />
+        ) : (
+          <Button variant="outline" className="hidden md:inline-flex">Login</Button>
+        )}
         {/* Mobile menu icon could go here later */}
       </div>
     </header>
