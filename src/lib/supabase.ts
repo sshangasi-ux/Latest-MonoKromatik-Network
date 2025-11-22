@@ -29,3 +29,17 @@ export const fetchContent = async (type?: string, limit?: number, offset?: numbe
   }
   return { data, count }; // Return data and count for pagination
 };
+
+// Function to fetch ticker messages from the 'ticker_messages' table
+export const fetchTickerMessages = async () => {
+  const { data, error } = await supabase
+    .from('ticker_messages')
+    .select('message')
+    .order('created_at', { ascending: false }); // Assuming a 'created_at' column for ordering
+
+  if (error) {
+    console.error('Error fetching ticker messages:', error);
+    throw error;
+  }
+  return data.map(item => item.message);
+};
