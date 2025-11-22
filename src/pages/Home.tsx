@@ -7,7 +7,6 @@ import HeroSection from "@/components/HeroSection";
 import LiveTicker from "@/components/LiveTicker";
 import FeaturedShowsCarousel from "@/components/FeaturedShowsCarousel";
 import VideoSpotlightCarousel from "@/components/VideoSpotlightCarousel";
-import ArticleGrid from "@/components/ArticleGrid";
 import UpcomingEventsCarousel from "@/components/UpcomingEventsCarousel";
 import MembershipCTA from "@/components/MembershipCTA";
 import TrendingArticlesSection from "@/components/TrendingArticlesSection";
@@ -15,7 +14,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
-import { Button } from "@/components/ui/button"; // Added Button import
+import { Button } from "@/components/ui/button";
 import {
   featuredShows,
   videoSpotlights,
@@ -97,19 +96,7 @@ const Home = () => {
         </section>
 
         {/* Trending Articles Section */}
-        <section className="py-12 bg-black text-white">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Trending Articles This Week</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {renderContentCards(recentArticles, "article")}
-            </div>
-            <div className="text-center mt-10">
-              <Button asChild className="bg-red-600 hover:bg-red-700 text-white text-lg px-8 py-6 rounded-lg uppercase font-bold transition-colors">
-                <Link to="/articles">View All Articles</Link>
-              </Button>
-            </div>
-          </div>
-        </section>
+        <TrendingArticlesSection />
 
         {/* Featured Shows Carousel */}
         <section className="py-12 bg-black text-white">
@@ -140,16 +127,6 @@ const Home = () => {
             ) : (
               <VideoSpotlightCarousel />
             )}
-          </div>
-        </section>
-
-        {/* Article Grid */}
-        <section className="py-12 bg-black text-white">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Recent Articles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {renderContentCards(recentArticles, "article")}
-            </div>
           </div>
         </section>
 
