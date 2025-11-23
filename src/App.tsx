@@ -14,10 +14,13 @@ import NewsListingPage from "./pages/NewsListingPage";
 import WatchListingPage from "./pages/WatchListingPage";
 import EventsListingPage from "./pages/EventsListingPage";
 import ProfilePage from "./pages/ProfilePage";
-import AboutUsPage from "./pages/AboutUsPage"; // Import AboutUsPage
-import ContactUsPage from "./pages/ContactUsPage"; // Import ContactUsPage
-import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"; // Import PrivacyPolicyPage
-import TermsOfServicePage from "./pages/TermsOfServicePage"; // Import TermsOfServicePage
+import AboutUsPage from "./pages/AboutUsPage";
+import ContactUsPage from "./pages/ContactUsPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
+import LoginPage from "./pages/LoginPage"; // Import LoginPage
+import SignupPage from "./pages/SignupPage"; // Import SignupPage
+import LogoutPage from "./pages/LogoutPage"; // Import LogoutPage
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -39,10 +42,13 @@ const App = () => (
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/events" element={<EventsListingPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/about" element={<AboutUsPage />} /> {/* New About Us Route */}
-            <Route path="/contact" element={<ContactUsPage />} /> {/* New Contact Us Route */}
-            <Route path="/privacy" element={<PrivacyPolicyPage />} /> {/* New Privacy Policy Route */}
-            <Route path="/terms" element={<TermsOfServicePage />} /> {/* New Terms of Service Route */}
+            <Route path="/about" element={<AboutUsPage />} />
+            <Route path="/contact" element={<ContactUsPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsOfServicePage />} />
+            <Route path="/login" element={<LoginPage />} /> {/* New Login Route */}
+            <Route path="/signup" element={<SignupPage />} /> {/* New Signup Route */}
+            <Route path="/logout" element={<LogoutPage />} /> {/* New Logout Route */}
             <Route path="/:type/:id" element={<ContentDetailPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

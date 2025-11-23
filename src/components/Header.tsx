@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, User } from "lucide-react"; // Import User icon
-import { useAuth } from "@/context/AuthContext"; // Import useAuth hook
+import { Search, User } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const { isAuthenticated, logout } = useAuth(); // Use auth context
+  const { isAuthenticated, logout } = useAuth();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +24,7 @@ const Header = () => {
     if (isAuthenticated) {
       await logout();
     } else {
-      navigate("/login"); // Assuming a /login route exists or will be created
+      navigate("/login");
     }
   };
 
@@ -79,7 +79,6 @@ const Header = () => {
             Login
           </Button>
         )}
-        {/* Mobile menu icon could go here later */}
       </div>
     </header>
   );
