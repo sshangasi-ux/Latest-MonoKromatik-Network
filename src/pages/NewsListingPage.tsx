@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import PaginationControls from "@/components/PaginationControls";
+import CategoryFilter from "@/components/CategoryFilter"; // Import CategoryFilter
 import { fetchContent } from "@/lib/supabase";
 import { dummyArticles } from "@/data/dummyContent";
 
@@ -21,6 +22,7 @@ interface ContentItem {
 }
 
 const ITEMS_PER_PAGE = 9;
+const ARTICLE_CATEGORIES = ["Music", "Tech", "Fashion", "Sports", "Culture", "Nature"]; // Example categories
 
 const NewsListingPage = () => {
   const [articles, setArticles] = useState<ContentItem[]>([]);
@@ -28,6 +30,7 @@ const NewsListingPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState("all"); // New state for category filter
 
   useEffect(() => {
     const getArticles = async () => {
@@ -35,7 +38,7 @@ const NewsListingPage = () => {
       setError(null);
       try {
         const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-        const { data, count } = await fetchContent('article', ITEMS_PER_PAGE, offset);
+        const { data, count } = await fetchContent('article', ITEMS_PER_PAGE, offset, selectedCategory); // Pass selectedCategory
 
         if (data) {
           const mappedArticles: ContentItem[] = data.map(item => ({
@@ -45,38 +48,49 @@ const NewsListingPage = () => {
           setArticles(mappedArticles);
           setTotalPages(Math.ceil((count || 0) / ITEMS_PER_PAGE));
         } else {
+          const filteredDummy = selectedCategory === "all"
+            ? dummyArticles
+            : dummyArticles.filter(article => article.category === selectedCategory);
           const startIndex = offset;
           const endIndex = offset + ITEMS_PER_PAGE;
-          const paginatedDummy = dummyArticles.slice(startIndex, endIndex).map(item => ({
+          const paginatedDummy = filteredDummy.slice(startIndex, endIndex).map(item => ({
             ...item,
             link: `/news/${item.link_slug}`,
           }));
           setArticles(paginatedDummy);
-          setTotalPages(Math.ceil(dummyArticles.length / ITEMS_PER_PAGE));
+          setTotalPages(Math.ceil(filteredDummy.length / ITEMS_PER_PAGE));
         }
       } catch (err) {
         console.error("Failed to fetch articles:", err);
         setError("Failed to load articles. Please try again later.");
+        const filteredDummy = selectedCategory === "all"
+          ? dummyArticles
+          : dummyArticles.filter(article => article.category === selectedCategory);
         const offset = (currentPage - 1) * ITEMS_PER_PAGE;
         const startIndex = offset;
         const endIndex = offset + ITEMS_PER_PAGE;
-        const paginatedDummy = dummyArticles.slice(startIndex, endIndex).map(item => ({
+        const paginatedDummy = filteredDummy.slice(startIndex, endIndex).map(item => ({
           ...item,
           link: `/news/${item.link_slug}`,
         }));
         setArticles(paginatedDummy);
-        setTotalPages(Math.ceil(dummyArticles.length / ITEMS_PER_PAGE));
+        setTotalPages(Math.ceil(filteredDummy.length / ITEMS_PER_PAGE));
       } finally {
         setLoading(false);
       }
     };
 
     getArticles();
-  }, [currentPage]);
+  }, [currentPage, selectedCategory]); // Re-fetch when category changes
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentPage(1); // Reset to first page on category change
   };
 
   return (
@@ -84,6 +98,14 @@ const NewsListingPage = () => {
       <Header />
       <main className="flex-grow container mx-auto p-8">
         <h1 className="text-4xl font-heading font-bold mb-8 text-center uppercase tracking-tight">All News & Articles</h1>
+
+        <div className="flex justify-center mb-8">
+          <CategoryFilter
+            selectedCategory={selectedCategory}
+            onCategoryChange={handleCategoryChange}
+            categories={ARTICLE_CATEGORIES}
+          />
+        </div>
 
         {error && (
           <div className="text-center text-destructive text-xl font-sans mb-8">{error}</div>
@@ -97,7 +119,7 @@ const NewsListingPage = () => {
           </div>
         ) : articles.length === 0 ? (
           <div className="text-center text-muted-foreground text-xl font-sans">
-            No articles available at the moment.
+            No articles available for this category.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

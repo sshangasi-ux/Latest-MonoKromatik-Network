@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import PaginationControls from "@/components/PaginationControls";
+import CategoryFilter from "@/components/CategoryFilter"; // Import CategoryFilter
 import { fetchContent } from "@/lib/supabase";
 import { dummyEvents } from "@/data/dummyContent";
 
@@ -21,6 +22,7 @@ interface ContentItem {
 }
 
 const ITEMS_PER_PAGE = 9;
+const EVENT_CATEGORIES = ["Music", "Tech", "Fashion", "Sports", "Culture", "Nature"]; // Example categories
 
 const EventsListingPage = () => {
   const [events, setEvents] = useState<ContentItem[]>([]);
@@ -28,6 +30,7 @@ const EventsListingPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState("all"); // New state for category filter
 
   useEffect(() => {
     const getEvents = async () => {
@@ -35,7 +38,7 @@ const EventsListingPage = () => {
       setError(null);
       try {
         const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-        const { data, count } = await fetchContent('event', ITEMS_PER_PAGE, offset);
+        const { data, count } = await fetchContent('event', ITEMS_PER_PAGE, offset, selectedCategory); // Pass selectedCategory
 
         if (data) {
           const mappedEvents: ContentItem[] = data.map(item => ({
@@ -45,38 +48,49 @@ const EventsListingPage = () => {
           setEvents(mappedEvents);
           setTotalPages(Math.ceil((count || 0) / ITEMS_PER_PAGE));
         } else {
+          const filteredDummy = selectedCategory === "all"
+            ? dummyEvents
+            : dummyEvents.filter(event => event.category === selectedCategory);
           const startIndex = offset;
           const endIndex = offset + ITEMS_PER_PAGE;
-          const paginatedDummy = dummyEvents.slice(startIndex, endIndex).map(item => ({
+          const paginatedDummy = filteredDummy.slice(startIndex, endIndex).map(item => ({
             ...item,
             link: `/events/${item.link_slug}`,
           }));
           setEvents(paginatedDummy);
-          setTotalPages(Math.ceil(dummyEvents.length / ITEMS_PER_PAGE));
+          setTotalPages(Math.ceil(filteredDummy.length / ITEMS_PER_PAGE));
         }
       } catch (err) {
         console.error("Failed to fetch events:", err);
         setError("Failed to load events. Please try again later.");
+        const filteredDummy = selectedCategory === "all"
+          ? dummyEvents
+          : dummyEvents.filter(event => event.category === selectedCategory);
         const offset = (currentPage - 1) * ITEMS_PER_PAGE;
         const startIndex = offset;
         const endIndex = offset + ITEMS_PER_PAGE;
-        const paginatedDummy = dummyEvents.slice(startIndex, endIndex).map(item => ({
+        const paginatedDummy = filteredDummy.slice(startIndex, endIndex).map(item => ({
           ...item,
           link: `/events/${item.link_slug}`,
         }));
         setEvents(paginatedDummy);
-        setTotalPages(Math.ceil(dummyEvents.length / ITEMS_PER_PAGE));
+        setTotalPages(Math.ceil(filteredDummy.length / ITEMS_PER_PAGE));
       } finally {
         setLoading(false);
       }
     };
 
     getEvents();
-  }, [currentPage]);
+  }, [currentPage, selectedCategory]); // Re-fetch when category changes
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentPage(1); // Reset to first page on category change
   };
 
   return (
@@ -84,6 +98,14 @@ const EventsListingPage = () => {
       <Header />
       <main className="flex-grow container mx-auto p-8">
         <h1 className="text-4xl font-heading font-bold mb-8 text-center uppercase tracking-tight">All Events</h1>
+
+        <div className="flex justify-center mb-8">
+          <CategoryFilter
+            selectedCategory={selectedCategory}
+            onCategoryChange={handleCategoryChange}
+            categories={EVENT_CATEGORIES}
+          />
+        </div>
 
         {error && (
           <div className="text-center text-destructive text-xl font-sans mb-8">{error}</div>
@@ -97,7 +119,7 @@ const EventsListingPage = () => {
           </div>
         ) : events.length === 0 ? (
           <div className="text-center text-muted-foreground text-xl font-sans">
-            No events available at the moment.
+            No events available for this category.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

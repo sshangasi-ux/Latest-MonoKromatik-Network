@@ -9,12 +9,16 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Function to fetch content from the 'content' table with optional type, limit, and offset for pagination
-export const fetchContent = async (type?: string, limit?: number, offset?: number) => {
+// Function to fetch content from the 'content' table with optional type, limit, offset, and category for pagination and filtering
+export const fetchContent = async (type?: string, limit?: number, offset?: number, category?: string) => {
   let query = supabase.from('content').select('*, video_url, image_gallery_urls', { count: 'exact' }); // Request exact count for pagination and select new fields
 
   if (type) {
     query = query.eq('type', type);
+  }
+
+  if (category && category !== 'all') { // Add category filter if provided and not 'all'
+    query = query.eq('category', category);
   }
 
   if (limit !== undefined) {
