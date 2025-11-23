@@ -12,7 +12,9 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
-  updateUserProfile: (fullName: string, avatarUrl: string | null) => Promise<void>; // New function
+  updateUserProfile: (fullName: string, avatarUrl: string | null) => Promise<void>;
+  updateUserEmail: (newEmail: string) => Promise<void>; // New function
+  updateUserPassword: (newPassword: string) => Promise<void>; // New function
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -115,13 +117,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateUserEmail = async (newEmail: string) => {
+    const { data, error } = await supabase.auth.updateUser({ email: newEmail });
+    if (error) {
+      throw error;
+    }
+    if (data.user) {
+      setUser(data.user);
+    }
+  };
+
+  const updateUserPassword = async (newPassword: string) => {
+    const { data, error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) {
+      throw error;
+    }
+    if (data.user) {
+      setUser(data.user);
+    }
+  };
+
   if (loading) {
     // Optionally render a loading spinner or skeleton here
     return <div>Loading authentication...</div>;
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, signup, updateUserProfile }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, signup, updateUserProfile, updateUserEmail, updateUserPassword }}>
       {children}
     </AuthContext.Provider>
   );
