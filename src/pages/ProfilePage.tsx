@@ -106,7 +106,7 @@ const ProfilePage: React.FC = () => {
           <TabsList className="grid w-full grid-cols-4 bg-secondary border-border"> {/* Increased grid-cols to 4 */}
             <TabsTrigger value="profile" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Profile Details</TabsTrigger>
             <TabsTrigger value="security" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Security</TabsTrigger>
-            <TabsTrigger value="preferences" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Preferences</TabsTrigger> {/* New Tab Trigger */}
+            <TabsTrigger value="preferences" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Preferences</TabsTrigger> {/* New Tab Trigger */}
             <TabsTrigger value="progress" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">My Progress</TabsTrigger>
           </TabsList>
 
@@ -186,6 +186,7 @@ const ProfilePage: React.FC = () => {
                           imageUrl={item.image_url}
                           category={item.category}
                           link={item.link}
+                          contentId={item.id} // Added contentId prop
                         />
                         {(item.progress_data?.percentage !== undefined || item.progress_data?.time !== undefined) && (
                           <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background/70 to-transparent">

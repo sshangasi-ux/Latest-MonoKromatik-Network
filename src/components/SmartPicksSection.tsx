@@ -173,6 +173,7 @@ const SmartPicksSection = () => {
                     imageUrl={item.image_url}
                     category={item.category}
                     link={item.link}
+                    contentId={item.id} // Added contentId prop
                   />
                 </CarouselItem>
               ))}

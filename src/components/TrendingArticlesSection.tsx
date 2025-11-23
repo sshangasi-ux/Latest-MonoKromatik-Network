@@ -74,6 +74,7 @@ const TrendingArticlesSection = () => {
                 imageUrl={article.image_url}
                 category={article.category}
                 link={`/news/${article.link_slug}`}
+                contentId={article.id} // Added contentId prop
               />
             ))}
           </div>

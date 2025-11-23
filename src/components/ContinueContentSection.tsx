@@ -125,6 +125,7 @@ const ContinueContentSection = () => {
                       imageUrl={item.image_url}
                       category={item.category}
                       link={item.link}
+                      contentId={item.id} // Added contentId prop
                     />
                     {(item.progress_data?.percentage !== undefined || item.progress_data?.time !== undefined) && (
                       <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background/70 to-transparent">

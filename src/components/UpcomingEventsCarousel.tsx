@@ -87,6 +87,7 @@ const UpcomingEventsCarousel = () => {
                       imageUrl={event.image_url}
                       category={event.category}
                       link={`/events/${event.link_slug}`}
+                      contentId={event.id} // Added contentId prop
                     />
                   </CarouselItem>
                 ))

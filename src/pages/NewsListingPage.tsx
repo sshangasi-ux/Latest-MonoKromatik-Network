@@ -132,6 +132,7 @@ const NewsListingPage = () => {
                 imageUrl={article.image_url}
                 category={article.category}
                 link={article.link}
+                contentId={article.id} // Added contentId prop
               />
             ))}
           </div>

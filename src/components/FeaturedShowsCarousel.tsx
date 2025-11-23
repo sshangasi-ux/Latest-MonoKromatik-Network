@@ -85,6 +85,7 @@ const FeaturedShowsCarousel = () => {
                       imageUrl={show.image_url}
                       category={show.category}
                       link={`/shows/${show.link_slug}`}
+                      contentId={show.id} // Added contentId prop
                     />
                   </CarouselItem>
                 ))

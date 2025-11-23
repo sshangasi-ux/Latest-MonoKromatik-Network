@@ -85,6 +85,7 @@ const SponsoredContentSection = () => {
                 imageUrl={item.image_url}
                 category="Sponsored" // Override category for display
                 link={item.link}
+                contentId={item.id} // Added contentId prop
               />
             ))}
           </div>

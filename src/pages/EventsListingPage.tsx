@@ -132,6 +132,7 @@ const EventsListingPage = () => {
                 imageUrl={event.image_url}
                 category={event.category}
                 link={event.link}
+                contentId={event.id} // Added contentId prop
               />
             ))}
           </div>

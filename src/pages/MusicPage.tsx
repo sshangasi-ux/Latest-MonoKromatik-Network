@@ -206,6 +206,7 @@ const MusicPage = () => {
                       imageUrl={show.image_url}
                       category={show.category}
                       link={show.link}
+                      contentId={show.id} // Added contentId prop
                     />
                   </CarouselItem>
                 ))}

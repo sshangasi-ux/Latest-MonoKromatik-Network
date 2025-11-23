@@ -132,6 +132,7 @@ const WatchListingPage = () => {
                 imageUrl={video.image_url}
                 category={video.category}
                 link={video.link}
+                contentId={video.id} // Added contentId prop
               />
             ))}
           </div>

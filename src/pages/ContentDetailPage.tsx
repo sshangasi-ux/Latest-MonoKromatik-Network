@@ -23,6 +23,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useAuth } from "@/context/AuthContext";
+import CommentSection from "@/components/CommentSection";
+import WatchlistButton from "@/components/WatchlistButton"; // Import WatchlistButton
 
 interface ContentItem {
   id: string;
@@ -262,9 +264,14 @@ const ContentDetailPage = () => {
             />
           )}
           <div className="p-6">
-            <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-sm px-3 py-1 self-start mb-4 font-semibold">
-              {displayItem.category}
-            </Badge>
+            <div className="flex items-center justify-between mb-4">
+              <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-sm px-3 py-1 self-start font-semibold">
+                {displayItem.category}
+              </Badge>
+              {displayItem.id && (
+                <WatchlistButton contentId={displayItem.id} contentType={displayItem.type} className="text-lg" />
+              )}
+            </div>
             <h1 className="text-4xl font-heading font-bold text-foreground mb-4 uppercase tracking-tight">
               {displayItem.title}
             </h1>
@@ -325,6 +332,8 @@ const ContentDetailPage = () => {
           </div>
         </div>
 
+        {displayItem.id && <CommentSection contentId={displayItem.id} />}
+
         {relatedContentToDisplay.length > 0 && (
           <section className="mt-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-8 text-center uppercase text-foreground tracking-tight">
@@ -340,6 +349,7 @@ const ContentDetailPage = () => {
                   imageUrl={item.image_url}
                   category={item.category}
                   link={item.link}
+                  contentId={item.id} // Pass contentId
                 />
               ))}
             </div>

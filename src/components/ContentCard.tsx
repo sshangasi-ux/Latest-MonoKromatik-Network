@@ -4,6 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import WatchlistButton from "./WatchlistButton"; // Import WatchlistButton
 
 interface ContentCardProps {
   type: "show" | "video" | "article" | "event" | "sponsored" | "music_show"; // Added 'music_show'
@@ -12,6 +13,7 @@ interface ContentCardProps {
   imageUrl: string;
   category: string;
   link: string;
+  contentId: string; // New prop for content ID
 }
 
 const ContentCard: React.FC<ContentCardProps> = ({
@@ -21,6 +23,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
   imageUrl,
   category,
   link,
+  contentId, // Destructure new prop
 }) => {
   return (
     <Link to={link} className="block h-full group"> {/* Added group for image hover */}
@@ -32,6 +35,9 @@ const ContentCard: React.FC<ContentCardProps> = ({
             className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/85 to-transparent" /> {/* Overlay gradient */}
+          <div className="absolute top-2 right-2 z-10">
+            <WatchlistButton contentId={contentId} contentType={type} /> {/* Add WatchlistButton */}
+          </div>
         </div>
         <CardContent className="p-4 flex-grow flex flex-col">
           <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-xs px-2 py-1 self-start mb-2 font-semibold">

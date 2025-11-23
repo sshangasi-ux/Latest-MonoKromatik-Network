@@ -85,6 +85,7 @@ const VideoSpotlightCarousel = () => {
                       imageUrl={video.image_url}
                       category={video.category}
                       link={`/watch/${video.link_slug}`}
+                      contentId={video.id} // Added contentId prop
                     />
                   </CarouselItem>
                 ))
