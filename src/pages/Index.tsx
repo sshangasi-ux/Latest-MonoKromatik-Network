@@ -1,6 +1,5 @@
 "use client";
 
-// Removed MadeWithDyad import
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import LiveTicker from "@/components/LiveTicker";
@@ -15,7 +14,7 @@ import SmartPicksSection from "@/components/SmartPicksSection";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       <LiveTicker />
       <main className="flex-grow">
@@ -29,7 +28,6 @@ const Index = () => {
         <MembershipCTA />
       </main>
       <Footer />
-      {/* Removed MadeWithDyad component from here */}
     </div>
   );
 };
