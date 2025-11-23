@@ -49,6 +49,8 @@ const App = () => (
             <Route path="/login" element={<LoginPage />} /> {/* New Login Route */}
             <Route path="/signup" element={<SignupPage />} /> {/* New Signup Route */}
             <Route path="/logout" element={<LogoutPage />} /> {/* New Logout Route */}
+            <Route path="/music/shows/:id" element={<ContentDetailPage />} /> {/* New Music Show Route */}
+            <Route path="/sponsored/:id" element={<ContentDetailPage />} /> {/* New Sponsored Content Route */}
             <Route path="/:type/:id" element={<ContentDetailPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

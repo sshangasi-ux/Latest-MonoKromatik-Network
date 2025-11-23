@@ -31,7 +31,7 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event" | "sponsored" | "music_show"; // Added 'music_show'
+  type: "show" | "video" | "article" | "event" | "sponsored" | "music_show";
   full_content?: string;
   link: string;
   video_url?: string;
@@ -66,14 +66,14 @@ const ContentDetailPage = () => {
       setLoading(true);
       setError(null);
       try {
-        let actualContentType: "show" | "video" | "article" | "event" | "sponsored" | "music_show" | undefined; // Added 'music_show'
+        let actualContentType: "show" | "video" | "article" | "event" | "sponsored" | "music_show" | undefined;
         switch (type) {
           case 'news': actualContentType = 'article'; break;
           case 'watch': actualContentType = 'video'; break;
           case 'shows': actualContentType = 'show'; break;
           case 'events': actualContentType = 'event'; break;
           case 'sponsored': actualContentType = 'sponsored'; break;
-          case 'music/shows': actualContentType = 'music_show'; break; // Added 'music_show'
+          case 'music/shows': actualContentType = 'music_show'; break; // Handle new music show route
           default: actualContentType = undefined;
         }
 
@@ -92,7 +92,7 @@ const ContentDetailPage = () => {
             case 'article': linkPrefix = '/news'; break;
             case 'event': linkPrefix = '/events'; break;
             case 'sponsored': linkPrefix = '/sponsored'; break;
-            case 'music_show': linkPrefix = '/music/shows'; break; // Added 'music_show'
+            case 'music_show': linkPrefix = '/music/shows'; break;
             default: linkPrefix = '';
           }
           const fullContentItem = { ...fetchedItem, link: `${linkPrefix}/${fetchedItem.link_slug}` };
@@ -115,7 +115,7 @@ const ContentDetailPage = () => {
               case 'article': relatedLinkPrefix = '/news'; break;
               case 'event': relatedLinkPrefix = '/events'; break;
               case 'sponsored': relatedLinkPrefix = '/sponsored'; break;
-              case 'music_show': relatedLinkPrefix = '/music/shows'; break; // Added 'music_show'
+              case 'music_show': relatedLinkPrefix = '/music/shows'; break;
               default: relatedLinkPrefix = '';
             }
             return { ...item, link: `${relatedLinkPrefix}/${item.link_slug}` };
@@ -193,7 +193,7 @@ const ContentDetailPage = () => {
     );
   }
 
-  const displayItem = contentItem || allDummyContent.find(item => item.link_slug === id && item.type === (type === 'news' ? 'article' : type === 'watch' ? 'video' : type === 'shows' ? 'show' : type === 'events' ? 'event' : type === 'sponsored' ? 'sponsored' : type === 'music/shows' ? 'music_show' : undefined)); // Added 'music_show'
+  const displayItem = contentItem || allDummyContent.find(item => item.link_slug === id && item.type === (type === 'news' ? 'article' : type === 'watch' ? 'video' : type === 'shows' ? 'show' : type === 'events' ? 'event' : type === 'sponsored' ? 'sponsored' : type === 'music/shows' ? 'music_show' : undefined));
 
   if (!displayItem) {
     return (
@@ -238,7 +238,7 @@ const ContentDetailPage = () => {
                 loading="lazy"
               ></iframe>
             </div>
-          ) : (displayItem.type === "article" || displayItem.type === "show" || displayItem.type === "sponsored" || displayItem.type === "music_show") && displayItem.image_gallery_urls && displayItem.image_gallery_urls.length > 1 ? ( // Added 'music_show'
+          ) : (displayItem.type === "article" || displayItem.type === "show" || displayItem.type === "sponsored" || displayItem.type === "music_show") && displayItem.image_gallery_urls && displayItem.image_gallery_urls.length > 1 ? (
             <Carousel className="w-full">
               <CarouselContent>
                 {displayItem.image_gallery_urls.map((imgUrl, index) => (
