@@ -10,7 +10,8 @@ import TrendingArticlesSection from "@/components/TrendingArticlesSection";
 import UpcomingEventsCarousel from "@/components/UpcomingEventsCarousel";
 import MembershipCTA from "@/components/MembershipCTA";
 import Footer from "@/components/Footer";
-import ContinueContentSection from "@/components/ContinueContentSection"; // New import
+import ContinueContentSection from "@/components/ContinueContentSection";
+import SmartPicksSection from "@/components/SmartPicksSection"; // New import
 
 const Index = () => {
   return (
@@ -19,7 +20,8 @@ const Index = () => {
       <LiveTicker />
       <main className="flex-grow">
         <HeroSection />
-        <ContinueContentSection /> {/* Added Continue Watching/Reading section */}
+        <ContinueContentSection />
+        <SmartPicksSection /> {/* Added Smart Picks for You section */}
         <FeaturedShowsCarousel />
         <VideoSpotlightCarousel />
         <TrendingArticlesSection />
