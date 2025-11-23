@@ -49,10 +49,10 @@ const UpcomingEventsCarousel = () => {
 
   if (error) {
     return (
-      <section className="py-12 bg-neutral-900 text-white">
+      <section className="py-12 bg-secondary text-foreground">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 uppercase">Upcoming Events</h2>
-          <p className="text-red-500">{error}</p>
+          <p className="text-destructive">{error}</p>
         </div>
       </section>
     );
@@ -61,7 +61,7 @@ const UpcomingEventsCarousel = () => {
   const contentToDisplay = events.length > 0 ? events : dummyEvents;
 
   return (
-    <section className="py-12 bg-neutral-900 text-white">
+    <section className="py-12 bg-secondary text-foreground">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Upcoming Events</h2>
         {loading ? (
@@ -92,12 +92,12 @@ const UpcomingEventsCarousel = () => {
                 ))
               }
             </CarouselContent>
-            <CarouselPrevious className="left-4 bg-neutral-800 text-white hover:bg-neutral-700" />
-            <CarouselNext className="right-4 bg-neutral-800 text-white hover:bg-neutral-700" />
+            <CarouselPrevious className="left-4 bg-secondary text-foreground hover:bg-secondary/80" />
+            <CarouselNext className="right-4 bg-secondary text-foreground hover:bg-secondary/80" />
           </Carousel>
         )}
         <div className="text-center mt-10">
-          <Button asChild className="bg-red-600 hover:bg-red-700 text-white text-lg px-8 py-6 rounded-lg uppercase font-bold transition-colors">
+          <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 rounded-lg uppercase font-bold transition-colors">
             <Link to="/events">View All Events</Link>
           </Button>
         </div>

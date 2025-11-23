@@ -47,10 +47,10 @@ const FeaturedShowsCarousel = () => {
 
   if (error) {
     return (
-      <section className="py-12 bg-black text-white">
+      <section className="py-12 bg-background text-foreground">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 uppercase">Featured Shows</h2>
-          <p className="text-red-500">{error}</p>
+          <p className="text-destructive">{error}</p>
         </div>
       </section>
     );
@@ -59,7 +59,7 @@ const FeaturedShowsCarousel = () => {
   const contentToDisplay = shows.length > 0 ? shows : dummyShows;
 
   return (
-    <section className="py-12 bg-black text-white">
+    <section className="py-12 bg-background text-foreground">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Featured Shows</h2>
         {loading ? (
@@ -90,8 +90,8 @@ const FeaturedShowsCarousel = () => {
                 ))
               }
             </CarouselContent>
-            <CarouselPrevious className="left-4 bg-neutral-800 text-white hover:bg-neutral-700" />
-            <CarouselNext className="right-4 bg-neutral-800 text-white hover:bg-neutral-700" />
+            <CarouselPrevious className="left-4 bg-secondary text-foreground hover:bg-secondary/80" />
+            <CarouselNext className="right-4 bg-secondary text-foreground hover:bg-secondary/80" />
           </Carousel>
         )}
       </div>

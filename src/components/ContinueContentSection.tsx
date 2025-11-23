@@ -82,10 +82,10 @@ const ContinueContentSection = () => {
 
   if (error) {
     return (
-      <section className="py-12 bg-black text-white">
+      <section className="py-12 bg-background text-foreground">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 uppercase">Continue Watching/Reading</h2>
-          <p className="text-red-500">{error}</p>
+          <p className="text-destructive">{error}</p>
         </div>
       </section>
     );
@@ -96,7 +96,7 @@ const ContinueContentSection = () => {
   }
 
   return (
-    <section className="py-12 bg-black text-white">
+    <section className="py-12 bg-background text-foreground">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">Continue Watching/Reading</h2>
         {loading ? (
@@ -125,13 +125,13 @@ const ContinueContentSection = () => {
                       link={item.link}
                     />
                     {(item.progress_data?.percentage !== undefined || item.progress_data?.time !== undefined) && (
-                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background/70 to-transparent">
                         <Progress
                           value={item.progress_data?.percentage !== undefined ? item.progress_data.percentage * 100 : 0}
-                          className="h-2 bg-gray-700"
-                          indicatorClassName="bg-red-600"
+                          className="h-2 bg-muted"
+                          indicatorClassName="bg-primary"
                         />
-                        <p className="text-xs text-gray-300 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                           {item.progress_data?.percentage !== undefined
                             ? `${Math.round(item.progress_data.percentage * 100)}% Read`
                             : "Started"}
@@ -142,8 +142,8 @@ const ContinueContentSection = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-4 bg-neutral-800 text-white hover:bg-neutral-700" />
-            <CarouselNext className="right-4 bg-neutral-800 text-white hover:bg-neutral-700" />
+            <CarouselPrevious className="left-4 bg-secondary text-foreground hover:bg-secondary/80" />
+            <CarouselNext className="right-4 bg-secondary text-foreground hover:bg-secondary/80" />
           </Carousel>
         )}
       </div>

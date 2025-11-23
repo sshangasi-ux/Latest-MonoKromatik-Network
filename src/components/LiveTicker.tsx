@@ -28,16 +28,16 @@ const LiveTicker = () => {
 
   if (error) {
     return (
-      <div className="bg-neutral-900 text-white py-2 text-center">
-        <span className="text-sm md:text-base mx-8 font-medium text-red-500">{error}</span>
+      <div className="bg-secondary text-foreground py-2 text-center">
+        <span className="text-sm md:text-base mx-8 font-medium text-destructive">{error}</span>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="bg-neutral-900 text-white py-2 overflow-hidden relative">
-        <div className="animate-pulse bg-neutral-800 h-5 w-full"></div>
+      <div className="bg-secondary text-foreground py-2 overflow-hidden relative">
+        <div className="animate-pulse bg-muted h-5 w-full"></div>
       </div>
     );
   }
@@ -49,7 +49,7 @@ const LiveTicker = () => {
   }
 
   return (
-    <div className="bg-neutral-900 text-white py-2 overflow-hidden relative">
+    <div className="bg-secondary text-foreground py-2 overflow-hidden relative">
       <div className="animate-marquee whitespace-nowrap">
         {messagesToDisplay.map((msg, index) => (
           <span key={index} className="text-sm md:text-base mx-8 font-medium">

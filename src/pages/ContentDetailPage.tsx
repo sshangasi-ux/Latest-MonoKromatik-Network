@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react"; // Added useCallback
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchContent, fetchContentBySlugAndType, saveUserProgress } from "@/lib/supabase"; // Added saveUserProgress
+import { fetchContent, fetchContentBySlugAndType, saveUserProgress } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Share2 } from "lucide-react";
@@ -22,7 +22,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useAuth } from "@/context/AuthContext"; // Import useAuth
+import { useAuth } from "@/context/AuthContext";
 
 interface ContentItem {
   id: string;
@@ -40,13 +40,12 @@ interface ContentItem {
 
 const ContentDetailPage = () => {
   const { type, id } = useParams<{ type: string; id: string }>();
-  const { user } = useAuth(); // Get current user
+  const { user } = useAuth();
   const [contentItem, setContentItem] = useState<ContentItem | undefined>(undefined);
   const [relatedContent, setRelatedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Function to save progress
   const handleSaveProgress = useCallback(async (progressData: any) => {
     if (user && contentItem) {
       try {
@@ -95,12 +94,11 @@ const ContentDetailPage = () => {
           const fullContentItem = { ...fetchedItem, link: `${linkPrefix}/${fetchedItem.link_slug}` };
           setContentItem(fullContentItem);
 
-          // Save initial progress when content is loaded
           if (user) {
             if (fullContentItem.type === "video") {
-              handleSaveProgress({ time: 0 }); // Mark as started
+              handleSaveProgress({ time: 0 });
             } else if (fullContentItem.type === "article") {
-              handleSaveProgress({ percentage: 0 }); // Mark as started
+              handleSaveProgress({ percentage: 0 });
             }
           }
 
@@ -135,9 +133,8 @@ const ContentDetailPage = () => {
     };
 
     fetchContentData();
-  }, [type, id, user, handleSaveProgress]); // Added user and handleSaveProgress to dependencies
+  }, [type, id, user, handleSaveProgress]);
 
-  // Article scroll progress tracking
   useEffect(() => {
     if (!contentItem || contentItem.type !== "article" || !user) return;
 
@@ -155,17 +152,17 @@ const ContentDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-black text-white">
+      <div className="min-h-screen flex flex-col bg-background text-foreground">
         <Header />
         <main className="flex-grow container mx-auto p-8">
-          <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden border border-neutral-800">
-            <div className="w-full h-64 md:h-96 bg-neutral-800 animate-pulse"></div>
+          <div className="bg-card rounded-lg shadow-lg overflow-hidden border border-border">
+            <div className="w-full h-64 md:h-96 bg-muted animate-pulse"></div>
             <div className="p-6">
-              <div className="h-6 w-24 bg-neutral-700 rounded mb-4 animate-pulse"></div>
-              <div className="h-10 w-3/4 bg-neutral-700 rounded mb-4 animate-pulse"></div>
-              <div className="h-6 w-full bg-neutral-800 rounded mb-6 animate-pulse"></div>
-              <div className="h-6 w-5/6 bg-neutral-800 rounded mb-8 animate-pulse"></div>
-              <div className="h-40 w-full bg-neutral-800 rounded animate-pulse"></div>
+              <div className="h-6 w-24 bg-muted-foreground rounded mb-4 animate-pulse"></div>
+              <div className="h-10 w-3/4 bg-muted-foreground rounded mb-4 animate-pulse"></div>
+              <div className="h-6 w-full bg-muted rounded mb-6 animate-pulse"></div>
+              <div className="h-6 w-5/6 bg-muted rounded mb-8 animate-pulse"></div>
+              <div className="h-40 w-full bg-muted rounded animate-pulse"></div>
             </div>
           </div>
         </main>
@@ -176,12 +173,12 @@ const ContentDetailPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col bg-black text-white">
+      <div className="min-h-screen flex flex-col bg-background text-foreground">
         <Header />
         <main className="flex-grow container mx-auto p-8 text-center">
-          <h1 className="text-4xl font-bold mb-4 text-white">Error</h1>
-          <p className="text-xl text-red-500 mb-4">{error}</p>
-          <Link to="/" className="text-red-500 hover:text-red-400 underline">
+          <h1 className="text-4xl font-bold mb-4 text-foreground">Error</h1>
+          <p className="text-xl text-destructive mb-4">{error}</p>
+          <Link to="/" className="text-primary hover:text-primary/90 underline">
             Return to Home
           </Link>
         </main>
@@ -194,16 +191,16 @@ const ContentDetailPage = () => {
 
   if (!displayItem) {
     return (
-      <div className="min-h-screen flex flex-col bg-black text-white">
+      <div className="min-h-screen flex flex-col bg-background text-foreground">
         <Header />
         <main className="flex-grow container mx-auto p-8 text-center">
-          <h1 className="text-4xl font-bold mb-4 text-white">
+          <h1 className="text-4xl font-bold mb-4 text-foreground">
             Content Not Found
           </h1>
-          <p className="text-xl text-gray-300 mb-4">
+          <p className="text-xl text-muted-foreground mb-4">
             The content you are looking for does not exist.
           </p>
-          <Link to="/" className="text-red-500 hover:text-red-400 underline">
+          <Link to="/" className="text-primary hover:text-primary/90 underline">
             Return to Home
           </Link>
         </main>
@@ -220,12 +217,12 @@ const ContentDetailPage = () => {
   const shareText = `Check out this ${displayItem.type} on MonoKromatik Network: ${displayItem.title}`;
 
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white">
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden border border-neutral-800">
+        <div className="bg-card rounded-lg shadow-lg overflow-hidden border border-border">
           {displayItem.type === "video" && displayItem.video_url ? (
-            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}> {/* 16:9 Aspect Ratio */}
+            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
               <iframe
                 className="absolute top-0 left-0 w-full h-full"
                 src={displayItem.video_url}
@@ -248,8 +245,8 @@ const ContentDetailPage = () => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="left-4 bg-neutral-800 text-white hover:bg-neutral-700" />
-              <CarouselNext className="right-4 bg-neutral-800 text-white hover:bg-neutral-700" />
+              <CarouselPrevious className="left-4 bg-secondary text-foreground hover:bg-secondary/80" />
+              <CarouselNext className="right-4 bg-secondary text-foreground hover:bg-secondary/80" />
             </Carousel>
           ) : (
             <img
@@ -259,33 +256,33 @@ const ContentDetailPage = () => {
             />
           )}
           <div className="p-6">
-            <Badge className="bg-red-600 hover:bg-red-700 text-white uppercase text-sm px-3 py-1 self-start mb-4">
+            <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-sm px-3 py-1 self-start mb-4">
               {displayItem.category}
             </Badge>
-            <h1 className="text-4xl font-bold text-white mb-4">
+            <h1 className="text-4xl font-bold text-foreground mb-4">
               {displayItem.title}
             </h1>
-            <p className="text-lg text-gray-300 mb-6">
+            <p className="text-lg text-muted-foreground mb-6">
               {displayItem.description}
             </p>
             <div className="flex space-x-4 mb-8">
-              <Button className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
                 {displayItem.type === "article" ? "Read Article" : "Watch Now"}
               </Button>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="border-neutral-700 text-white hover:bg-neutral-800 text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
+                  <Button variant="outline" className="border-border text-foreground hover:bg-secondary text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
                     <Share2 className="h-5 w-5 mr-2" />
                     Share
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-40 p-2 bg-neutral-800 border-neutral-700 text-white">
+                <PopoverContent className="w-40 p-2 bg-card border-border text-foreground">
                   <div className="flex flex-col space-y-2">
                     <a
                       href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-sm hover:bg-neutral-700 p-2 rounded-md"
+                      className="flex items-center text-sm hover:bg-secondary p-2 rounded-md"
                     >
                       <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.814L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
                       Twitter
@@ -294,7 +291,7 @@ const ContentDetailPage = () => {
                       href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-sm hover:bg-neutral-700 p-2 rounded-md"
+                      className="flex items-center text-sm hover:bg-secondary p-2 rounded-md"
                     >
                       <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.24.195 2.24.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z"></path></svg>
                       Facebook
@@ -306,7 +303,7 @@ const ContentDetailPage = () => {
 
             {displayItem.full_content && (
               <div
-                className="prose dark:prose-invert max-w-none text-gray-200 prose-p:text-gray-200 prose-h3:text-white prose-h2:text-white prose-a:text-red-500 hover:prose-a:text-red-400"
+                className="prose dark:prose-invert max-w-none text-foreground prose-p:text-muted-foreground prose-h3:text-foreground prose-h2:text-foreground prose-a:text-primary hover:prose-a:text-primary/90"
                 dangerouslySetInnerHTML={{ __html: displayItem.full_content }}
               />
             )}
@@ -315,7 +312,7 @@ const ContentDetailPage = () => {
 
         {relatedContentToDisplay.length > 0 && (
           <section className="mt-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase text-foreground">
               More Like This
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -335,7 +332,7 @@ const ContentDetailPage = () => {
         )}
 
         <div className="mt-8 text-center">
-          <Link to="/" className="text-red-500 hover:text-red-400 underline">
+          <Link to="/" className="text-primary hover:text-primary/90 underline">
             Back to Home
           </Link>
         </div>

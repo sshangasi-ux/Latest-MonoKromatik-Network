@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import { searchContent } from "@/lib/supabase";
-import { allDummyContent } from "@/data/dummyContent"; // Fallback for dummy content
+import { allDummyContent } from "@/data/dummyContent";
 
 interface ContentItem {
   id: string;
@@ -38,7 +38,7 @@ const SearchPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const { data, error } = await searchContent(query, 20); // Fetch up to 20 results
+        const { data, error } = await searchContent(query, 20);
         if (error) {
           throw error;
         }
@@ -57,7 +57,6 @@ const SearchPage = () => {
       } catch (err) {
         console.error("Failed to fetch search results:", err);
         setError("Failed to load search results. Please try again later.");
-        // Fallback to dummy content for search if API fails
         const dummyFiltered = allDummyContent.filter(item =>
           item.title.toLowerCase().includes(query.toLowerCase()) ||
           item.description.toLowerCase().includes(query.toLowerCase()) ||
@@ -73,10 +72,10 @@ const SearchPage = () => {
   }, [query]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white">
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center uppercase">
+        <h1 className="text-4xl font-bold mb-8 text-center uppercase text-foreground">
           Search Results for "{query}"
         </h1>
 
@@ -87,9 +86,9 @@ const SearchPage = () => {
             ))}
           </div>
         ) : error ? (
-          <div className="text-center text-red-500 text-xl">{error}</div>
+          <div className="text-center text-destructive text-xl">{error}</div>
         ) : results.length === 0 ? (
-          <div className="text-center text-gray-400 text-xl">
+          <div className="text-center text-muted-foreground text-xl">
             No results found for "{query}". Try a different search term.
           </div>
         ) : (
@@ -109,7 +108,7 @@ const SearchPage = () => {
         )}
 
         <div className="mt-12 text-center">
-          <Link to="/" className="text-red-500 hover:text-red-400 underline">
+          <Link to="/" className="text-primary hover:text-primary/90 underline">
             Back to Home
           </Link>
         </div>
