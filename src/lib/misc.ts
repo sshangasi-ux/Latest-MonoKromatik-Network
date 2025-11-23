@@ -63,6 +63,7 @@ export interface InnovatorProfile {
   full_name: string;
   avatar_url?: string | null;
   bio?: string | null;
+  region?: string; // Added region to innovator profile
 }
 
 // Interface for Innovator Spotlight data
@@ -87,11 +88,12 @@ export const fetchInnovatorsSpotlight = async (limit: number = 3): Promise<Innov
         id,
         full_name,
         avatar_url,
-        bio
+        bio,
+        region
       ),
       spotlight_content_id,
       content:spotlight_content_id (
-        id, title, description, image_url, category, link_slug, type, creator_id, profiles(full_name)
+        id, title, description, image_url, category, link_slug, type, creator_id, profiles(full_name), region
       )
     `)
     .limit(limit)

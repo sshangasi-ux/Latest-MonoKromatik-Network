@@ -22,6 +22,7 @@ interface ContentItem {
   link_slug: string;
   type: "show" | "video" | "article" | "event" | "sponsored" | "music_show";
   link: string;
+  region?: string; // Added region
 }
 
 const LatestContentCarousel = () => {
@@ -135,6 +136,7 @@ const LatestContentCarousel = () => {
                     category={item.category}
                     link={item.link}
                     contentId={item.id} // Added contentId prop
+                    region={item.region} // Pass region to ContentCard
                   />
                 </CarouselItem>
               ))}

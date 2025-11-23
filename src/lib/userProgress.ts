@@ -8,8 +8,8 @@ export interface UserProgress {
   content_id: string;
   content_type: string;
   progress_data?: {
-    time?: number; // For videos
-    percentage?: number; // For articles
+    time?: number;
+    percentage?: number;
   };
   last_viewed_at?: string;
   content?: ContentItem; // Nested content details
@@ -62,7 +62,7 @@ export const fetchUserProgress = async (userId: string, limit: number = 5) => {
     .select(`
       *,
       content:content_id (
-        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)
+        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region
       )
     `)
     .eq('user_id', userId)

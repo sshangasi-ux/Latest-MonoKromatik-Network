@@ -110,7 +110,7 @@ export const fetchPlaylistItems = async (playlistId: string): Promise<PlaylistIt
       content_id,
       position,
       content:content_id (
-        id, title, description, image_url, category, link_slug, type, creator_id, profiles(full_name)
+        id, title, description, image_url, category, link_slug, type, creator_id, profiles(full_name), region
       )
     `)
     .eq('playlist_id', playlistId)
@@ -151,6 +151,7 @@ export const fetchPlaylistItems = async (playlistId: string): Promise<PlaylistIt
       music_embed_url: rawContent.music_embed_url,
       creator_id: rawContent.creator_id,
       creator_name: rawContent.profiles?.[0]?.full_name || null, // Access the first element of the profiles array
+      region: rawContent.region, // Include region
       link: '', // Will be set below
     };
 

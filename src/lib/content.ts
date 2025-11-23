@@ -21,7 +21,7 @@ export interface ContentItem {
 
 // Function to fetch content from the 'content' table with optional type, limit, offset, and category for pagination and filtering
 export const fetchContent = async (type?: string, limit?: number, offset?: number, category?: string, region?: string) => {
-  let query = supabase.from('content').select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)', { count: 'exact' });
+  let query = supabase.from('content').select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region', { count: 'exact' });
 
   if (type) {
     query = query.eq('type', type);
@@ -55,16 +55,21 @@ export const fetchContent = async (type?: string, limit?: number, offset?: numbe
 };
 
 // Function to search content by title, description, or category
-export const searchContent = async (query: string, limit: number = 5) => {
+export const searchContent = async (query: string, limit: number = 5, region?: string) => {
   if (!query) {
     return { data: [], error: null };
   }
 
-  const { data, error } = await supabase
+  let queryBuilder = supabase
     .from('content')
-    .select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)')
-    .or(`title.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`)
-    .limit(limit);
+    .select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region')
+    .or(`title.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`);
+
+  if (region && region !== 'all') {
+    queryBuilder = queryBuilder.eq('region', region);
+  }
+
+  const { data, error } = await queryBuilder.limit(limit);
 
   if (error) {
     console.error('Error searching content:', error);
@@ -81,7 +86,7 @@ export const searchContent = async (query: string, limit: number = 5) => {
 export const fetchContentBySlugAndType = async (slug: string, type: string) => {
   const { data, error } = await supabase
     .from('content')
-    .select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)')
+    .select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region')
     .eq('link_slug', slug)
     .eq('type', type)
     .single();

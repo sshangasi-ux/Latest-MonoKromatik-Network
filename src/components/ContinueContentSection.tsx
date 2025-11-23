@@ -28,6 +28,7 @@ interface ContentItemWithProgress {
     time?: number;
     percentage?: number;
   };
+  region?: string; // Added region
 }
 
 const ContinueContentSection = () => {
@@ -126,6 +127,7 @@ const ContinueContentSection = () => {
                       category={item.category}
                       link={item.link}
                       contentId={item.id} // Added contentId prop
+                      region={item.region} // Pass region to ContentCard
                     />
                     {(item.progress_data?.percentage !== undefined || item.progress_data?.time !== undefined) && (
                       <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background/70 to-transparent">
