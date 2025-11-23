@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* Light background for default */
-    --foreground: 222.2 84% 4.9%; /* Dark foreground for default */
+    --background: 0 0% 100%; /* White */
+    --foreground: 222.2 84% 4.9%; /* Dark black */
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -13,11 +13,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 217.2 91.2% 59.8%; /* Lovable vibrant blue */
-    --primary-foreground: 0 0% 100%; /* White */
+    --primary: 222.2 47.4% 11.2%; /* Original dark blue/black */
+    --primary-foreground: 210 40% 98%; /* Original off-white */
 
-    --secondary: 210 40% 96.1%; /* Light grey for secondary */
-    --secondary-foreground: 222.2 47.4% 11.2%; /* Dark grey for secondary foreground */
+    --secondary: 210 40% 96.1%; /* Original light grey */
+    --secondary-foreground: 222.2 47.4% 11.2%; /* Original dark blue/black */
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
@@ -25,8 +25,8 @@
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 0 84.2% 60.2%; /* Keeping a warning red for destructive actions */
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%; /* Original red */
+    --destructive-foreground: 210 40% 98%; /* Original off-white */
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
@@ -41,7 +41,7 @@
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 222.2 84% 4.9%;
   }
 
   .dark {
@@ -54,7 +54,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217.2 91.2% 59.8%; /* Lovable vibrant blue */
+    --primary: 217.2 91.2% 59.8%; /* Original dark blue/black */
     --primary-foreground: 0 0% 100%; /* White */
 
     --secondary: 217.2 32.6% 17.5%; /* Darker grey/blue for secondary */
@@ -66,7 +66,7 @@
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%; /* Keeping a warning red for destructive actions */
+    --destructive: 0 62.8% 30.6%; /* Original red */
     --destructive-foreground: 210 40% 98%;
 
     --border: 217.2 32.6% 17.5%;

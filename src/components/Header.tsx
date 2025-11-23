@@ -21,7 +21,7 @@ const Header = () => {
   return (
     <header className="bg-background text-foreground shadow-sm p-4 flex items-center justify-between border-b border-border">
       <div className="flex items-center">
-        <Link to="/" className="text-2xl font-bold text-primary-foreground">
+        <Link to="/" className="text-2xl font-bold text-primary">
           MonoKromatik Network
         </Link>
       </div>

@@ -17,7 +17,7 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
       </div>
       <div className="container mx-auto px-4 relative z-10 text-center">
-        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 drop-shadow-lg text-primary-foreground">
+        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 drop-shadow-lg text-foreground">
           Experience the Pulse of African Content
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-3xl mx-auto">
