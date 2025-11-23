@@ -9,7 +9,7 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 import { cn } from "@/lib/utils";
 import AddToPlaylistButton from "./AddToPlaylistButton";
 import LikeButton from "./LikeButton"; // Import LikeButton
-import { getLikeCount } from "@/lib/supabase"; // Import getLikeCount
+import { getLikeCount, getAverageRating } from "@/lib/supabase"; // Import getLikeCount and getAverageRating
 
 interface ContentCardProps {
   contentId: string;
@@ -40,17 +40,27 @@ const ContentCard: React.FC<ContentCardProps> = ({
 }) => {
   const { userId } = useWatchlist(); // Only need userId for watchlist button
   const [initialLikes, setInitialLikes] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [loadingRatings, setLoadingRatings] = useState(true);
 
   useEffect(() => {
-    const fetchLikes = async () => {
+    const fetchData = async () => {
+      setLoadingRatings(true);
       try {
-        const count = await getLikeCount(contentId);
-        setInitialLikes(count);
+        const likes = await getLikeCount(contentId);
+        setInitialLikes(likes);
+
+        const { averageRating: avg, reviewCount: count } = await getAverageRating(contentId) || { averageRating: 0, reviewCount: 0 };
+        setAverageRating(avg);
+        setReviewCount(count);
       } catch (err) {
-        console.error("Failed to fetch initial like count for card:", err);
+        console.error("Failed to fetch card metrics:", err);
+      } finally {
+        setLoadingRatings(false);
       }
     };
-    fetchLikes();
+    fetchData();
   }, [contentId]);
 
   const renderIcon = () => {
@@ -99,6 +109,20 @@ const ContentCard: React.FC<ContentCardProps> = ({
           {description}
         </CardContent>
         <CardFooter className="pt-2 flex flex-col items-start space-y-2">
+          {loadingRatings ? (
+            <div className="h-4 w-24 bg-muted rounded animate-pulse mb-2"></div>
+          ) : reviewCount > 0 ? (
+            <div className="flex items-center space-x-1 text-muted-foreground text-sm mb-2">
+              <div className="flex">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <Star key={i} className={`h-4 w-4 ${i < Math.round(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"}`} />
+                ))}
+              </div>
+              <span>({reviewCount})</span>
+            </div>
+          ) : (
+            <span className="text-muted-foreground text-xs mb-2 font-sans">No reviews yet</span>
+          )}
           <Button variant="secondary" size="sm" className="w-full">
             {renderIcon()}
             View Details
