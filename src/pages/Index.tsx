@@ -1,37 +1,21 @@
 "use client";
 
-import Header from "@/components/Header";
-import HeroSection from "@/components/HeroSection";
-import LiveTicker from "@/components/LiveTicker";
-import FeaturedShowsCarousel from "@/components/FeaturedShowsCarousel";
-import VideoSpotlightCarousel from "@/components/VideoSpotlightCarousel";
-import TrendingArticlesSection from "@/components/TrendingArticlesSection";
-import UpcomingEventsCarousel from "@/components/UpcomingEventsCarousel";
-import MembershipCTA from "@/components/MembershipCTA";
-import Footer from "@/components/Footer";
-import ContinueContentSection from "@/components/ContinueContentSection";
-import SmartPicksSection from "@/components/SmartPicksSection";
-import SponsoredContentSection from "@/components/SponsoredContentSection";
-import LatestContentCarousel from "@/components/LatestContentCarousel"; // Import new component
+import { MadeWithDyad } from "@/components/made-with-dyad";
+import Header from "@/components/Header"; // Import the new Header component
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Header />
-      <LiveTicker />
-      <main className="flex-grow">
-        <HeroSection />
-        <ContinueContentSection />
-        <SmartPicksSection />
-        <LatestContentCarousel /> {/* Add the new section here */}
-        <SponsoredContentSection />
-        <FeaturedShowsCarousel />
-        <VideoSpotlightCarousel />
-        <TrendingArticlesSection />
-        <UpcomingEventsCarousel />
-        <MembershipCTA />
+    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
+      <Header /> {/* Render the Header component */}
+      <main className="flex-grow flex items-center justify-center">
+        <div className="text-center p-4">
+          <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Welcome to MonoKromatik Network</h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300">
+            Your hub for creative solutions.
+          </p>
+        </div>
       </main>
-      <Footer />
+      <MadeWithDyad />
     </div>
   );
 };
