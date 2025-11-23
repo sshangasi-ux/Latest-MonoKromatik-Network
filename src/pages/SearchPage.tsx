@@ -8,6 +8,7 @@ import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import { searchContent } from "@/lib/supabase";
 import { allDummyContent } from "@/data/dummyContent";
+import RegionFilter from "@/components/RegionFilter"; // Import RegionFilter
 
 interface ContentItem {
   id: string;
@@ -20,12 +21,15 @@ interface ContentItem {
   link: string;
 }
 
+const AFRICAN_REGIONS = ["Southern Africa", "West Africa", "East Africa", "North Africa", "Central Africa"]; // Define regions
+
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("query") || "";
   const [results, setResults] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState("all"); // New state for region filter
 
   useEffect(() => {
     const fetchSearchResults = async () => {
@@ -38,7 +42,7 @@ const SearchPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const { data, error } = await searchContent(query, 20);
+        const { data, error } = await searchContent(query, 20, selectedRegion); // Pass selectedRegion to searchContent
         if (error) {
           throw error;
         }
@@ -60,9 +64,10 @@ const SearchPage = () => {
         console.error("Failed to fetch search results:", err);
         setError("Failed to load search results. Please try again later.");
         const dummyFiltered = allDummyContent.filter(item =>
-          item.title.toLowerCase().includes(query.toLowerCase()) ||
+          (item.title.toLowerCase().includes(query.toLowerCase()) ||
           item.description.toLowerCase().includes(query.toLowerCase()) ||
-          item.category.toLowerCase().includes(query.toLowerCase())
+          item.category.toLowerCase().includes(query.toLowerCase())) &&
+          (selectedRegion === "all" || item.region === selectedRegion) // Filter dummy content by region
         ).slice(0, 20);
         setResults(dummyFiltered);
       } finally {
@@ -71,7 +76,11 @@ const SearchPage = () => {
     };
 
     fetchSearchResults();
-  }, [query]);
+  }, [query, selectedRegion]); // Re-fetch when query or selectedRegion changes
+
+  const handleRegionChange = (region: string) => {
+    setSelectedRegion(region);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -80,6 +89,14 @@ const SearchPage = () => {
         <h1 className="text-4xl font-heading font-bold mb-8 text-center uppercase text-foreground tracking-tight">
           Search Results for "{query}"
         </h1>
+
+        <div className="flex justify-center mb-8">
+          <RegionFilter
+            selectedRegion={selectedRegion}
+            onRegionChange={handleRegionChange}
+            regions={AFRICAN_REGIONS}
+          />
+        </div>
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -91,20 +108,20 @@ const SearchPage = () => {
           <div className="text-center text-destructive text-xl font-sans">{error}</div>
         ) : results.length === 0 ? (
           <div className="text-center text-muted-foreground text-xl font-sans">
-            No results found for "{query}". Try a different search term.
+            No results found for "{query}" in {selectedRegion === "all" ? "all regions" : selectedRegion}. Try a different search term or region.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {results.map((item) => (
               <ContentCard
                 key={item.id}
+                contentId={item.id} // Added contentId prop
                 type={item.type}
                 title={item.title}
                 description={item.description}
                 imageUrl={item.image_url}
                 category={item.category}
                 link={item.link}
-                contentId={item.id} // Added contentId prop
               />
             ))}
           </div>
