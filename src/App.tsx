@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SearchPage from "./pages/SearchPage"; // Import SearchPage
 import { AuthProvider } from "./context/AuthContext";
+// import "./App.css"; // Removed this line
 
 const queryClient = new QueryClient();
 
