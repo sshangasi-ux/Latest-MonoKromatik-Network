@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 interface ContentCardProps {
-  type: "show" | "video" | "article" | "event" | "sponsored"; // Added 'sponsored'
+  type: "show" | "video" | "article" | "event" | "sponsored" | "music_show"; // Added 'music_show'
   title: string;
   description: string;
   imageUrl: string;

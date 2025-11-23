@@ -14,7 +14,7 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event" | "sponsored";
+  type: "show" | "video" | "article" | "event" | "sponsored" | "music_show"; // Added 'music_show'
   link: string;
 }
 

@@ -24,7 +24,7 @@ interface ContentItemWithProgress {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event";
+  type: "show" | "video" | "article" | "event" | "sponsored" | "music_show"; // Added 'music_show'
   link: string;
   progress_data?: {
     time?: number;
@@ -66,6 +66,8 @@ const ProfilePage: React.FC = () => {
               case 'video': linkPrefix = '/watch'; break;
               case 'article': linkPrefix = '/news'; break;
               case 'event': linkPrefix = '/events'; break;
+              case 'sponsored': linkPrefix = '/sponsored'; break;
+              case 'music_show': linkPrefix = '/music/shows'; break; // Added 'music_show'
               default: linkPrefix = '';
             }
             return {

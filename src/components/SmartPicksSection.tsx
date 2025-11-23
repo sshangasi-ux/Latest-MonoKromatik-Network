@@ -22,7 +22,7 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event" | "sponsored";
+  type: "show" | "video" | "article" | "event" | "sponsored" | "music_show"; // Added 'music_show'
   link: string;
 }
 
@@ -68,6 +68,7 @@ const SmartPicksSection = () => {
               case 'article': linkPrefix = '/news'; break;
               case 'event': linkPrefix = '/events'; break;
               case 'sponsored': linkPrefix = '/sponsored'; break;
+              case 'music_show': linkPrefix = '/music/shows'; break; // Added 'music_show'
               default: linkPrefix = '';
             }
             return { ...item, link: `${linkPrefix}/${item.link_slug}` };
@@ -98,6 +99,7 @@ const SmartPicksSection = () => {
               case 'article': linkPrefix = '/news'; break;
               case 'event': linkPrefix = '/events'; break;
               case 'sponsored': linkPrefix = '/sponsored'; break;
+              case 'music_show': linkPrefix = '/music/shows'; break; // Added 'music_show'
               default: linkPrefix = '';
             }
             return { ...item, link: `${linkPrefix}/${item.link_slug}` };
@@ -116,6 +118,7 @@ const SmartPicksSection = () => {
             case 'article': linkPrefix = '/news'; break;
             case 'event': linkPrefix = '/events'; break;
             case 'sponsored': linkPrefix = '/sponsored'; break;
+            case 'music_show': linkPrefix = '/music/shows'; break; // Added 'music_show'
             default: linkPrefix = '';
           }
           return { ...item, link: `${linkPrefix}/${item.link_slug}` };
