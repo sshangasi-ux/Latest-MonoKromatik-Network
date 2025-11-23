@@ -6,13 +6,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SearchPage from "./pages/SearchPage";
-import ContentDetailPage from "./pages/ContentDetailPage"; // Ensure ContentDetailPage is imported
-import MusicPage from "./pages/MusicPage"; // Import MusicPage
-import ShopPage from "./pages/ShopPage"; // Import ShopPage
-import ShowsListingPage from "./pages/ShowsListingPage"; // Import ShowsListingPage
-import NewsListingPage from "./pages/NewsListingPage"; // Import NewsListingPage
-import WatchListingPage from "./pages/WatchListingPage"; // Import WatchListingPage
-import EventsListingPage from "./pages/EventsListingPage"; // Import EventsListingPage
+import ContentDetailPage from "./pages/ContentDetailPage";
+import MusicPage from "./pages/MusicPage";
+import ShopPage from "./pages/ShopPage";
+import ShowsListingPage from "./pages/ShowsListingPage";
+import NewsListingPage from "./pages/NewsListingPage";
+import WatchListingPage from "./pages/WatchListingPage";
+import EventsListingPage from "./pages/EventsListingPage";
+import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -27,13 +28,14 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/search" element={<SearchPage />} />
-            <Route path="/shows" element={<ShowsListingPage />} /> {/* New Shows Listing Route */}
-            <Route path="/news" element={<NewsListingPage />} /> {/* New News Listing Route */}
-            <Route path="/music" element={<MusicPage />} /> {/* New Music Route */}
-            <Route path="/watch" element={<WatchListingPage />} /> {/* New Watch Listing Route */}
-            <Route path="/shop" element={<ShopPage />} /> {/* New Shop Route */}
-            <Route path="/events" element={<EventsListingPage />} /> {/* New Events Listing Route */}
-            <Route path="/:type/:id" element={<ContentDetailPage />} /> {/* Dynamic Content Detail Route */}
+            <Route path="/shows" element={<ShowsListingPage />} />
+            <Route path="/news" element={<NewsListingPage />} />
+            <Route path="/music" element={<MusicPage />} />
+            <Route path="/watch" element={<WatchListingPage />} />
+            <Route path="/shop" element={<ShopPage />} />
+            <Route path="/events" element={<EventsListingPage />} />
+            <Route path="/profile" element={<ProfilePage />} /> {/* New Profile Route */}
+            <Route path="/:type/:id" element={<ContentDetailPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

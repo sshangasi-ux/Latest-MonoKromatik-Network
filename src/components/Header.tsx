@@ -4,17 +4,27 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, User } from "lucide-react"; // Import User icon
+import { useAuth } from "@/context/AuthContext"; // Import useAuth hook
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth(); // Use auth context
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
       setSearchTerm("");
+    }
+  };
+
+  const handleLoginLogout = async () => {
+    if (isAuthenticated) {
+      await logout();
+    } else {
+      navigate("/login"); // Assuming a /login route exists or will be created
     }
   };
 
@@ -58,7 +68,17 @@ const Header = () => {
             <Search className="h-5 w-5" />
           </Button>
         </form>
-        <Button variant="outline" className="hidden md:inline-flex border-primary text-primary hover:bg-primary hover:text-primary-foreground uppercase font-semibold text-sm px-4 py-2">Login</Button>
+        {isAuthenticated ? (
+          <Button asChild variant="ghost" size="icon" className="text-foreground hover:bg-secondary hover:text-primary">
+            <Link to="/profile">
+              <User className="h-6 w-6" />
+            </Link>
+          </Button>
+        ) : (
+          <Button variant="outline" onClick={handleLoginLogout} className="hidden md:inline-flex border-primary text-primary hover:bg-primary hover:text-primary-foreground uppercase font-semibold text-sm px-4 py-2">
+            Login
+          </Button>
+        )}
         {/* Mobile menu icon could go here later */}
       </div>
     </header>
