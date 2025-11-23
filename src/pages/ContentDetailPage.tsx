@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchContent } from "@/lib/supabase";
+import { fetchContent, fetchContentBySlugAndType } from "@/lib/supabase"; // Updated import
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Share2 } from "lucide-react";
@@ -30,7 +30,7 @@ interface ContentItem {
 const ContentDetailPage = () => {
   const { type, id } = useParams<{ type: string; id: string }>();
   const [contentItem, setContentItem] = useState<ContentItem | undefined>(undefined);
-  const [allContent, setAllContent] = useState<ContentItem[]>([]);
+  const [relatedContent, setRelatedContent] = useState<ContentItem[]>([]); // State for related content
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,27 +39,60 @@ const ContentDetailPage = () => {
       setLoading(true);
       setError(null);
       try {
-        let fetchedItem: ContentItem | undefined;
-        
-        const { data: allSupabaseContentData } = await fetchContent(); // Destructure data
-        const mappedContent: ContentItem[] = (allSupabaseContentData as ContentItem[]).map(item => {
+        // Determine the actual content type based on the URL path
+        let actualContentType: "show" | "video" | "article" | "event" | undefined;
+        switch (type) {
+          case 'news': actualContentType = 'article'; break;
+          case 'watch': actualContentType = 'video'; break;
+          case 'shows': actualContentType = 'show'; break;
+          case 'events': actualContentType = 'event'; break;
+          default: actualContentType = undefined;
+        }
+
+        if (!actualContentType || !id) {
+          setError("Invalid content type or ID.");
+          setLoading(false);
+          return;
+        }
+
+        // 1. Fetch the specific content item
+        const fetchedItem = await fetchContentBySlugAndType(id, actualContentType);
+        if (fetchedItem) {
+          // Construct the full link for the fetched item
           let linkPrefix = '';
-          switch (item.type) {
+          switch (fetchedItem.type) {
             case 'show': linkPrefix = '/shows'; break;
             case 'video': linkPrefix = '/watch'; break;
             case 'article': linkPrefix = '/news'; break;
             case 'event': linkPrefix = '/events'; break;
             default: linkPrefix = '';
           }
-          return { ...item, link: `${linkPrefix}/${item.link_slug}` };
-        });
+          setContentItem({ ...fetchedItem, link: `${linkPrefix}/${fetchedItem.link_slug}` });
 
-        const foundItem = mappedContent.find(
-          (item) => item.type === (type === 'news' ? 'article' : type === 'watch' ? 'video' : type === 'shows' ? 'show' : type === 'events' ? 'event' : '') && item.link_slug === id
-        );
-        
-        setContentItem(foundItem);
-        setAllContent(mappedContent);
+          // 2. Fetch related content based on category
+          // Fetch a few more items than needed to ensure we can filter out the current item
+          const { data: allContentData } = await fetchContent(undefined, 10); 
+          const mappedAllContent: ContentItem[] = (allContentData as ContentItem[]).map(item => {
+            let relatedLinkPrefix = '';
+            switch (item.type) {
+              case 'show': relatedLinkPrefix = '/shows'; break;
+              case 'video': relatedLinkPrefix = '/watch'; break;
+              case 'article': relatedLinkPrefix = '/news'; break;
+              case 'event': relatedLinkPrefix = '/events'; break;
+              default: relatedLinkPrefix = '';
+            }
+            return { ...item, link: `${relatedLinkPrefix}/${item.link_slug}` };
+          });
+
+          const filteredRelated = mappedAllContent.filter(
+            (item) =>
+              item.category === fetchedItem.category && item.id !== fetchedItem.id
+          ).slice(0, 3); // Show up to 3 related items
+          setRelatedContent(filteredRelated);
+
+        } else {
+          setContentItem(undefined); // Item not found
+        }
       } catch (err) {
         console.error("Failed to fetch content detail:", err);
         setError("Failed to load content. Please try again later.");
@@ -69,7 +102,7 @@ const ContentDetailPage = () => {
     };
 
     fetchContentData();
-  }, [type, id]);
+  }, [type, id]); // Re-run effect if type or id changes
 
   if (loading) {
     return (
@@ -130,12 +163,6 @@ const ContentDetailPage = () => {
 
   const shareUrl = `${window.location.origin}${contentItem.link}`;
   const shareText = `Check out this ${contentItem.type} on MonoKromatik Network: ${contentItem.title}`;
-
-  // Filter for related content (same category, exclude current item)
-  const relatedContent = allContent.filter(
-    (item) =>
-      item.category === contentItem?.category && item.id !== contentItem?.id
-  ).slice(0, 3); // Show up to 3 related items
 
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">

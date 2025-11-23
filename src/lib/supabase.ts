@@ -46,7 +46,7 @@ export const fetchTickerMessages = async () => {
   return data.map(item => item.message);
 };
 
-// New function to search content by title, description, or category
+// Function to search content by title, description, or category
 export const searchContent = async (query: string, limit: number = 5) => {
   if (!query) {
     return { data: [], error: null };
@@ -63,4 +63,20 @@ export const searchContent = async (query: string, limit: number = 5) => {
     throw error;
   }
   return { data, error };
+};
+
+// New function to fetch a single content item by its link_slug and type
+export const fetchContentBySlugAndType = async (slug: string, type: string) => {
+  const { data, error } = await supabase
+    .from('content')
+    .select('*')
+    .eq('link_slug', slug)
+    .eq('type', type)
+    .single(); // Use .single() to expect one row
+
+  if (error) {
+    console.error(`Error fetching content with slug ${slug} and type ${type}:`, error);
+    throw error;
+  }
+  return data;
 };
