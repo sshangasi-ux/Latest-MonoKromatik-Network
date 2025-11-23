@@ -1,25 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react"; // Import useEffect and useState
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Play, BookOpen, Calendar, Star, LinkIcon, User } from "lucide-react"; // Import User icon
+import { Play, BookOpen, Calendar, Star, LinkIcon, User, MapPin } from "lucide-react";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { cn } from "@/lib/utils";
-import AddToPlaylistButton from "./AddToPlaylistButton"; // Import AddToPlaylistButton
+import AddToPlaylistButton from "./AddToPlaylistButton";
+import LikeButton from "./LikeButton"; // Import LikeButton
+import { getLikeCount } from "@/lib/supabase"; // Import getLikeCount
 
 interface ContentCardProps {
-  contentId: string; // Content ID for watchlist and other unique identification
+  contentId: string;
   type: "show" | "video" | "article" | "event" | "sponsored" | "music_show";
   title: string;
   description: string;
   imageUrl: string;
   category: string;
-  link: string; // The actual navigation link
+  link: string;
   className?: string;
-  creatorId?: string; // New prop for creator's user ID
-  creatorName?: string; // New prop for creator's name
+  creatorId?: string;
+  creatorName?: string;
+  region?: string;
 }
 
 const ContentCard: React.FC<ContentCardProps> = ({
@@ -33,23 +36,22 @@ const ContentCard: React.FC<ContentCardProps> = ({
   className,
   creatorId,
   creatorName,
+  region,
 }) => {
-  const { addToWatchlist, removeFromWatchlist, isInWatchlist, userId } = useWatchlist();
-  const onWatchlist = isInWatchlist(contentId);
+  const { userId } = useWatchlist(); // Only need userId for watchlist button
+  const [initialLikes, setInitialLikes] = useState(0);
 
-  const handleWatchlistToggle = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigating to the content detail page
-    e.stopPropagation(); // Stop event propagation
-    if (!userId) {
-      // The hook already shows a toast, but we can add more specific UI here if needed
-      return;
-    }
-    if (onWatchlist) {
-      removeFromWatchlist(contentId, title);
-    } else {
-      addToWatchlist(contentId, title);
-    }
-  };
+  useEffect(() => {
+    const fetchLikes = async () => {
+      try {
+        const count = await getLikeCount(contentId);
+        setInitialLikes(count);
+      } catch (err) {
+        console.error("Failed to fetch initial like count for card:", err);
+      }
+    };
+    fetchLikes();
+  }, [contentId]);
 
   const renderIcon = () => {
     switch (type) {
@@ -81,19 +83,9 @@ const ContentCard: React.FC<ContentCardProps> = ({
               e.currentTarget.src = "/placeholder.svg"; // Fallback image
             }}
           />
-          <div className="absolute top-2 right-2 flex space-x-2"> {/* Adjusted for multiple buttons */}
-            <AddToPlaylistButton contentId={contentId} contentTitle={title} /> {/* Add to Playlist Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleWatchlistToggle}
-              className={cn(
-                "rounded-full bg-background/60 hover:bg-background/80 backdrop-blur-sm",
-                onWatchlist ? "text-red-500 hover:text-red-600" : "text-gray-400 hover:text-primary"
-              )}
-            >
-              <Heart className="h-5 w-5 fill-current" />
-            </Button>
+          <div className="absolute top-2 right-2 flex space-x-2">
+            <AddToPlaylistButton contentId={contentId} contentTitle={title} />
+            <LikeButton contentId={contentId} initialLikes={initialLikes} /> {/* Integrate LikeButton */}
           </div>
           <span className="absolute bottom-2 left-2 bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded-full capitalize">
             {category}
@@ -118,6 +110,11 @@ const ContentCard: React.FC<ContentCardProps> = ({
                 By {creatorName}
               </Link>
             </Button>
+          )}
+          {region && (
+            <div className="flex items-center text-xs text-muted-foreground font-sans mt-1">
+              <MapPin className="h-3 w-3 mr-1" /> {region}
+            </div>
           )}
         </CardFooter>
       </Card>

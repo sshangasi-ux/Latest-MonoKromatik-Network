@@ -16,10 +16,11 @@ export interface ContentItem {
   music_embed_url?: string;
   creator_id?: string;
   creator_name?: string; // Added for direct access
+  region?: string; // New field for regional focus
 }
 
 // Function to fetch content from the 'content' table with optional type, limit, offset, and category for pagination and filtering
-export const fetchContent = async (type?: string, limit?: number, offset?: number, category?: string) => {
+export const fetchContent = async (type?: string, limit?: number, offset?: number, category?: string, region?: string) => {
   let query = supabase.from('content').select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)', { count: 'exact' });
 
   if (type) {
@@ -28,6 +29,10 @@ export const fetchContent = async (type?: string, limit?: number, offset?: numbe
 
   if (category && category !== 'all') {
     query = query.eq('category', category);
+  }
+
+  if (region && region !== 'all') { // Apply region filter
+    query = query.eq('region', region);
   }
 
   if (limit !== undefined) {

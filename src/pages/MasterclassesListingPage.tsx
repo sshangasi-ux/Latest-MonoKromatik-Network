@@ -7,11 +7,13 @@ import MasterclassCard from "@/components/MasterclassCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import PaginationControls from "@/components/PaginationControls";
 import CategoryFilter from "@/components/CategoryFilter";
+import RegionFilter from "@/components/RegionFilter"; // Import RegionFilter
 import { fetchMasterclasses, Masterclass } from "@/lib/masterclasses";
 import { dummyMasterclasses } from "@/data/dummyContent";
 
 const ITEMS_PER_PAGE = 9;
 const MASTERCLASS_CATEGORIES = ["Music", "Tech", "Fashion", "Culture", "Business", "Art"]; // Example categories
+const AFRICAN_REGIONS = ["Southern Africa", "West Africa", "East Africa", "North Africa", "Central Africa"]; // Example regions
 
 const MasterclassesListingPage: React.FC = () => {
   const [masterclasses, setMasterclasses] = useState<Masterclass[]>([]);
@@ -20,6 +22,7 @@ const MasterclassesListingPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedRegion, setSelectedRegion] = useState("all"); // New state for region filter
 
   useEffect(() => {
     const getMasterclasses = async () => {
@@ -27,15 +30,16 @@ const MasterclassesListingPage: React.FC = () => {
       setError(null);
       try {
         const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-        const { data, count } = await fetchMasterclasses(ITEMS_PER_PAGE, offset, selectedCategory);
+        const { data, count } = await fetchMasterclasses(ITEMS_PER_PAGE, offset, selectedCategory, selectedRegion); // Pass selectedRegion
 
         if (data) {
           setMasterclasses(data);
           setTotalPages(Math.ceil((count || 0) / ITEMS_PER_PAGE));
         } else {
-          const filteredDummy = selectedCategory === "all"
-            ? dummyMasterclasses
-            : dummyMasterclasses.filter(mc => mc.category === selectedCategory);
+          const filteredDummy = dummyMasterclasses.filter(mc =>
+            (selectedCategory === "all" || mc.category === selectedCategory) &&
+            (selectedRegion === "all" || mc.region === selectedRegion)
+          );
           const startIndex = offset;
           const endIndex = offset + ITEMS_PER_PAGE;
           const paginatedDummy = filteredDummy.slice(startIndex, endIndex);
@@ -45,9 +49,10 @@ const MasterclassesListingPage: React.FC = () => {
       } catch (err) {
         console.error("Failed to fetch masterclasses:", err);
         setError("Failed to load masterclasses. Please try again later.");
-        const filteredDummy = selectedCategory === "all"
-          ? dummyMasterclasses
-          : dummyMasterclasses.filter(mc => mc.category === selectedCategory);
+        const filteredDummy = dummyMasterclasses.filter(mc =>
+          (selectedCategory === "all" || mc.category === selectedCategory) &&
+          (selectedRegion === "all" || mc.region === selectedRegion)
+        );
         const offset = (currentPage - 1) * ITEMS_PER_PAGE;
         const startIndex = offset;
         const endIndex = offset + ITEMS_PER_PAGE;
@@ -60,7 +65,7 @@ const MasterclassesListingPage: React.FC = () => {
     };
 
     getMasterclasses();
-  }, [currentPage, selectedCategory]);
+  }, [currentPage, selectedCategory, selectedRegion]); // Re-fetch when region changes
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -72,17 +77,27 @@ const MasterclassesListingPage: React.FC = () => {
     setCurrentPage(1);
   };
 
+  const handleRegionChange = (region: string) => {
+    setSelectedRegion(region);
+    setCurrentPage(1);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       <main className="flex-grow container mx-auto p-8">
         <h1 className="text-4xl font-heading font-bold mb-8 text-center uppercase tracking-tight">All Masterclasses</h1>
 
-        <div className="flex justify-center mb-8">
+        <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 mb-8">
           <CategoryFilter
             selectedCategory={selectedCategory}
             onCategoryChange={handleCategoryChange}
             categories={MASTERCLASS_CATEGORIES}
+          />
+          <RegionFilter
+            selectedRegion={selectedRegion}
+            onRegionChange={handleRegionChange}
+            regions={AFRICAN_REGIONS}
           />
         </div>
 
@@ -98,7 +113,7 @@ const MasterclassesListingPage: React.FC = () => {
           </div>
         ) : masterclasses.length === 0 ? (
           <div className="text-center text-muted-foreground text-xl font-sans">
-            No masterclasses available for this category.
+            No masterclasses available for this category and region.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

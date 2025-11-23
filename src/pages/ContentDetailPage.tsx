@@ -4,10 +4,10 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchContent, fetchContentBySlugAndType, saveUserProgress } from "@/lib/supabase";
+import { fetchContent, fetchContentBySlugAndType, saveUserProgress, getLikeCount } from "@/lib/supabase"; // Import getLikeCount
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Share2 } from "lucide-react";
+import { Share2, MapPin } from "lucide-react"; // Import MapPin
 import {
   Popover,
   PopoverContent,
@@ -25,7 +25,8 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import CommentSection from "@/components/CommentSection";
 import WatchlistButton from "@/components/WatchlistButton";
-import AddToPlaylistButton from "@/components/AddToPlaylistButton"; // Import AddToPlaylistButton
+import AddToPlaylistButton from "@/components/AddToPlaylistButton";
+import LikeButton from "@/components/LikeButton"; // Import LikeButton
 
 interface ContentItem {
   id: string;
@@ -39,6 +40,7 @@ interface ContentItem {
   link: string;
   video_url?: string;
   image_gallery_urls?: string[];
+  region?: string; // Added region
 }
 
 const ContentDetailPage = () => {
@@ -48,6 +50,7 @@ const ContentDetailPage = () => {
   const [relatedContent, setRelatedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [initialLikes, setInitialLikes] = useState(0); // State for initial likes
 
   const handleSaveProgress = useCallback(async (progressData: any) => {
     if (user && contentItem) {
@@ -76,7 +79,7 @@ const ContentDetailPage = () => {
           case 'shows': actualContentType = 'show'; break;
           case 'events': actualContentType = 'event'; break;
           case 'sponsored': actualContentType = 'sponsored'; break;
-          case 'music/shows': actualContentType = 'music_show'; break; // Handle new music show route
+          case 'music/shows': actualContentType = 'music_show'; break;
           default: actualContentType = undefined;
         }
 
@@ -100,6 +103,10 @@ const ContentDetailPage = () => {
           }
           const fullContentItem = { ...fetchedItem, link: `${linkPrefix}/${fetchedItem.link_slug}` };
           setContentItem(fullContentItem);
+
+          // Fetch initial likes for the detail page
+          const likes = await getLikeCount(fullContentItem.id);
+          setInitialLikes(likes);
 
           if (user) {
             if (fullContentItem.type === "video") {
@@ -266,14 +273,22 @@ const ContentDetailPage = () => {
           )}
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-sm px-3 py-1 self-start font-semibold">
-                {displayItem.category}
-              </Badge>
-              <div className="flex space-x-2"> {/* Group watchlist and add to playlist buttons */}
+              <div className="flex items-center space-x-2">
+                <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-sm px-3 py-1 self-start font-semibold">
+                  {displayItem.category}
+                </Badge>
+                {displayItem.region && (
+                  <Badge variant="secondary" className="bg-secondary text-muted-foreground uppercase text-xs px-3 py-1 font-semibold">
+                    <MapPin className="h-3 w-3 mr-1" /> {displayItem.region}
+                  </Badge>
+                )}
+              </div>
+              <div className="flex space-x-2">
                 {displayItem.id && (
                   <>
                     <AddToPlaylistButton contentId={displayItem.id} contentTitle={displayItem.title} />
                     <WatchlistButton contentId={displayItem.id} contentType={displayItem.type} className="text-lg" />
+                    <LikeButton contentId={displayItem.id} initialLikes={initialLikes} /> {/* Integrate LikeButton */}
                   </>
                 )}
               </div>
@@ -288,7 +303,7 @@ const ContentDetailPage = () => {
               {displayItem.type === "event" ? (
                 <Button
                   className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-6 py-3 rounded-lg uppercase font-semibold transition-all hover:scale-[1.02] hover:shadow-primary/20"
-                  onClick={() => window.open("https://example.com/buy-tickets", "_blank")} // Placeholder for 3rd party ticket link
+                  onClick={() => window.open("https://example.com/buy-tickets", "_blank")}
                 >
                   Buy Tickets
                 </Button>
@@ -356,6 +371,7 @@ const ContentDetailPage = () => {
                   imageUrl={item.image_url}
                   category={item.category}
                   link={item.link}
+                  region={item.region} // Pass region to related content cards
                 />
               ))}
             </div>

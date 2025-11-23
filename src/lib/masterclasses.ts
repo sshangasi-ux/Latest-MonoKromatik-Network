@@ -17,6 +17,7 @@ export interface Masterclass {
   duration_minutes?: number | null;
   is_published: boolean;
   link: string; // Derived link for navigation
+  region?: string; // New field for regional focus
 }
 
 // Interface for Masterclass Enrollment
@@ -31,7 +32,7 @@ export interface MasterclassEnrollment {
 }
 
 // Function to fetch all published masterclasses
-export const fetchMasterclasses = async (limit?: number, offset?: number, category?: string) => {
+export const fetchMasterclasses = async (limit?: number, offset?: number, category?: string, region?: string) => {
   let query = supabase
     .from('masterclasses')
     .select(`
@@ -44,6 +45,10 @@ export const fetchMasterclasses = async (limit?: number, offset?: number, catego
 
   if (category && category !== 'all') {
     query = query.eq('category', category);
+  }
+
+  if (region && region !== 'all') { // Apply region filter
+    query = query.eq('region', region);
   }
 
   if (limit !== undefined) {

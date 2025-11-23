@@ -24,5 +24,8 @@ export * from './masterclasses';
 // Re-export all from misc module
 export * from './misc';
 
+// Re-export all from likes module
+export * from './likes';
+
 // Export the supabase client directly for convenience if needed
 export { supabase };
