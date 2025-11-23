@@ -75,7 +75,7 @@ const SearchPage = () => {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       <main className="flex-grow container mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center uppercase text-foreground">
+        <h1 className="text-4xl font-heading font-bold mb-8 text-center uppercase text-foreground tracking-tight">
           Search Results for "{query}"
         </h1>
 
@@ -86,9 +86,9 @@ const SearchPage = () => {
             ))}
           </div>
         ) : error ? (
-          <div className="text-center text-destructive text-xl">{error}</div>
+          <div className="text-center text-destructive text-xl font-sans">{error}</div>
         ) : results.length === 0 ? (
-          <div className="text-center text-muted-foreground text-xl">
+          <div className="text-center text-muted-foreground text-xl font-sans">
             No results found for "{query}". Try a different search term.
           </div>
         ) : (
@@ -108,7 +108,7 @@ const SearchPage = () => {
         )}
 
         <div className="mt-12 text-center">
-          <Link to="/" className="text-primary hover:text-primary/90 underline">
+          <Link to="/" className="text-primary hover:text-primary/90 underline uppercase font-semibold text-sm">
             Back to Home
           </Link>
         </div>

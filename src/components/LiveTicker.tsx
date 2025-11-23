@@ -52,7 +52,7 @@ const LiveTicker = () => {
     <div className="bg-secondary text-foreground py-2 overflow-hidden relative">
       <div className="animate-marquee whitespace-nowrap">
         {messagesToDisplay.map((msg, index) => (
-          <span key={index} className="text-sm md:text-base mx-8 font-medium">
+          <span key={index} className="text-sm md:text-base mx-8 font-medium font-sans">
             {msg}
           </span>
         ))}

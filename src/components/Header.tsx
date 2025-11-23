@@ -19,23 +19,23 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-background text-foreground shadow-sm p-4 flex items-center justify-between border-b border-border">
+    <header className="bg-background text-foreground shadow-sm p-4 flex items-center justify-between border-b border-border sticky top-0 z-50">
       <div className="flex items-center">
-        <Link to="/" className="text-2xl font-bold text-primary">
-          MonoKromatik Network
+        <Link to="/" className="text-2xl font-heading font-extrabold uppercase text-foreground">
+          MONO<span className="text-primary">[KROMATIK]</span> NETWORK
         </Link>
       </div>
       <nav className="hidden md:flex space-x-6">
-        <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
+        <Link to="/" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
           Home
         </Link>
-        <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">
+        <Link to="/about" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
           About
         </Link>
-        <Link to="/services" className="text-muted-foreground hover:text-primary transition-colors">
+        <Link to="/services" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
           Services
         </Link>
-        <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+        <Link to="/contact" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
           Contact
         </Link>
       </nav>
@@ -43,8 +43,8 @@ const Header = () => {
         <form onSubmit={handleSearch} className="flex">
           <Input
             type="text"
-            placeholder="Search content..."
-            className="w-48 bg-secondary border-border text-foreground focus:ring-primary focus:border-primary"
+            placeholder="SEARCH CONTENT..."
+            className="w-48 bg-input border-border text-foreground focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground uppercase text-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -52,7 +52,7 @@ const Header = () => {
             <Search className="h-5 w-5" />
           </Button>
         </form>
-        <Button variant="outline" className="hidden md:inline-flex border-primary text-primary hover:bg-primary hover:text-primary-foreground">Login</Button>
+        <Button variant="outline" className="hidden md:inline-flex border-primary text-primary hover:bg-primary hover:text-primary-foreground uppercase font-semibold text-sm px-4 py-2">Login</Button>
         {/* Mobile menu icon could go here later */}
       </div>
     </header>

@@ -176,9 +176,9 @@ const ContentDetailPage = () => {
       <div className="min-h-screen flex flex-col bg-background text-foreground">
         <Header />
         <main className="flex-grow container mx-auto p-8 text-center">
-          <h1 className="text-4xl font-bold mb-4 text-foreground">Error</h1>
-          <p className="text-xl text-destructive mb-4">{error}</p>
-          <Link to="/" className="text-primary hover:text-primary/90 underline">
+          <h1 className="text-4xl font-heading font-bold mb-4 text-foreground uppercase tracking-tight">Error</h1>
+          <p className="text-xl text-destructive mb-4 font-sans">{error}</p>
+          <Link to="/" className="text-primary hover:text-primary/90 underline uppercase font-semibold text-sm">
             Return to Home
           </Link>
         </main>
@@ -194,13 +194,13 @@ const ContentDetailPage = () => {
       <div className="min-h-screen flex flex-col bg-background text-foreground">
         <Header />
         <main className="flex-grow container mx-auto p-8 text-center">
-          <h1 className="text-4xl font-bold mb-4 text-foreground">
+          <h1 className="text-4xl font-heading font-bold mb-4 text-foreground uppercase tracking-tight">
             Content Not Found
           </h1>
-          <p className="text-xl text-muted-foreground mb-4">
+          <p className="text-xl text-muted-foreground mb-4 font-sans">
             The content you are looking for does not exist.
           </p>
-          <Link to="/" className="text-primary hover:text-primary/90 underline">
+          <Link to="/" className="text-primary hover:text-primary/90 underline uppercase font-semibold text-sm">
             Return to Home
           </Link>
         </main>
@@ -245,8 +245,8 @@ const ContentDetailPage = () => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="left-4 bg-secondary text-foreground hover:bg-secondary/80" />
-              <CarouselNext className="right-4 bg-secondary text-foreground hover:bg-secondary/80" />
+              <CarouselPrevious className="left-4 bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground border-border hover:border-primary" />
+              <CarouselNext className="right-4 bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground border-border hover:border-primary" />
             </Carousel>
           ) : (
             <img
@@ -256,22 +256,22 @@ const ContentDetailPage = () => {
             />
           )}
           <div className="p-6">
-            <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-sm px-3 py-1 self-start mb-4">
+            <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-sm px-3 py-1 self-start mb-4 font-semibold">
               {displayItem.category}
             </Badge>
-            <h1 className="text-4xl font-bold text-foreground mb-4">
+            <h1 className="text-4xl font-heading font-bold text-foreground mb-4 uppercase tracking-tight">
               {displayItem.title}
             </h1>
-            <p className="text-lg text-muted-foreground mb-6">
+            <p className="text-lg text-muted-foreground mb-6 font-sans">
               {displayItem.description}
             </p>
             <div className="flex space-x-4 mb-8">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-6 py-3 rounded-lg uppercase font-semibold transition-all hover:scale-[1.02] hover:shadow-primary/20">
                 {displayItem.type === "article" ? "Read Article" : "Watch Now"}
               </Button>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="border-border text-foreground hover:bg-secondary text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
+                  <Button variant="outline" className="border-border text-foreground hover:bg-secondary text-lg px-6 py-3 rounded-lg uppercase font-semibold transition-all hover:scale-[1.02] hover:shadow-primary/20">
                     <Share2 className="h-5 w-5 mr-2" />
                     Share
                   </Button>
@@ -282,7 +282,7 @@ const ContentDetailPage = () => {
                       href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-sm hover:bg-secondary p-2 rounded-md"
+                      className="flex items-center text-sm hover:bg-muted p-2 rounded-md font-sans"
                     >
                       <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.814L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
                       Twitter
@@ -291,7 +291,7 @@ const ContentDetailPage = () => {
                       href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-sm hover:bg-secondary p-2 rounded-md"
+                      className="flex items-center text-sm hover:bg-muted p-2 rounded-md font-sans"
                     >
                       <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.24.195 2.24.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z"></path></svg>
                       Facebook
@@ -303,7 +303,7 @@ const ContentDetailPage = () => {
 
             {displayItem.full_content && (
               <div
-                className="prose dark:prose-invert max-w-none text-foreground prose-p:text-muted-foreground prose-h3:text-foreground prose-h2:text-foreground prose-a:text-primary hover:prose-a:text-primary/90"
+                className="prose dark:prose-invert max-w-none text-foreground prose-p:text-muted-foreground prose-h3:text-foreground prose-h2:text-foreground prose-a:text-primary hover:prose-a:text-primary/90 font-sans"
                 dangerouslySetInnerHTML={{ __html: displayItem.full_content }}
               />
             )}
@@ -312,7 +312,7 @@ const ContentDetailPage = () => {
 
         {relatedContentToDisplay.length > 0 && (
           <section className="mt-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase text-foreground">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-8 text-center uppercase text-foreground tracking-tight">
               More Like This
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -332,7 +332,7 @@ const ContentDetailPage = () => {
         )}
 
         <div className="mt-8 text-center">
-          <Link to="/" className="text-primary hover:text-primary/90 underline">
+          <Link to="/" className="text-primary hover:text-primary/90 underline uppercase font-semibold text-sm">
             Back to Home
           </Link>
         </div>

@@ -23,22 +23,25 @@ const ContentCard: React.FC<ContentCardProps> = ({
   link,
 }) => {
   return (
-    <Link to={link} className="block h-full">
-      <Card className="h-full flex flex-col bg-card text-foreground border-border hover:border-primary transition-all duration-200 ease-in-out overflow-hidden">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-48 object-cover"
-        />
+    <Link to={link} className="block h-full group"> {/* Added group for image hover */}
+      <Card className="h-full flex flex-col bg-card text-foreground border-border overflow-hidden transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/20">
+        <div className="relative w-full h-48 overflow-hidden">
+          <img
+            src={imageUrl}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/85 to-transparent" /> {/* Overlay gradient */}
+        </div>
         <CardContent className="p-4 flex-grow flex flex-col">
-          <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-xs px-2 py-1 self-start mb-2">
+          <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-xs px-2 py-1 self-start mb-2 font-semibold">
             {category}
           </Badge>
-          <h3 className="text-xl font-bold mb-2 line-clamp-2">{title}</h3>
-          <p className="text-muted-foreground text-sm line-clamp-3 flex-grow">
+          <h3 className="text-xl font-heading font-bold mb-2 line-clamp-2 uppercase tracking-tight">{title}</h3>
+          <p className="text-muted-foreground text-sm line-clamp-3 flex-grow font-sans">
             {description}
           </p>
-          <div className="mt-4 text-primary hover:text-primary/90 font-semibold text-sm">
+          <div className="mt-4 text-primary hover:text-primary/90 font-semibold text-sm uppercase font-sans">
             {type === "article" ? "Read More" : "View Details"}
           </div>
         </CardContent>

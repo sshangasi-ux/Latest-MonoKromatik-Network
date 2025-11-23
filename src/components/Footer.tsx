@@ -6,12 +6,12 @@ import { MadeWithDyad } from "./made-with-dyad";
 
 const Footer = () => {
   return (
-    <footer className="bg-background text-muted-foreground py-8 border-t border-border">
+    <footer className="bg-secondary text-muted-foreground py-8 border-t border-border">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Brand Info */}
         <div>
-          <Link to="/" className="text-2xl font-bold text-primary mb-4 block">
-            MonoKromatik Network
+          <Link to="/" className="text-2xl font-heading font-extrabold uppercase text-foreground mb-4 block">
+            MONO<span className="text-primary">[KROMATIK]</span> NETWORK
           </Link>
           <p className="text-sm">
             Your ultimate hub for African content, news, and entertainment.
@@ -34,25 +34,25 @@ const Footer = () => {
 
         {/* Navigation Links */}
         <div>
-          <h3 className="text-lg font-semibold text-primary mb-4">Quick Links</h3>
+          <h3 className="text-lg font-heading font-semibold uppercase text-foreground mb-4">Quick Links</h3>
           <ul className="space-y-2">
             <li>
-              <Link to="/about" className="text-sm hover:text-primary transition-colors">
+              <Link to="/about" className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors uppercase">
                 About Us
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="text-sm hover:text-primary transition-colors">
+              <Link to="/contact" className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors uppercase">
                 Contact
               </Link>
             </li>
             <li>
-              <Link to="/privacy" className="text-sm hover:text-primary transition-colors">
+              <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors uppercase">
                 Privacy Policy
               </Link>
             </li>
             <li>
-              <Link to="/terms" className="text-sm hover:text-primary transition-colors">
+              <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors uppercase">
                 Terms of Service
               </Link>
             </li>
@@ -61,7 +61,7 @@ const Footer = () => {
 
         {/* Contact Info / Newsletter */}
         <div>
-          <h3 className="text-lg font-semibold text-primary mb-4">Stay Connected</h3>
+          <h3 className="text-lg font-heading font-semibold uppercase text-foreground mb-4">Stay Connected</h3>
           <p className="text-sm mb-4">
             Subscribe to our newsletter for the latest updates.
           </p>
@@ -69,12 +69,12 @@ const Footer = () => {
           <form className="flex">
             <input
               type="email"
-              placeholder="Your email"
-              className="flex-grow px-4 py-2 rounded-l-md bg-secondary border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              placeholder="YOUR EMAIL"
+              className="flex-grow px-4 py-2 rounded-l-md bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground uppercase text-sm"
             />
             <button
               type="submit"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-r-md transition-colors"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-r-md transition-colors uppercase font-semibold text-sm"
             >
               Subscribe
             </button>
@@ -82,7 +82,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="mt-8 text-center text-sm text-muted-foreground border-t border-border pt-4">
-        &copy; {new Date().getFullYear()} MonoKromatik Network. All rights reserved.
+        &copy; {new Date().getFullYear()} MONOKROMATIK NETWORK. All rights reserved.
         <MadeWithDyad />
       </div>
     </footer>
