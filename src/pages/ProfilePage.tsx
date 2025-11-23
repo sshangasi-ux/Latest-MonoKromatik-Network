@@ -11,11 +11,13 @@ import PasswordUpdateForm from "@/components/PasswordUpdateForm";
 import UserPreferencesForm from "@/components/UserPreferencesForm"; // Import new component
 import { useAuth } from "@/context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchUserProgress } from "@/lib/supabase";
+import { fetchUserProgress, fetchUserEnrollments } from "@/lib/supabase"; // Import fetchUserEnrollments
 import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import { Progress } from "@/components/ui/progress";
-import { User as UserIcon } from "lucide-react";
+import { User as UserIcon, GraduationCap } from "lucide-react"; // Import GraduationCap icon
+import MasterclassCard from "@/components/MasterclassCard"; // Import MasterclassCard
+import { MasterclassEnrollment } from "@/lib/masterclasses"; // Import MasterclassEnrollment interface
 
 interface ContentItemWithProgress {
   id: string;
@@ -38,6 +40,9 @@ const ProfilePage: React.FC = () => {
   const [progressItems, setProgressItems] = useState<ContentItemWithProgress[]>([]);
   const [loadingProgress, setLoadingProgress] = useState(true);
   const [progressError, setProgressError] = useState<string | null>(null);
+  const [enrolledMasterclasses, setEnrolledMasterclasses] = useState<MasterclassEnrollment[]>([]); // New state for masterclasses
+  const [loadingMasterclasses, setLoadingMasterclasses] = useState(true); // New loading state
+  const [masterclassError, setMasterclassError] = useState<string | null>(null); // New error state
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -85,8 +90,28 @@ const ProfilePage: React.FC = () => {
       }
     };
 
+    const getEnrolledMasterclasses = async () => {
+      if (!user) {
+        setLoadingMasterclasses(false);
+        return;
+      }
+
+      setLoadingMasterclasses(true);
+      setMasterclassError(null);
+      try {
+        const fetchedEnrollments = await fetchUserEnrollments(user.id);
+        setEnrolledMasterclasses(fetchedEnrollments);
+      } catch (err) {
+        console.error("Failed to fetch enrolled masterclasses:", err);
+        setMasterclassError("Failed to load your masterclasses. Please try again later.");
+      } finally {
+        setLoadingMasterclasses(false);
+      }
+    };
+
     if (isAuthenticated && user) {
       getProgress();
+      getEnrolledMasterclasses(); // Fetch enrolled masterclasses
     }
   }, [isAuthenticated, user]);
 
@@ -107,6 +132,7 @@ const ProfilePage: React.FC = () => {
             <TabsTrigger value="profile" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Profile Details</TabsTrigger>
             <TabsTrigger value="security" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Security</TabsTrigger>
             <TabsTrigger value="preferences" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Preferences</TabsTrigger> {/* New Tab Trigger */}
+            <TabsTrigger value="masterclasses" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">My Masterclasses</TabsTrigger> {/* New Tab Trigger for Masterclasses */}
             <TabsTrigger value="progress" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">My Progress</TabsTrigger>
           </TabsList>
 
@@ -150,6 +176,56 @@ const ProfilePage: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-6">
                 <UserPreferencesForm />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="masterclasses" className="mt-6"> {/* New Tab Content for Masterclasses */}
+            <Card className="bg-card border-border text-foreground">
+              <CardHeader>
+                <CardTitle className="font-heading uppercase tracking-tight">My Enrolled Masterclasses</CardTitle>
+                <CardDescription className="font-sans">
+                  View the masterclasses you've enrolled in and track your progress.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loadingMasterclasses ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {Array.from({ length: 3 }).map((_, index) => (
+                      <ContentCardSkeleton key={index} />
+                    ))}
+                  </div>
+                ) : masterclassError ? (
+                  <p className="text-destructive text-center font-sans">{masterclassError}</p>
+                ) : enrolledMasterclasses.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-8 text-center">
+                    <GraduationCap className="h-12 w-12 text-muted-foreground mb-3" />
+                    <p className="text-muted-foreground font-sans">You haven't enrolled in any masterclasses yet.</p>
+                    <Link to="/masterclasses" className="text-primary hover:text-primary/90 underline uppercase font-semibold text-sm mt-2">
+                      Explore Masterclasses
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {enrolledMasterclasses.map((enrollment) => enrollment.masterclass && (
+                      <div key={enrollment.id} className="relative group">
+                        <MasterclassCard masterclass={enrollment.masterclass} />
+                        {(enrollment.progress_percentage !== undefined && enrollment.progress_percentage !== null) && (
+                          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background/70 to-transparent">
+                            <Progress
+                              value={enrollment.progress_percentage}
+                              className="h-2 bg-muted"
+                              indicatorClassName="bg-primary"
+                            />
+                            <p className="text-xs text-muted-foreground mt-1 font-sans">
+                              {Math.round(enrollment.progress_percentage)}% Completed
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
