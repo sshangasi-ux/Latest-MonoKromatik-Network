@@ -23,6 +23,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import { fetchContent } from "@/lib/supabase";
+import CreatePlaylistDialog from "@/components/CreatePlaylistDialog"; // Import CreatePlaylistDialog
+import { useAuth } from "@/context/AuthContext"; // Import useAuth
 
 interface ContentItem {
   id: string;
@@ -52,9 +54,11 @@ interface MusicPlaylist {
   cover_url: string;
   embed_url: string;
   genre: string;
+  tracks?: MusicTrack[]; // Optional list of tracks
 }
 
 const MusicPage = () => {
+  const { isAuthenticated } = useAuth(); // Use auth context
   const [currentPlayingEmbed, setCurrentPlayingEmbed] = useState<{
     url: string;
     title: string;
@@ -111,9 +115,14 @@ const MusicPage = () => {
 
         {/* Curated Playlists Section */}
         <section className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-8 text-center uppercase tracking-tight">
-            Curated <span className="text-primary">Playlists</span>
-          </h2>
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold uppercase tracking-tight">
+              Curated <span className="text-primary">Playlists</span>
+            </h2>
+            {isAuthenticated && (
+              <CreatePlaylistDialog />
+            )}
+          </div>
           <Carousel
             opts={{
               align: "start",
