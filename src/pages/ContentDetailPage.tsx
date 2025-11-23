@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react"; // Added useCallback
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchContent, fetchContentBySlugAndType } from "@/lib/supabase";
+import { fetchContent, fetchContentBySlugAndType, saveUserProgress } from "@/lib/supabase"; // Added saveUserProgress
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Share2 } from "lucide-react";
@@ -22,6 +22,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useAuth } from "@/context/AuthContext"; // Import useAuth
 
 interface ContentItem {
   id: string;
@@ -33,16 +34,33 @@ interface ContentItem {
   type: "show" | "video" | "article" | "event";
   full_content?: string;
   link: string;
-  video_url?: string; // Added video_url
-  image_gallery_urls?: string[]; // Added image_gallery_urls
+  video_url?: string;
+  image_gallery_urls?: string[];
 }
 
 const ContentDetailPage = () => {
   const { type, id } = useParams<{ type: string; id: string }>();
+  const { user } = useAuth(); // Get current user
   const [contentItem, setContentItem] = useState<ContentItem | undefined>(undefined);
   const [relatedContent, setRelatedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Function to save progress
+  const handleSaveProgress = useCallback(async (progressData: any) => {
+    if (user && contentItem) {
+      try {
+        await saveUserProgress({
+          user_id: user.id,
+          content_id: contentItem.id,
+          content_type: contentItem.type,
+          progress_data: progressData,
+        });
+      } catch (err) {
+        console.error("Failed to save user progress:", err);
+      }
+    }
+  }, [user, contentItem]);
 
   useEffect(() => {
     const fetchContentData = async () => {
@@ -74,7 +92,17 @@ const ContentDetailPage = () => {
             case 'event': linkPrefix = '/events'; break;
             default: linkPrefix = '';
           }
-          setContentItem({ ...fetchedItem, link: `${linkPrefix}/${fetchedItem.link_slug}` });
+          const fullContentItem = { ...fetchedItem, link: `${linkPrefix}/${fetchedItem.link_slug}` };
+          setContentItem(fullContentItem);
+
+          // Save initial progress when content is loaded
+          if (user) {
+            if (fullContentItem.type === "video") {
+              handleSaveProgress({ time: 0 }); // Mark as started
+            } else if (fullContentItem.type === "article") {
+              handleSaveProgress({ percentage: 0 }); // Mark as started
+            }
+          }
 
           const { data: allContentData } = await fetchContent(undefined, 10);
           const mappedAllContent: ContentItem[] = (allContentData as ContentItem[]).map(item => {
@@ -107,7 +135,23 @@ const ContentDetailPage = () => {
     };
 
     fetchContentData();
-  }, [type, id]);
+  }, [type, id, user, handleSaveProgress]); // Added user and handleSaveProgress to dependencies
+
+  // Article scroll progress tracking
+  useEffect(() => {
+    if (!contentItem || contentItem.type !== "article" || !user) return;
+
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = window.scrollY;
+      const percentage = scrollHeight > 0 ? Math.min(1, scrolled / scrollHeight) : 0;
+      handleSaveProgress({ percentage });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [contentItem, user, handleSaveProgress]);
+
 
   if (loading) {
     return (
