@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, User, Heart } from "lucide-react"; // Import Heart icon
+import { Search, User, Heart, ListMusic } from "lucide-react"; // Import ListMusic icon
 import { useAuth } from "@/context/AuthContext";
 
 const Header = () => {
@@ -72,11 +72,18 @@ const Header = () => {
           </Button>
         </form>
         {isAuthenticated && (
-          <Button asChild variant="ghost" size="icon" className="text-foreground hover:bg-secondary hover:text-primary">
-            <Link to="/watchlist">
-              <Heart className="h-6 w-6" />
-            </Link>
-          </Button>
+          <>
+            <Button asChild variant="ghost" size="icon" className="text-foreground hover:bg-secondary hover:text-primary">
+              <Link to="/playlists">
+                <ListMusic className="h-6 w-6" />
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="icon" className="text-foreground hover:bg-secondary hover:text-primary">
+              <Link to="/watchlist">
+                <Heart className="h-6 w-6" />
+              </Link>
+            </Button>
+          </>
         )}
         {isAuthenticated ? (
           <Button asChild variant="ghost" size="icon" className="text-foreground hover:bg-secondary hover:text-primary">

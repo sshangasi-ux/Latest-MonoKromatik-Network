@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, Play, BookOpen, Calendar, Star, LinkIcon, User } from "lucide-react"; // Import User icon
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { cn } from "@/lib/utils";
+import AddToPlaylistButton from "./AddToPlaylistButton"; // Import AddToPlaylistButton
 
 interface ContentCardProps {
   contentId: string; // Content ID for watchlist and other unique identification
@@ -30,8 +31,8 @@ const ContentCard: React.FC<ContentCardProps> = ({
   category,
   link,
   className,
-  creatorId, // Destructure new prop
-  creatorName, // Destructure new prop
+  creatorId,
+  creatorName,
 }) => {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist, userId } = useWatchlist();
   const onWatchlist = isInWatchlist(contentId);
@@ -80,7 +81,8 @@ const ContentCard: React.FC<ContentCardProps> = ({
               e.currentTarget.src = "/placeholder.svg"; // Fallback image
             }}
           />
-          <div className="absolute top-2 right-2">
+          <div className="absolute top-2 right-2 flex space-x-2"> {/* Adjusted for multiple buttons */}
+            <AddToPlaylistButton contentId={contentId} contentTitle={title} /> {/* Add to Playlist Button */}
             <Button
               variant="ghost"
               size="icon"

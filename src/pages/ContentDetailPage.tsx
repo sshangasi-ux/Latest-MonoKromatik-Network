@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/carousel";
 import { useAuth } from "@/context/AuthContext";
 import CommentSection from "@/components/CommentSection";
-import WatchlistButton from "@/components/WatchlistButton"; // Added import for WatchlistButton
+import WatchlistButton from "@/components/WatchlistButton";
+import AddToPlaylistButton from "@/components/AddToPlaylistButton"; // Import AddToPlaylistButton
 
 interface ContentItem {
   id: string;
@@ -268,9 +269,14 @@ const ContentDetailPage = () => {
               <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-sm px-3 py-1 self-start font-semibold">
                 {displayItem.category}
               </Badge>
-              {displayItem.id && (
-                <WatchlistButton contentId={displayItem.id} contentType={displayItem.type} className="text-lg" />
-              )}
+              <div className="flex space-x-2"> {/* Group watchlist and add to playlist buttons */}
+                {displayItem.id && (
+                  <>
+                    <AddToPlaylistButton contentId={displayItem.id} contentTitle={displayItem.title} />
+                    <WatchlistButton contentId={displayItem.id} contentType={displayItem.type} className="text-lg" />
+                  </>
+                )}
+              </div>
             </div>
             <h1 className="text-4xl font-heading font-bold text-foreground mb-4 uppercase tracking-tight">
               {displayItem.title}
@@ -343,7 +349,7 @@ const ContentDetailPage = () => {
               {relatedContentToDisplay.map((item) => (
                 <ContentCard
                   key={`${item.type}-${item.id}`}
-                  contentId={item.id} /* Changed from id={item.id} to contentId={item.id} */
+                  contentId={item.id}
                   type={item.type}
                   title={item.title}
                   description={item.description}
