@@ -22,7 +22,7 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event" | "sponsored"; // Added 'sponsored'
+  type: "show" | "video" | "article" | "event" | "sponsored";
   link: string;
 }
 
@@ -37,18 +37,25 @@ const SmartPicksSection = () => {
       setLoading(true);
       setError(null);
       try {
-        let categories: string[] = [];
+        let targetCategories: string[] = [];
+
         if (isAuthenticated && user) {
-          const userProgress = await fetchUserProgress(user.id, 5); // Get recent progress
-          const recentCategories = userProgress
-            .filter(p => p.content?.category)
-            .map(p => p.content.category)
-            .filter((value, index, self) => self.indexOf(value) === index); // Unique categories
-          categories = recentCategories;
+          // Prioritize explicit preferred categories from user_metadata
+          if (user.user_metadata?.preferred_categories && user.user_metadata.preferred_categories.length > 0) {
+            targetCategories = user.user_metadata.preferred_categories;
+          } else {
+            // Fallback to recent progress categories if no explicit preferences
+            const userProgress = await fetchUserProgress(user.id, 5); // Get recent progress
+            const recentCategories = userProgress
+              .filter(p => p.content?.category)
+              .map(p => p.content.category)
+              .filter((value, index, self) => self.indexOf(value) === index); // Unique categories
+            targetCategories = recentCategories;
+          }
         }
 
         let fetchedContent: ContentItem[] = [];
-        if (categories.length > 0) {
+        if (targetCategories.length > 0) {
           // Fetch content based on user's preferred categories
           // For simplicity, we'll fetch a general set and filter client-side
           // In a real app, you'd have a more sophisticated backend query
@@ -60,14 +67,14 @@ const SmartPicksSection = () => {
               case 'video': linkPrefix = '/watch'; break;
               case 'article': linkPrefix = '/news'; break;
               case 'event': linkPrefix = '/events'; break;
-              case 'sponsored': linkPrefix = '/sponsored'; break; // Added 'sponsored'
+              case 'sponsored': linkPrefix = '/sponsored'; break;
               default: linkPrefix = '';
             }
             return { ...item, link: `${linkPrefix}/${item.link_slug}` };
           });
 
-          // Filter for items in recommended categories, prioritize new items
-          const categoryFiltered = mappedContent.filter(item => categories.includes(item.category));
+          // Filter for items in target categories, prioritize new items
+          const categoryFiltered = mappedContent.filter(item => targetCategories.includes(item.category));
           // Shuffle and take a few
           fetchedContent = categoryFiltered.sort(() => 0.5 - Math.random()).slice(0, 6);
 
@@ -81,7 +88,7 @@ const SmartPicksSection = () => {
           }
 
         } else {
-          // Fallback for non-authenticated users or no progress: general popular content
+          // Fallback for non-authenticated users or no preferences: general popular content
           const { data } = await fetchContent(undefined, 6);
           fetchedContent = (data as ContentItem[]).map(item => {
             let linkPrefix = '';
@@ -90,7 +97,7 @@ const SmartPicksSection = () => {
               case 'video': linkPrefix = '/watch'; break;
               case 'article': linkPrefix = '/news'; break;
               case 'event': linkPrefix = '/events'; break;
-              case 'sponsored': linkPrefix = '/sponsored'; break; // Added 'sponsored'
+              case 'sponsored': linkPrefix = '/sponsored'; break;
               default: linkPrefix = '';
             }
             return { ...item, link: `${linkPrefix}/${item.link_slug}` };
@@ -108,7 +115,7 @@ const SmartPicksSection = () => {
             case 'video': linkPrefix = '/watch'; break;
             case 'article': linkPrefix = '/news'; break;
             case 'event': linkPrefix = '/events'; break;
-            case 'sponsored': linkPrefix = '/sponsored'; break; // Added 'sponsored'
+            case 'sponsored': linkPrefix = '/sponsored'; break;
             default: linkPrefix = '';
           }
           return { ...item, link: `${linkPrefix}/${item.link_slug}` };
