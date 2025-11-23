@@ -1,6 +1,6 @@
 "use client";
 
-import { MadeWithDyad } from "@/components/made-with-dyad";
+// Removed MadeWithDyad import
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import LiveTicker from "@/components/LiveTicker";
@@ -11,7 +11,7 @@ import UpcomingEventsCarousel from "@/components/UpcomingEventsCarousel";
 import MembershipCTA from "@/components/MembershipCTA";
 import Footer from "@/components/Footer";
 import ContinueContentSection from "@/components/ContinueContentSection";
-import SmartPicksSection from "@/components/SmartPicksSection"; // New import
+import SmartPicksSection from "@/components/SmartPicksSection";
 
 const Index = () => {
   return (
@@ -21,7 +21,7 @@ const Index = () => {
       <main className="flex-grow">
         <HeroSection />
         <ContinueContentSection />
-        <SmartPicksSection /> {/* Added Smart Picks for You section */}
+        <SmartPicksSection />
         <FeaturedShowsCarousel />
         <VideoSpotlightCarousel />
         <TrendingArticlesSection />
@@ -29,7 +29,7 @@ const Index = () => {
         <MembershipCTA />
       </main>
       <Footer />
-      <MadeWithDyad />
+      {/* Removed MadeWithDyad component from here */}
     </div>
   );
 };

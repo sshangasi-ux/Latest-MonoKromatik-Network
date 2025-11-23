@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { MadeWithDyad } from "./made-with-dyad";
+import { MadeWithDyad } from "./made-with-dyad"; // Keep import here
 
 const Footer = () => {
   return (
@@ -81,7 +81,7 @@ const Footer = () => {
       </div>
       <div className="mt-8 text-center text-sm text-gray-500 border-t border-neutral-800 pt-4">
         &copy; {new Date().getFullYear()} MonoKromatik Network. All rights reserved.
-        <MadeWithDyad />
+        <MadeWithDyad /> {/* Moved MadeWithDyad here */}
       </div>
     </footer>
   );
