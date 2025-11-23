@@ -19,21 +19,22 @@ export default {
     },
     extend: {
       colors: {
+        // New color palette inspired by lovable.dev
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "hsl(var(--primary))", // Vibrant blue
+          foreground: "hsl(var(--primary-foreground))", // White
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "hsl(var(--secondary))", // Darker grey/blue
+          foreground: "hsl(var(--secondary-foreground))", // Light grey
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
+          DEFAULT: "hsl(var(--destructive))", // A warning red, or a darker blue for consistency
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
