@@ -27,5 +27,8 @@ export * from './misc';
 // Re-export all from likes module
 export * from './likes';
 
+// Re-export all from reviews module
+export * from './reviews'; // New: Re-export all from reviews module
+
 // Export the supabase client directly for convenience if needed
 export { supabase };

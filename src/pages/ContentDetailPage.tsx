@@ -4,10 +4,10 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchContent, fetchContentBySlugAndType, saveUserProgress, getLikeCount } from "@/lib/supabase";
+import { fetchContent, fetchContentBySlugAndType, saveUserProgress, getLikeCount, getAverageRating } from "@/lib/supabase"; // Import getAverageRating
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Share2, MapPin } from "lucide-react";
+import { Share2, MapPin, Star } from "lucide-react"; // Import Star icon
 import {
   Popover,
   PopoverContent,
@@ -27,6 +27,7 @@ import CommentSection from "@/components/CommentSection";
 import WatchlistButton from "@/components/WatchlistButton";
 import AddToPlaylistButton from "@/components/AddToPlaylistButton";
 import LikeButton from "@/components/LikeButton";
+import ReviewSection from "@/components/ReviewSection"; // Import ReviewSection
 
 interface ContentItem {
   id: string;
@@ -51,6 +52,8 @@ const ContentDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [initialLikes, setInitialLikes] = useState(0);
+  const [averageRating, setAverageRating] = useState(0); // State for average rating
+  const [reviewCount, setReviewCount] = useState(0); // State for review count
 
   const handleSaveProgress = useCallback(async (progressData: any) => {
     if (user && contentItem) {
@@ -106,6 +109,10 @@ const ContentDetailPage = () => {
 
           const likes = await getLikeCount(fullContentItem.id);
           setInitialLikes(likes);
+
+          const { averageRating: avg, reviewCount: count } = await getAverageRating(fullContentItem.id) || { averageRating: 0, reviewCount: 0 };
+          setAverageRating(avg);
+          setReviewCount(count);
 
           if (user) {
             if (fullContentItem.type === "video") {
@@ -295,6 +302,16 @@ const ContentDetailPage = () => {
             <h1 className="text-4xl font-heading font-bold text-foreground mb-4 uppercase tracking-tight">
               {displayItem.title}
             </h1>
+            {reviewCount > 0 && (
+              <div className="flex items-center space-x-2 text-muted-foreground text-sm mb-4">
+                <div className="flex">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Star key={i} className={`h-4 w-4 ${i < Math.round(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"}`} />
+                  ))}
+                </div>
+                <span>{averageRating.toFixed(1)} ({reviewCount} reviews)</span>
+              </div>
+            )}
             <p className="text-lg text-muted-foreground mb-6 font-sans">
               {displayItem.description}
             </p>
@@ -380,6 +397,7 @@ const ContentDetailPage = () => {
         </div>
 
         {displayItem.id && <CommentSection contentId={displayItem.id} />}
+        {displayItem.id && <ReviewSection contentId={displayItem.id} />} {/* New: Integrate ReviewSection */}
 
         {relatedContentToDisplay.length > 0 && (
           <section className="mt-12">
