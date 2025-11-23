@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useWatchlist } from "@/hooks/useWatchlist"; // Corrected import
+import { useWatchlist } from "@/hooks/useWatchlist";
 import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import { Frown } from "lucide-react";
@@ -50,7 +50,7 @@ const WatchlistPage: React.FC = () => {
             {watchlist.map((item) => (
               <ContentCard
                 key={item.id}
-                id={item.id}
+                contentId={item.id} /* Changed from id={item.id} to contentId={item.id} */
                 type={item.type}
                 title={item.title}
                 description={item.description}

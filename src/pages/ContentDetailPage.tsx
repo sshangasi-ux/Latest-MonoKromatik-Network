@@ -343,7 +343,7 @@ const ContentDetailPage = () => {
               {relatedContentToDisplay.map((item) => (
                 <ContentCard
                   key={`${item.type}-${item.id}`}
-                  id={item.id}
+                  contentId={item.id} /* Changed from id={item.id} to contentId={item.id} */
                   type={item.type}
                   title={item.title}
                   description={item.description}

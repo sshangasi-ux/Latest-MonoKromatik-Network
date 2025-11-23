@@ -9,7 +9,7 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 import { cn } from "@/lib/utils";
 
 interface ContentCardProps {
-  id: string; // Content ID for watchlist
+  contentId: string; // Content ID for watchlist and other unique identification
   type: "show" | "video" | "article" | "event" | "sponsored" | "music_show";
   title: string;
   description: string;
@@ -20,7 +20,7 @@ interface ContentCardProps {
 }
 
 const ContentCard: React.FC<ContentCardProps> = ({
-  id,
+  contentId, // Changed from 'id' to 'contentId'
   type,
   title,
   description,
@@ -30,7 +30,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
   className,
 }) => {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist, userId } = useWatchlist();
-  const onWatchlist = isInWatchlist(id);
+  const onWatchlist = isInWatchlist(contentId); // Using contentId
 
   const handleWatchlistToggle = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigating to the content detail page
@@ -40,9 +40,9 @@ const ContentCard: React.FC<ContentCardProps> = ({
       return;
     }
     if (onWatchlist) {
-      removeFromWatchlist(id, title);
+      removeFromWatchlist(contentId, title); // Using contentId
     } else {
-      addToWatchlist(id, title);
+      addToWatchlist(contentId, title); // Using contentId
     }
   };
 
