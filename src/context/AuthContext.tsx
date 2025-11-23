@@ -3,25 +3,33 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { supabase } from "@/lib/supabase";
+import { supabase, updateUserPreferredCategories as supabaseUpdateUserPreferredCategories } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+
+// Extend the User type to include preferred_categories in user_metadata
+interface CustomUser extends User {
+  user_metadata: User['user_metadata'] & {
+    preferred_categories?: string[];
+  };
+}
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: User | null;
+  user: CustomUser | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   updateUserProfile: (fullName: string, avatarUrl: string | null) => Promise<void>;
   updateUserEmail: (newEmail: string) => Promise<void>;
   updateUserPassword: (newPassword: string) => Promise<void>;
+  updateUserPreferredCategories: (categories: string[]) => Promise<void>; // New function
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<CustomUser | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -30,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       async (event, session) => {
         if (session) {
           setIsAuthenticated(true);
-          setUser(session.user);
+          setUser(session.user as CustomUser); // Cast to CustomUser
         } else {
           setIsAuthenticated(false);
           setUser(null);
@@ -43,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         setIsAuthenticated(true);
-        setUser(session.user);
+        setUser(session.user as CustomUser); // Cast to CustomUser
       } else {
         setIsAuthenticated(false);
         setUser(null);
@@ -112,7 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw error;
     }
     if (data.user) {
-      setUser(data.user);
+      setUser(data.user as CustomUser); // Cast to CustomUser
     }
   };
 
@@ -122,7 +130,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw error;
     }
     if (data.user) {
-      setUser(data.user);
+      setUser(data.user as CustomUser); // Cast to CustomUser
     }
   };
 
@@ -132,7 +140,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw error;
     }
     if (data.user) {
-      setUser(data.user);
+      setUser(data.user as CustomUser); // Cast to CustomUser
+    }
+  };
+
+  const updateUserPreferredCategories = async (categories: string[]) => {
+    try {
+      const updatedUser = await supabaseUpdateUserPreferredCategories(categories);
+      if (updatedUser) {
+        setUser(updatedUser as CustomUser); // Update local user state
+        toast.success("Preferred categories updated!");
+      }
+    } catch (error: any) {
+      toast.error(`Failed to update preferences: ${error.message}`);
+      throw error;
     }
   };
 
@@ -141,7 +162,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, signup, updateUserProfile, updateUserEmail, updateUserPassword }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, signup, updateUserProfile, updateUserEmail, updateUserPassword, updateUserPreferredCategories }}>
       {children}
     </AuthContext.Provider>
   );

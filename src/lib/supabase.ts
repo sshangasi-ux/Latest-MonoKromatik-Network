@@ -190,3 +190,16 @@ export const fetchContactInfo = async (): Promise<ContactInfo | null> => {
 
   return data || null;
 };
+
+// New function to update user's preferred categories in user_metadata
+export const updateUserPreferredCategories = async (categories: string[]) => {
+  const { data, error } = await supabase.auth.updateUser({
+    data: { preferred_categories: categories },
+  });
+
+  if (error) {
+    console.error('Error updating user preferred categories:', error);
+    throw error;
+  }
+  return data.user;
+};

@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import ProfileForm from "@/components/ProfileForm";
 import EmailUpdateForm from "@/components/EmailUpdateForm";
 import PasswordUpdateForm from "@/components/PasswordUpdateForm";
+import UserPreferencesForm from "@/components/UserPreferencesForm"; // Import new component
 import { useAuth } from "@/context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchUserProgress } from "@/lib/supabase";
@@ -100,9 +101,10 @@ const ProfilePage: React.FC = () => {
         </h1>
 
         <Tabs defaultValue="profile" className="w-full max-w-4xl mx-auto">
-          <TabsList className="grid w-full grid-cols-3 bg-secondary border-border">
+          <TabsList className="grid w-full grid-cols-4 bg-secondary border-border"> {/* Increased grid-cols to 4 */}
             <TabsTrigger value="profile" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Profile Details</TabsTrigger>
             <TabsTrigger value="security" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Security</TabsTrigger>
+            <TabsTrigger value="preferences" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Preferences</TabsTrigger> {/* New Tab Trigger */}
             <TabsTrigger value="progress" className="uppercase font-semibold text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">My Progress</TabsTrigger>
           </TabsList>
 
@@ -132,6 +134,20 @@ const ProfilePage: React.FC = () => {
                 <EmailUpdateForm />
                 <div className="border-t border-border pt-6" />
                 <PasswordUpdateForm />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="preferences" className="mt-6"> {/* New Tab Content */}
+            <Card className="bg-card border-border text-foreground">
+              <CardHeader>
+                <CardTitle className="font-heading uppercase tracking-tight">Content Preferences</CardTitle>
+                <CardDescription className="font-sans">
+                  Tell us what you love to watch and read to get better recommendations.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <UserPreferencesForm />
               </CardContent>
             </Card>
           </TabsContent>
