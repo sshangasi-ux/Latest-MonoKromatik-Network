@@ -13,7 +13,8 @@ import ContinueContentSection from "@/components/ContinueContentSection";
 import SmartPicksSection from "@/components/SmartPicksSection";
 import SponsoredContentSection from "@/components/SponsoredContentSection";
 import LatestContentCarousel from "@/components/LatestContentCarousel";
-import InnovatorsSpotlightSection from "@/components/InnovatorsSpotlightSection"; // Import new component
+import InnovatorsSpotlightSection from "@/components/InnovatorsSpotlightSection";
+import MasterclassesSection from "@/components/MasterclassesSection"; // Import new component
 
 const Index = () => {
   return (
@@ -24,7 +25,8 @@ const Index = () => {
         <HeroSection />
         <ContinueContentSection />
         <SmartPicksSection />
-        <InnovatorsSpotlightSection /> {/* Add the new section here */}
+        <InnovatorsSpotlightSection />
+        <MasterclassesSection /> {/* Add the new section here */}
         <LatestContentCarousel />
         <SponsoredContentSection />
         <FeaturedShowsCarousel />

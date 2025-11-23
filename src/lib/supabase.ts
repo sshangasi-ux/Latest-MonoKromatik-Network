@@ -18,6 +18,9 @@ export * from './creators';
 // Re-export all from playlists module
 export * from './playlists';
 
+// Re-export all from masterclasses module
+export * from './masterclasses';
+
 // Re-export all from misc module
 export * from './misc';
 

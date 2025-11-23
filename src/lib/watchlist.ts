@@ -7,9 +7,11 @@ interface SupabaseContentQueryResult extends Omit<ContentItem, 'link' | 'creator
 }
 
 // Intermediate interface for the item structure within the watchlist fetch
-interface SupabaseWatchlistItem {
+// The error message indicates 'content' is an array of objects, not a single object.
+// This is unusual for a direct FK, but we must follow the error.
+interface RawSupabaseWatchlistItem {
   content_id: string;
-  content: SupabaseContentQueryResult | null;
+  content: SupabaseContentQueryResult[] | null;
 }
 
 // Watchlist Functions
@@ -56,26 +58,30 @@ export const fetchUserWatchlist = async (userId: string) => {
     throw error;
   }
 
-  // Explicitly cast data to the expected array type
-  const rawWatchlistItems = data as SupabaseWatchlistItem[];
+  // Cast the raw data to the type that TypeScript is inferring
+  const rawWatchlistItems = data as RawSupabaseWatchlistItem[];
 
   const mappedData = rawWatchlistItems?.map((item) => {
-    if (!item.content) return null; // Handle cases where content might be null
+    // If item.content is an array, we take the first element.
+    // If it's null or empty, we treat it as no content.
+    const actualContent = item.content?.[0] || null;
+
+    if (!actualContent) return null;
 
     // Explicitly construct ContentItem, mapping profiles.full_name to creator_name
     const content: ContentItem = {
-      id: item.content.id,
-      title: item.content.title,
-      description: item.content.description,
-      image_url: item.content.image_url,
-      category: item.content.category,
-      link_slug: item.content.link_slug,
-      type: item.content.type,
-      video_url: item.content.video_url,
-      image_gallery_urls: item.content.image_gallery_urls,
-      music_embed_url: item.content.music_embed_url,
-      creator_id: item.content.creator_id,
-      creator_name: item.content.profiles?.[0]?.full_name || null, // Access the first element of the profiles array
+      id: actualContent.id,
+      title: actualContent.title,
+      description: actualContent.description,
+      image_url: actualContent.image_url,
+      category: actualContent.category,
+      link_slug: actualContent.link_slug,
+      type: actualContent.type,
+      video_url: actualContent.video_url,
+      image_gallery_urls: actualContent.image_gallery_urls,
+      music_embed_url: actualContent.music_embed_url,
+      creator_id: actualContent.creator_id,
+      creator_name: actualContent.profiles?.[0]?.full_name || null, // Access the first element of the profiles array
       link: '', // Will be set below
     };
 

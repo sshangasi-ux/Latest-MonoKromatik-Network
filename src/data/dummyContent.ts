@@ -53,6 +53,24 @@ interface InnovatorSpotlight {
   content?: ContentItem | null;
 }
 
+// Interface for Masterclass (matching src/lib/masterclasses.ts)
+interface Masterclass {
+  id: string;
+  created_at: string;
+  title: string;
+  description: string;
+  image_url: string;
+  category: string;
+  link_slug: string;
+  instructor_id: string;
+  instructor?: InnovatorProfile | null; // Using InnovatorProfile for instructor
+  video_url: string;
+  price?: number | null;
+  duration_minutes?: number | null;
+  is_published: boolean;
+  link: string; // Derived link for navigation
+}
+
 const generateDummyContent = (type: "show" | "video" | "article" | "event" | "sponsored" | "music_show", count: number): ContentItem[] => {
   const items: ContentItem[] = [];
   const linkPrefix = {
@@ -265,5 +283,93 @@ export const dummyInnovators: InnovatorSpotlight[] = [
       type: "show",
       link: "/shows/show-slug-3",
     },
+  },
+];
+
+// Dummy Masterclasses
+export const dummyMasterclasses: Masterclass[] = [
+  {
+    id: "masterclass-1",
+    created_at: new Date().toISOString(),
+    title: "The Art of African Storytelling",
+    description: "Learn the ancient techniques and modern applications of African oral traditions in narrative creation.",
+    image_url: "https://via.placeholder.com/600x400/C1272D/FFFFFF?text=Storytelling",
+    category: "Culture",
+    link_slug: "african-storytelling",
+    instructor_id: "creator-1", // Aisha Khan
+    instructor: {
+      id: "creator-1",
+      full_name: "Aisha Khan",
+      avatar_url: "https://via.placeholder.com/150/C1272D/FFFFFF?text=AK",
+      bio: "Award-winning filmmaker and storyteller.",
+    },
+    video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&mute=1&controls=1",
+    price: 49.99,
+    duration_minutes: 120,
+    is_published: true,
+    link: "/masterclasses/african-storytelling",
+  },
+  {
+    id: "masterclass-2",
+    created_at: new Date().toISOString(),
+    title: "Building Sustainable Tech in Africa",
+    description: "A deep dive into developing technology solutions that address unique African challenges and opportunities.",
+    image_url: "https://via.placeholder.com/600x400/1F1F1F/FFFFFF?text=Sustainable+Tech",
+    category: "Tech",
+    link_slug: "sustainable-tech-africa",
+    instructor_id: "creator-2", // Kwame Nkrumah
+    instructor: {
+      id: "creator-2",
+      full_name: "Kwame Nkrumah",
+      avatar_url: "https://via.placeholder.com/150/1F1F1F/FFFFFF?text=KN",
+      bio: "Tech visionary building solutions for Africa.",
+    },
+    video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&mute=1&controls=1",
+    price: 79.99,
+    duration_minutes: 180,
+    is_published: true,
+    link: "/masterclasses/sustainable-tech-africa",
+  },
+  {
+    id: "masterclass-3",
+    created_at: new Date().toISOString(),
+    title: "Contemporary African Fashion Design",
+    description: "Explore the fusion of traditional African textiles and modern design principles to create unique fashion.",
+    image_url: "https://via.placeholder.com/600x400/9CA3AF/FFFFFF?text=Fashion+Design",
+    category: "Fashion",
+    link_slug: "african-fashion-design",
+    instructor_id: "creator-3", // Zola Mkhize
+    instructor: {
+      id: "creator-3",
+      full_name: "Zola Mkhize",
+      avatar_url: "https://via.placeholder.com/150/9CA3AF/FFFFFF?text=ZM",
+      bio: "Fashion designer blending tradition with modern aesthetics.",
+    },
+    video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&mute=1&controls=1",
+    price: 59.99,
+    duration_minutes: 150,
+    is_published: true,
+    link: "/masterclasses/african-fashion-design",
+  },
+  {
+    id: "masterclass-4",
+    created_at: new Date().toISOString(),
+    title: "Introduction to Afrobeat Production",
+    description: "Master the rhythms and melodies of Afrobeat music production from a seasoned producer.",
+    image_url: "https://via.placeholder.com/600x400/000000/FFFFFF?text=Afrobeat+Production",
+    category: "Music",
+    link_slug: "afrobeat-production",
+    instructor_id: "creator-1", // Reusing Aisha Khan as an example instructor
+    instructor: {
+      id: "creator-1",
+      full_name: "Aisha Khan",
+      avatar_url: "https://via.placeholder.com/150/C1272D/FFFFFF?text=AK",
+      bio: "Award-winning filmmaker and storyteller.",
+    },
+    video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&mute=1&controls=1",
+    price: 69.99,
+    duration_minutes: 160,
+    is_published: true,
+    link: "/masterclasses/afrobeat-production",
   },
 ];

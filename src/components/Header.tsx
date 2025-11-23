@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, User, Heart, ListMusic } from "lucide-react"; // Import ListMusic icon
+import { Search, User, Heart, ListMusic, GraduationCap } from "lucide-react"; // Import GraduationCap icon
 import { useAuth } from "@/context/AuthContext";
 
 const Header = () => {
@@ -53,6 +53,9 @@ const Header = () => {
         </Link>
         <Link to="/events" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
           Events
+        </Link>
+        <Link to="/masterclasses" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
+          Masterclasses
         </Link>
         <Link to="/shop" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
           Shop
