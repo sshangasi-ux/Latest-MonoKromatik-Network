@@ -5,7 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import { AuthProvider } from "./context/AuthContext"; // Import AuthProvider
+import SearchPage from "./pages/SearchPage"; // Import SearchPage
+import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
 
@@ -15,9 +16,10 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthProvider> {/* Wrap the entire application with AuthProvider */}
+        <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/search" element={<SearchPage />} /> {/* New Search Route */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
