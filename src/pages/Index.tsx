@@ -11,6 +11,7 @@ import MembershipCTA from "@/components/MembershipCTA";
 import Footer from "@/components/Footer";
 import ContinueContentSection from "@/components/ContinueContentSection";
 import SmartPicksSection from "@/components/SmartPicksSection";
+import SponsoredContentSection from "@/components/SponsoredContentSection"; // Import new component
 
 const Index = () => {
   return (
@@ -21,6 +22,7 @@ const Index = () => {
         <HeroSection />
         <ContinueContentSection />
         <SmartPicksSection />
+        <SponsoredContentSection /> {/* Add the new section here */}
         <FeaturedShowsCarousel />
         <VideoSpotlightCarousel />
         <TrendingArticlesSection />

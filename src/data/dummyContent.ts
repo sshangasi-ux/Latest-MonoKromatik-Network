@@ -7,20 +7,21 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event";
+  type: "show" | "video" | "article" | "event" | "sponsored"; // Added 'sponsored' type
   full_content?: string;
   link: string;
   video_url?: string; // New field for video content
   image_gallery_urls?: string[]; // New field for image galleries
 }
 
-const generateDummyContent = (type: "show" | "video" | "article" | "event", count: number): ContentItem[] => {
+const generateDummyContent = (type: "show" | "video" | "article" | "event" | "sponsored", count: number): ContentItem[] => {
   const items: ContentItem[] = [];
   const linkPrefix = {
     show: '/shows',
     video: '/watch',
     article: '/news',
     event: '/events',
+    sponsored: '/sponsored', // New link prefix for sponsored content
   }[type];
 
   for (let i = 1; i <= count; i++) {
@@ -47,7 +48,7 @@ const generateDummyContent = (type: "show" | "video" | "article" | "event", coun
     if (type === "video") {
       // Example YouTube embed URL
       item.video_url = `https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&mute=1&controls=1`; // Rick Astley for fun
-    } else if (type === "article" || type === "show") {
+    } else if (type === "article" || type === "show" || type === "sponsored") { // Added 'sponsored' here
       item.image_gallery_urls = [
         `https://via.placeholder.com/800x450/2d3748/FFFFFF?text=${type.charAt(0).toUpperCase() + type.slice(1)}+Gallery+1`,
         `https://via.placeholder.com/800x450/4a5568/FFFFFF?text=${type.charAt(0).toUpperCase() + type.slice(1)}+Gallery+2`,
@@ -64,6 +65,7 @@ export const dummyShows = generateDummyContent("show", 6);
 export const dummyVideos = generateDummyContent("video", 6);
 export const dummyArticles = generateDummyContent("article", 6);
 export const dummyEvents = generateDummyContent("event", 6);
+export const dummySponsoredContent = generateDummyContent("sponsored", 3); // New dummy sponsored content
 
 // For search results and category pages, we can combine and extend
 export const allDummyContent: ContentItem[] = [
@@ -71,6 +73,7 @@ export const allDummyContent: ContentItem[] = [
   ...generateDummyContent("video", 10),
   ...generateDummyContent("article", 10),
   ...generateDummyContent("event", 10),
+  ...generateDummyContent("sponsored", 5), // Include sponsored content in allDummyContent
 ];
 
 // Dummy ticker messages

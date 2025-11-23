@@ -31,7 +31,7 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event";
+  type: "show" | "video" | "article" | "event" | "sponsored"; // Added 'sponsored'
   full_content?: string;
   link: string;
   video_url?: string;
@@ -66,12 +66,13 @@ const ContentDetailPage = () => {
       setLoading(true);
       setError(null);
       try {
-        let actualContentType: "show" | "video" | "article" | "event" | undefined;
+        let actualContentType: "show" | "video" | "article" | "event" | "sponsored" | undefined; // Added 'sponsored'
         switch (type) {
           case 'news': actualContentType = 'article'; break;
           case 'watch': actualContentType = 'video'; break;
           case 'shows': actualContentType = 'show'; break;
           case 'events': actualContentType = 'event'; break;
+          case 'sponsored': actualContentType = 'sponsored'; break; // Added 'sponsored'
           default: actualContentType = undefined;
         }
 
@@ -89,6 +90,7 @@ const ContentDetailPage = () => {
             case 'video': linkPrefix = '/watch'; break;
             case 'article': linkPrefix = '/news'; break;
             case 'event': linkPrefix = '/events'; break;
+            case 'sponsored': linkPrefix = '/sponsored'; break; // Added 'sponsored'
             default: linkPrefix = '';
           }
           const fullContentItem = { ...fetchedItem, link: `${linkPrefix}/${fetchedItem.link_slug}` };
@@ -110,6 +112,7 @@ const ContentDetailPage = () => {
               case 'video': relatedLinkPrefix = '/watch'; break;
               case 'article': relatedLinkPrefix = '/news'; break;
               case 'event': relatedLinkPrefix = '/events'; break;
+              case 'sponsored': relatedLinkPrefix = '/sponsored'; break; // Added 'sponsored'
               default: relatedLinkPrefix = '';
             }
             return { ...item, link: `${relatedLinkPrefix}/${item.link_slug}` };
@@ -187,7 +190,7 @@ const ContentDetailPage = () => {
     );
   }
 
-  const displayItem = contentItem || allDummyContent.find(item => item.link_slug === id && item.type === (type === 'news' ? 'article' : type === 'watch' ? 'video' : type === 'shows' ? 'show' : type === 'events' ? 'event' : undefined));
+  const displayItem = contentItem || allDummyContent.find(item => item.link_slug === id && item.type === (type === 'news' ? 'article' : type === 'watch' ? 'video' : type === 'shows' ? 'show' : type === 'events' ? 'event' : type === 'sponsored' ? 'sponsored' : undefined)); // Added 'sponsored'
 
   if (!displayItem) {
     return (
@@ -232,7 +235,7 @@ const ContentDetailPage = () => {
                 loading="lazy"
               ></iframe>
             </div>
-          ) : (displayItem.type === "article" || displayItem.type === "show") && displayItem.image_gallery_urls && displayItem.image_gallery_urls.length > 1 ? (
+          ) : (displayItem.type === "article" || displayItem.type === "show" || displayItem.type === "sponsored") && displayItem.image_gallery_urls && displayItem.image_gallery_urls.length > 1 ? ( // Added 'sponsored'
             <Carousel className="w-full">
               <CarouselContent>
                 {displayItem.image_gallery_urls.map((imgUrl, index) => (

@@ -22,7 +22,7 @@ interface ContentItem {
   image_url: string;
   category: string;
   link_slug: string;
-  type: "show" | "video" | "article" | "event";
+  type: "show" | "video" | "article" | "event" | "sponsored"; // Added 'sponsored'
   link: string;
 }
 
@@ -60,6 +60,7 @@ const SmartPicksSection = () => {
               case 'video': linkPrefix = '/watch'; break;
               case 'article': linkPrefix = '/news'; break;
               case 'event': linkPrefix = '/events'; break;
+              case 'sponsored': linkPrefix = '/sponsored'; break; // Added 'sponsored'
               default: linkPrefix = '';
             }
             return { ...item, link: `${linkPrefix}/${item.link_slug}` };
@@ -89,6 +90,7 @@ const SmartPicksSection = () => {
               case 'video': linkPrefix = '/watch'; break;
               case 'article': linkPrefix = '/news'; break;
               case 'event': linkPrefix = '/events'; break;
+              case 'sponsored': linkPrefix = '/sponsored'; break; // Added 'sponsored'
               default: linkPrefix = '';
             }
             return { ...item, link: `${linkPrefix}/${item.link_slug}` };
@@ -106,6 +108,7 @@ const SmartPicksSection = () => {
             case 'video': linkPrefix = '/watch'; break;
             case 'article': linkPrefix = '/news'; break;
             case 'event': linkPrefix = '/events'; break;
+            case 'sponsored': linkPrefix = '/sponsored'; break; // Added 'sponsored'
             default: linkPrefix = '';
           }
           return { ...item, link: `${linkPrefix}/${item.link_slug}` };
