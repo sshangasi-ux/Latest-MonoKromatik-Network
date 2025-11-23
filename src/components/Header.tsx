@@ -3,6 +3,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Heart } from "lucide-react"; // Import Heart icon
 
 const Header = () => {
   return (
@@ -24,6 +25,9 @@ const Header = () => {
         </Link>
         <Link to="/contact" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
           Contact
+        </Link>
+        <Link to="/watchlist" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center">
+          <Heart className="h-4 w-4 mr-1" /> Watchlist
         </Link>
       </nav>
       <div className="flex items-center space-x-4">
