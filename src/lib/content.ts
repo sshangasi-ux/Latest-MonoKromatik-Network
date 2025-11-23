@@ -55,7 +55,7 @@ export const fetchContent = async (type?: string, limit?: number, offset?: numbe
 };
 
 // Function to search content by title, description, or category
-export const searchContent = async (query: string, limit: number = 5, region?: string) => {
+export const searchContent = async (query: string, limit: number = 5, region?: string, type?: string) => {
   if (!query) {
     return { data: [], error: null };
   }
@@ -67,6 +67,10 @@ export const searchContent = async (query: string, limit: number = 5, region?: s
 
   if (region && region !== 'all') {
     queryBuilder = queryBuilder.eq('region', region);
+  }
+
+  if (type && type !== 'all') { // Apply type filter
+    queryBuilder = queryBuilder.eq('type', type);
   }
 
   const { data, error } = await queryBuilder.limit(limit);

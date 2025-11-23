@@ -9,6 +9,14 @@ import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import { searchContent } from "@/lib/supabase";
 import { allDummyContent } from "@/data/dummyContent";
 import RegionFilter from "@/components/RegionFilter"; // Import RegionFilter
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 interface ContentItem {
   id: string;
@@ -22,6 +30,15 @@ interface ContentItem {
 }
 
 const AFRICAN_REGIONS = ["Southern Africa", "West Africa", "East Africa", "North Africa", "Central Africa"]; // Define regions
+const CONTENT_TYPES = [
+  { value: "all", label: "All Types" },
+  { value: "show", label: "Shows" },
+  { value: "video", label: "Videos" },
+  { value: "article", label: "Articles" },
+  { value: "event", label: "Events" },
+  { value: "music_show", label: "Music Shows" },
+  { value: "sponsored", label: "Sponsored" },
+];
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -29,7 +46,8 @@ const SearchPage = () => {
   const [results, setResults] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedRegion, setSelectedRegion] = useState("all"); // New state for region filter
+  const [selectedRegion, setSelectedRegion] = useState("all"); // State for region filter
+  const [selectedType, setSelectedType] = useState("all"); // New state for content type filter
 
   useEffect(() => {
     const fetchSearchResults = async () => {
@@ -42,7 +60,8 @@ const SearchPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const { data, error } = await searchContent(query, 20, selectedRegion); // Pass selectedRegion to searchContent
+        // Pass selectedRegion and selectedType to searchContent
+        const { data, error } = await searchContent(query, 20, selectedRegion, selectedType === "all" ? undefined : selectedType);
         if (error) {
           throw error;
         }
@@ -67,7 +86,8 @@ const SearchPage = () => {
           (item.title.toLowerCase().includes(query.toLowerCase()) ||
           item.description.toLowerCase().includes(query.toLowerCase()) ||
           item.category.toLowerCase().includes(query.toLowerCase())) &&
-          (selectedRegion === "all" || item.region === selectedRegion) // Filter dummy content by region
+          (selectedRegion === "all" || item.region === selectedRegion) && // Filter dummy content by region
+          (selectedType === "all" || item.type === selectedType) // Filter dummy content by type
         ).slice(0, 20);
         setResults(dummyFiltered);
       } finally {
@@ -76,10 +96,14 @@ const SearchPage = () => {
     };
 
     fetchSearchResults();
-  }, [query, selectedRegion]); // Re-fetch when query or selectedRegion changes
+  }, [query, selectedRegion, selectedType]); // Re-fetch when query, selectedRegion, or selectedType changes
 
   const handleRegionChange = (region: string) => {
     setSelectedRegion(region);
+  };
+
+  const handleTypeChange = (type: string) => {
+    setSelectedType(type);
   };
 
   return (
@@ -90,12 +114,29 @@ const SearchPage = () => {
           Search Results for "{query}"
         </h1>
 
-        <div className="flex justify-center mb-8">
+        <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 mb-8">
           <RegionFilter
             selectedRegion={selectedRegion}
             onRegionChange={handleRegionChange}
             regions={AFRICAN_REGIONS}
           />
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="type-filter" className="text-foreground uppercase font-semibold text-sm">
+              Filter by Type:
+            </Label>
+            <Select value={selectedType} onValueChange={handleTypeChange}>
+              <SelectTrigger id="type-filter" className="w-[180px] bg-input border-border text-foreground focus:ring-2 focus:ring-primary focus:border-transparent uppercase text-sm">
+                <SelectValue placeholder="All Types" />
+              </SelectTrigger>
+              <SelectContent className="bg-card border-border text-foreground">
+                {CONTENT_TYPES.map((typeOption) => (
+                  <SelectItem key={typeOption.value} value={typeOption.value} className="uppercase text-sm">
+                    {typeOption.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {loading ? (
@@ -108,7 +149,7 @@ const SearchPage = () => {
           <div className="text-center text-destructive text-xl font-sans">{error}</div>
         ) : results.length === 0 ? (
           <div className="text-center text-muted-foreground text-xl font-sans">
-            No results found for "{query}" in {selectedRegion === "all" ? "all regions" : selectedRegion}. Try a different search term or region.
+            No results found for "{query}" in {selectedRegion === "all" ? "all regions" : selectedRegion} and {selectedType === "all" ? "all types" : selectedType}. Try a different search term, region, or type.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
