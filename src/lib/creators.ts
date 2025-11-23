@@ -51,3 +51,18 @@ export const fetchContentByCreator = async (creatorId: string, limit?: number, o
   })) as ContentItem[]; // Cast to ContentItem[]
   return { data: mappedData, count };
 };
+
+// New function to fetch all creators (or profiles marked as creators)
+export const fetchAllCreators = async (): Promise<CreatorProfile[]> => {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, full_name')
+    .eq('is_creator', true) // Assuming a flag for creators
+    .order('full_name', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching all creators:', error);
+    throw error;
+  }
+  return data || [];
+};

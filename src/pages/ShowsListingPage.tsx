@@ -8,7 +8,8 @@ import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import PaginationControls from "@/components/PaginationControls";
 import CategoryFilter from "@/components/CategoryFilter";
 import RegionFilter from "@/components/RegionFilter"; // Import RegionFilter
-import { fetchContent } from "@/lib/supabase";
+import CreatorFilter from "@/components/CreatorFilter"; // Import CreatorFilter
+import { fetchContent, fetchAllCreators } from "@/lib/supabase"; // Import fetchAllCreators
 import { dummyShows } from "@/data/dummyContent";
 
 interface ContentItem {
@@ -21,6 +22,12 @@ interface ContentItem {
   type: "show" | "video" | "article" | "event" | "sponsored" | "music_show";
   link: string;
   region?: string; // Added region
+  creator_id?: string; // Added creator_id
+}
+
+interface Creator {
+  id: string;
+  full_name: string;
 }
 
 const ITEMS_PER_PAGE = 9;
@@ -34,7 +41,22 @@ const ShowsListingPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedRegion, setSelectedRegion] = useState("all"); // New state for region filter
+  const [selectedRegion, setSelectedRegion] = useState("all");
+  const [selectedCreator, setSelectedCreator] = useState("all"); // New state for creator filter
+  const [creators, setCreators] = useState<Creator[]>([]); // State to store list of creators
+
+  useEffect(() => {
+    const getCreators = async () => {
+      try {
+        const fetchedCreators = await fetchAllCreators();
+        setCreators(fetchedCreators);
+      } catch (err) {
+        console.error("Failed to fetch creators for filter:", err);
+        // Optionally set an error or use a default empty list
+      }
+    };
+    getCreators();
+  }, []);
 
   useEffect(() => {
     const getShows = async () => {
@@ -42,7 +64,7 @@ const ShowsListingPage = () => {
       setError(null);
       try {
         const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-        const { data, count } = await fetchContent('show', ITEMS_PER_PAGE, offset, selectedCategory, selectedRegion); // Pass selectedRegion
+        const { data, count } = await fetchContent('show', ITEMS_PER_PAGE, offset, selectedCategory, selectedRegion, selectedCreator === "all" ? undefined : selectedCreator); // Pass selectedCreator
 
         if (data) {
           const mappedShows: ContentItem[] = data.map(item => ({
@@ -55,7 +77,8 @@ const ShowsListingPage = () => {
           // Fallback to dummy data if no data from Supabase
           const filteredDummy = dummyShows.filter(show =>
             (selectedCategory === "all" || show.category === selectedCategory) &&
-            (selectedRegion === "all" || show.region === selectedRegion)
+            (selectedRegion === "all" || show.region === selectedRegion) &&
+            (selectedCreator === "all" || show.creator_id === selectedCreator) // Filter dummy data by creator
           );
           const startIndex = offset;
           const endIndex = offset + ITEMS_PER_PAGE;
@@ -72,7 +95,8 @@ const ShowsListingPage = () => {
         // Fallback to dummy data on error
         const filteredDummy = dummyShows.filter(show =>
           (selectedCategory === "all" || show.category === selectedCategory) &&
-          (selectedRegion === "all" || show.region === selectedRegion)
+          (selectedRegion === "all" || show.region === selectedRegion) &&
+          (selectedCreator === "all" || show.creator_id === selectedCreator) // Filter dummy data by creator
         );
         const offset = (currentPage - 1) * ITEMS_PER_PAGE;
         const startIndex = offset;
@@ -89,7 +113,7 @@ const ShowsListingPage = () => {
     };
 
     getShows();
-  }, [currentPage, selectedCategory, selectedRegion]); // Re-fetch when region changes
+  }, [currentPage, selectedCategory, selectedRegion, selectedCreator]); // Re-fetch when creator changes
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -104,6 +128,11 @@ const ShowsListingPage = () => {
   const handleRegionChange = (region: string) => {
     setSelectedRegion(region);
     setCurrentPage(1); // Reset to first page on region change
+  };
+
+  const handleCreatorChange = (creatorId: string) => {
+    setSelectedCreator(creatorId);
+    setCurrentPage(1); // Reset to first page on creator change
   };
 
   return (
@@ -123,6 +152,11 @@ const ShowsListingPage = () => {
             onRegionChange={handleRegionChange}
             regions={AFRICAN_REGIONS}
           />
+          <CreatorFilter
+            selectedCreator={selectedCreator}
+            onCreatorChange={handleCreatorChange}
+            creators={creators}
+          />
         </div>
 
         {error && (
@@ -137,7 +171,7 @@ const ShowsListingPage = () => {
           </div>
         ) : shows.length === 0 ? (
           <div className="text-center text-muted-foreground text-xl font-sans">
-            No shows available for this category and region.
+            No shows available for this category, region, and creator.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

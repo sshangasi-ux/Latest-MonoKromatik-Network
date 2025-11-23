@@ -20,7 +20,7 @@ export interface ContentItem {
 }
 
 // Function to fetch content from the 'content' table with optional type, limit, offset, and category for pagination and filtering
-export const fetchContent = async (type?: string, limit?: number, offset?: number, category?: string, region?: string) => {
+export const fetchContent = async (type?: string, limit?: number, offset?: number, category?: string, region?: string, creatorId?: string) => {
   let query = supabase.from('content').select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region', { count: 'exact' });
 
   if (type) {
@@ -33,6 +33,10 @@ export const fetchContent = async (type?: string, limit?: number, offset?: numbe
 
   if (region && region !== 'all') { // Apply region filter
     query = query.eq('region', region);
+  }
+
+  if (creatorId && creatorId !== 'all') { // Apply creator filter
+    query = query.eq('creator_id', creatorId);
   }
 
   if (limit !== undefined) {
