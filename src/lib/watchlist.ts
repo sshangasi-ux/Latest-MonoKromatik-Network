@@ -1,6 +1,17 @@
 import { supabase } from './supabaseClient';
 import { ContentItem } from './content'; // Import ContentItem for nested content
 
+// Intermediate interface to accurately represent the content object returned by Supabase select
+interface SupabaseContentQueryResult extends Omit<ContentItem, 'link' | 'creator_name'> {
+  profiles?: { full_name: string }[]; // Supabase returns profiles as an array
+}
+
+// Intermediate interface for the item structure within the watchlist fetch
+interface SupabaseWatchlistItem {
+  content_id: string;
+  content: SupabaseContentQueryResult | null;
+}
+
 // Watchlist Functions
 export const addContentToWatchlist = async (userId: string, contentId: string) => {
   const { data, error } = await supabase
@@ -45,7 +56,10 @@ export const fetchUserWatchlist = async (userId: string) => {
     throw error;
   }
 
-  const mappedData = data?.map(item => {
+  // Explicitly cast data to the expected array type
+  const rawWatchlistItems = data as SupabaseWatchlistItem[];
+
+  const mappedData = rawWatchlistItems?.map((item) => {
     if (!item.content) return null; // Handle cases where content might be null
 
     // Explicitly construct ContentItem, mapping profiles.full_name to creator_name
@@ -61,7 +75,7 @@ export const fetchUserWatchlist = async (userId: string) => {
       image_gallery_urls: item.content.image_gallery_urls,
       music_embed_url: item.content.music_embed_url,
       creator_id: item.content.creator_id,
-      creator_name: (item.content as any).profiles?.full_name || null,
+      creator_name: item.content.profiles?.[0]?.full_name || null, // Access the first element of the profiles array
       link: '', // Will be set below
     };
 

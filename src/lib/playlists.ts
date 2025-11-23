@@ -15,6 +15,11 @@ export interface Playlist {
   } | null;
 }
 
+// Intermediate interface to accurately represent the content object returned by Supabase select within playlist items
+interface SupabasePlaylistItemContentQueryResult extends Omit<ContentItem, 'link' | 'creator_name'> {
+  profiles?: { full_name: string }[]; // Supabase returns profiles as an array
+}
+
 // Interface for a Playlist Item
 export interface PlaylistItem {
   id: string;
@@ -129,20 +134,23 @@ export const fetchPlaylistItems = async (playlistId: string): Promise<PlaylistIt
       };
     }
 
+    // Cast item.content to the intermediate type for safe access
+    const rawContent = item.content as SupabasePlaylistItemContentQueryResult;
+
     // Explicitly construct ContentItem, mapping profiles.full_name to creator_name
     const content: ContentItem = {
-      id: item.content.id,
-      title: item.content.title,
-      description: item.content.description,
-      image_url: item.content.image_url,
-      category: item.content.category,
-      link_slug: item.content.link_slug,
-      type: item.content.type,
-      video_url: item.content.video_url,
-      image_gallery_urls: item.content.image_gallery_urls,
-      music_embed_url: item.content.music_embed_url,
-      creator_id: item.content.creator_id,
-      creator_name: (item.content as any).profiles?.full_name || null,
+      id: rawContent.id,
+      title: rawContent.title,
+      description: rawContent.description,
+      image_url: rawContent.image_url,
+      category: rawContent.category,
+      link_slug: rawContent.link_slug,
+      type: rawContent.type,
+      video_url: rawContent.video_url,
+      image_gallery_urls: rawContent.image_gallery_urls,
+      music_embed_url: rawContent.music_embed_url,
+      creator_id: rawContent.creator_id,
+      creator_name: rawContent.profiles?.[0]?.full_name || null, // Access the first element of the profiles array
       link: '', // Will be set below
     };
 
