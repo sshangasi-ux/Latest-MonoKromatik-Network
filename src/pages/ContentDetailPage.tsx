@@ -4,17 +4,17 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchContent, fetchContentBySlugAndType } from "@/lib/supabase"; // Updated import
+import { fetchContent, fetchContentBySlugAndType } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Share2 } from "lucide-react";
+import { Share2, Heart } from "lucide-react"; // Import Heart icon
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import ContentCard from "@/components/ContentCard";
-import { allDummyContent } from "@/data/dummyContent"; // Import all dummy content
+import { allDummyContent } from "@/data/dummyContent";
 
 interface ContentItem {
   id: string;
@@ -26,12 +26,13 @@ interface ContentItem {
   type: "show" | "video" | "article" | "event";
   full_content?: string;
   link: string;
+  video_url?: string; // Added video_url to interface
 }
 
 const ContentDetailPage = () => {
   const { type, id } = useParams<{ type: string; id: string }>();
   const [contentItem, setContentItem] = useState<ContentItem | undefined>(undefined);
-  const [relatedContent, setRelatedContent] = useState<ContentItem[]>([]); // State for related content
+  const [relatedContent, setRelatedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,7 +41,6 @@ const ContentDetailPage = () => {
       setLoading(true);
       setError(null);
       try {
-        // Determine the actual content type based on the URL path
         let actualContentType: "show" | "video" | "article" | "event" | undefined;
         switch (type) {
           case 'news': actualContentType = 'article'; break;
@@ -56,10 +56,8 @@ const ContentDetailPage = () => {
           return;
         }
 
-        // 1. Fetch the specific content item
         const fetchedItem = await fetchContentBySlugAndType(id, actualContentType);
         if (fetchedItem) {
-          // Construct the full link for the fetched item
           let linkPrefix = '';
           switch (fetchedItem.type) {
             case 'show': linkPrefix = '/shows'; break;
@@ -70,8 +68,6 @@ const ContentDetailPage = () => {
           }
           setContentItem({ ...fetchedItem, link: `${linkPrefix}/${fetchedItem.link_slug}` });
 
-          // 2. Fetch related content based on category
-          // Fetch a few more items than needed to ensure we can filter out the current item
           const { data: allContentData } = await fetchContent(undefined, 10); 
           const mappedAllContent: ContentItem[] = (allContentData as ContentItem[]).map(item => {
             let relatedLinkPrefix = '';
@@ -88,11 +84,11 @@ const ContentDetailPage = () => {
           const filteredRelated = mappedAllContent.filter(
             (item) =>
               item.category === fetchedItem.category && item.id !== fetchedItem.id
-          ).slice(0, 3); // Show up to 3 related items
+          ).slice(0, 3);
           setRelatedContent(filteredRelated);
 
         } else {
-          setContentItem(undefined); // Item not found
+          setContentItem(undefined);
         }
       } catch (err) {
         console.error("Failed to fetch content detail:", err);
@@ -103,7 +99,7 @@ const ContentDetailPage = () => {
     };
 
     fetchContentData();
-  }, [type, id]); // Re-run effect if type or id changes
+  }, [type, id]);
 
   if (loading) {
     return (
@@ -142,7 +138,6 @@ const ContentDetailPage = () => {
     );
   }
 
-  // If contentItem is not found, try to use a dummy item for visual purposes
   const displayItem = contentItem || allDummyContent.find(item => item.link_slug === id && item.type === (type === 'news' ? 'article' : type === 'watch' ? 'video' : type === 'shows' ? 'show' : type === 'events' ? 'event' : undefined));
 
   if (!displayItem) {
@@ -167,7 +162,7 @@ const ContentDetailPage = () => {
 
   const relatedContentToDisplay = relatedContent.length > 0 ? relatedContent : allDummyContent.filter(
     (item) => item.category === displayItem.category && item.id !== displayItem.id
-  ).slice(0, 3); // Show up to 3 dummy related items
+  ).slice(0, 3);
 
   const shareUrl = `${window.location.origin}${displayItem.link}`;
   const shareText = `Check out this ${displayItem.type} on MonoKromatik Network: ${displayItem.title}`;
@@ -177,11 +172,23 @@ const ContentDetailPage = () => {
       <Header />
       <main className="flex-grow container mx-auto p-8">
         <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden border border-neutral-800">
-          <img
-            src={displayItem.image_url}
-            alt={displayItem.title}
-            className="w-full h-64 object-cover md:h-96"
-          />
+          {(displayItem.type === "show" || displayItem.type === "video") && displayItem.video_url ? (
+            <div className="relative w-full" style={{ paddingBottom: '56.25%' /* 16:9 Aspect Ratio */ }}>
+              <iframe
+                className="absolute top-0 left-0 w-full h-full"
+                src={displayItem.video_url}
+                title={displayItem.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          ) : (
+            <img
+              src={displayItem.image_url}
+              alt={displayItem.title}
+              className="w-full h-64 object-cover md:h-96"
+            />
+          )}
           <div className="p-6">
             <Badge className="bg-red-600 hover:bg-red-700 text-white uppercase text-sm px-3 py-1 self-start mb-4">
               {displayItem.category}
@@ -195,6 +202,10 @@ const ContentDetailPage = () => {
             <div className="flex space-x-4 mb-8">
               <Button className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
                 {displayItem.type === "article" ? "Read Article" : "Watch Now"}
+              </Button>
+              <Button variant="outline" className="border-neutral-700 text-white hover:bg-neutral-800 text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
+                <Heart className="h-5 w-5 mr-2" />
+                Like
               </Button>
               <Popover>
                 <PopoverTrigger asChild>
