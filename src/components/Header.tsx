@@ -29,14 +29,20 @@ const Header = () => {
         <Link to="/" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
           Home
         </Link>
-        <Link to="/about" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
-          About
+        <Link to="/shows" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
+          Shows
         </Link>
-        <Link to="/services" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
-          Services
+        <Link to="/news" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
+          News
         </Link>
-        <Link to="/contact" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
-          Contact
+        <Link to="/music" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
+          Music
+        </Link>
+        <Link to="/watch" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
+          Watch
+        </Link>
+        <Link to="/shop" className="text-foreground hover:text-primary hover:underline transition-colors uppercase font-medium text-sm">
+          Shop
         </Link>
       </nav>
       <div className="flex items-center space-x-4">

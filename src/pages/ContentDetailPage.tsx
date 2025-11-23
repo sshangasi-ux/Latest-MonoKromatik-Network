@@ -266,9 +266,18 @@ const ContentDetailPage = () => {
               {displayItem.description}
             </p>
             <div className="flex space-x-4 mb-8">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-6 py-3 rounded-lg uppercase font-semibold transition-all hover:scale-[1.02] hover:shadow-primary/20">
-                {displayItem.type === "article" ? "Read Article" : "Watch Now"}
-              </Button>
+              {displayItem.type === "event" ? (
+                <Button
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-6 py-3 rounded-lg uppercase font-semibold transition-all hover:scale-[1.02] hover:shadow-primary/20"
+                  onClick={() => window.open("https://example.com/buy-tickets", "_blank")} // Placeholder for 3rd party ticket link
+                >
+                  Buy Tickets
+                </Button>
+              ) : (
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-6 py-3 rounded-lg uppercase font-semibold transition-all hover:scale-[1.02] hover:shadow-primary/20">
+                  {displayItem.type === "article" ? "Read Article" : "Watch Now"}
+                </Button>
+              )}
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="border-border text-foreground hover:bg-secondary text-lg px-6 py-3 rounded-lg uppercase font-semibold transition-all hover:scale-[1.02] hover:shadow-primary/20">
