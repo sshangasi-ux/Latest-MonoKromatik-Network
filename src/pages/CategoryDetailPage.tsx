@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import { fetchContent } from "@/lib/supabase";
+import { allDummyContent } from "@/data/dummyContent"; // Import all dummy content
 
 interface ContentItem {
   id: string;
@@ -84,6 +85,10 @@ const CategoryDetailPage = () => {
     );
   }
 
+  const contentToDisplay = categoryContent.length > 0 ? categoryContent : allDummyContent.filter(
+    (item) => item.category.toLowerCase() === (categoryName?.toLowerCase() || "")
+  ).slice(0, 6); // Show up to 6 dummy items for visual if no real results
+
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
@@ -98,9 +103,9 @@ const CategoryDetailPage = () => {
               <ContentCardSkeleton key={index} />
             ))}
           </div>
-        ) : categoryContent.length > 0 ? (
+        ) : contentToDisplay.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categoryContent.map((item) => (
+            {contentToDisplay.map((item) => (
               <ContentCard
                 key={`${item.type}-${item.id}`}
                 type={item.type}

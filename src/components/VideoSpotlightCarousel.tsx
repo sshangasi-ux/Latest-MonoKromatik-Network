@@ -11,6 +11,7 @@ import {
 import ContentCard from "./ContentCard";
 import ContentCardSkeleton from "./ContentCardSkeleton";
 import { fetchContent } from "@/lib/supabase"; // Import fetchContent
+import { dummyVideos } from "@/data/dummyContent"; // Import dummy content
 
 interface ContentItem {
   id: string;
@@ -55,6 +56,8 @@ const VideoSpotlightCarousel = () => {
     );
   }
 
+  const contentToDisplay = videos.length > 0 ? videos : dummyVideos;
+
   return (
     <section className="py-12 bg-neutral-900 text-white">
       <div className="container mx-auto px-4">
@@ -73,8 +76,7 @@ const VideoSpotlightCarousel = () => {
             className="w-full"
           >
             <CarouselContent className="-ml-4">
-              {videos.length > 0 ? (
-                videos.map((video) => (
+              {contentToDisplay.map((video) => (
                   <CarouselItem key={video.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
                     <ContentCard
                       type="video"
@@ -86,9 +88,7 @@ const VideoSpotlightCarousel = () => {
                     />
                   </CarouselItem>
                 ))
-              ) : (
-                <div className="w-full text-center py-8">No video spotlights available.</div>
-              )}
+              }
             </CarouselContent>
             <CarouselPrevious className="left-4 bg-neutral-800 text-white hover:bg-neutral-700" />
             <CarouselNext className="right-4 bg-neutral-800 text-white hover:bg-neutral-700" />

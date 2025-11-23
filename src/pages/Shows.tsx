@@ -14,6 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { dummyShows } from "@/data/dummyContent"; // Import dummy content
 
 interface ContentItem {
   id: string;
@@ -76,6 +77,8 @@ const Shows = () => {
     );
   }
 
+  const contentToDisplay = shows.length > 0 ? shows : dummyShows.slice(0, ITEMS_PER_PAGE); // Use dummy content if no real data
+
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
@@ -87,10 +90,10 @@ const Shows = () => {
               <ContentCardSkeleton key={index} />
             ))}
           </div>
-        ) : shows.length > 0 ? (
+        ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {shows.map((show) => (
+              {contentToDisplay.map((show) => (
                 <ContentCard
                   key={show.id}
                   type="show"
@@ -131,8 +134,6 @@ const Shows = () => {
               </Pagination>
             )}
           </>
-        ) : (
-          <p className="text-xl text-gray-300 text-center">No shows available.</p>
         )}
       </main>
       <Footer />

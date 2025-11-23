@@ -14,6 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { dummyArticles } from "@/data/dummyContent"; // Import dummy content
 
 interface ContentItem {
   id: string;
@@ -76,6 +77,8 @@ const Articles = () => {
     );
   }
 
+  const contentToDisplay = articles.length > 0 ? articles : dummyArticles.slice(0, ITEMS_PER_PAGE); // Use dummy content if no real data
+
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
@@ -87,10 +90,10 @@ const Articles = () => {
               <ContentCardSkeleton key={index} />
             ))}
           </div>
-        ) : articles.length > 0 ? (
+        ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articles.map((article) => (
+              {contentToDisplay.map((article) => (
                 <ContentCard
                   key={article.id}
                   type="article"
@@ -131,8 +134,6 @@ const Articles = () => {
               </Pagination>
             )}
           </>
-        ) : (
-          <p className="text-xl text-gray-300 text-center">No articles available.</p>
         )}
       </main>
       <Footer />

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { fetchTickerMessages } from "@/lib/supabase"; // New import
+import { dummyTickerMessages } from "@/data/dummyContent"; // Import dummy ticker messages
 
 const LiveTicker = () => {
   const [tickerMessages, setTickerMessages] = useState<string[]>([]);
@@ -41,14 +42,16 @@ const LiveTicker = () => {
     );
   }
 
-  if (tickerMessages.length === 0) {
-    return null; // Don't render ticker if no messages
+  const messagesToDisplay = tickerMessages.length > 0 ? tickerMessages : dummyTickerMessages;
+
+  if (messagesToDisplay.length === 0) {
+    return null; // Don't render ticker if no messages (even dummy ones)
   }
 
   return (
     <div className="bg-neutral-900 text-white py-2 overflow-hidden relative">
       <div className="animate-marquee whitespace-nowrap">
-        {tickerMessages.map((msg, index) => (
+        {messagesToDisplay.map((msg, index) => (
           <span key={index} className="text-sm md:text-base mx-8 font-medium">
             {msg}
           </span>

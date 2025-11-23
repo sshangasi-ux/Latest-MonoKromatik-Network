@@ -14,6 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { dummyVideos } from "@/data/dummyContent"; // Import dummy content
 
 interface ContentItem {
   id: string;
@@ -76,6 +77,8 @@ const Videos = () => {
     );
   }
 
+  const contentToDisplay = videos.length > 0 ? videos : dummyVideos.slice(0, ITEMS_PER_PAGE); // Use dummy content if no real data
+
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
@@ -87,10 +90,10 @@ const Videos = () => {
               <ContentCardSkeleton key={index} />
             ))}
           </div>
-        ) : videos.length > 0 ? (
+        ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.map((video) => (
+              {contentToDisplay.map((video) => (
                 <ContentCard
                   key={video.id}
                   type="video"
@@ -131,8 +134,6 @@ const Videos = () => {
               </Pagination>
             )}
           </>
-        ) : (
-          <p className="text-xl text-gray-300 text-center">No videos available.</p>
         )}
       </main>
       <Footer />

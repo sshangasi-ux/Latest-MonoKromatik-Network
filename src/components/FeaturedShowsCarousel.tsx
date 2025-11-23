@@ -11,6 +11,7 @@ import {
 import ContentCard from "./ContentCard";
 import ContentCardSkeleton from "./ContentCardSkeleton"; // Import skeleton
 import { fetchContent } from "@/lib/supabase"; // New import for Supabase fetching
+import { dummyShows } from "@/data/dummyContent"; // Import dummy content
 
 interface ContentItem {
   id: string;
@@ -56,6 +57,8 @@ const FeaturedShowsCarousel = () => {
     );
   }
 
+  const contentToDisplay = shows.length > 0 ? shows : dummyShows;
+
   return (
     <section className="py-12 bg-black text-white">
       <div className="container mx-auto px-4">
@@ -74,8 +77,7 @@ const FeaturedShowsCarousel = () => {
             className="w-full"
           >
             <CarouselContent className="-ml-4">
-              {shows.length > 0 ? (
-                shows.map((show) => (
+              {contentToDisplay.map((show) => (
                   <CarouselItem key={show.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
                     <ContentCard
                       type="show"
@@ -87,9 +89,7 @@ const FeaturedShowsCarousel = () => {
                     />
                   </CarouselItem>
                 ))
-              ) : (
-                <div className="w-full text-center py-8">No featured shows available.</div>
-              )}
+              }
             </CarouselContent>
             <CarouselPrevious className="left-4 bg-neutral-800 text-white hover:bg-neutral-700" />
             <CarouselNext className="right-4 bg-neutral-800 text-white hover:bg-neutral-700" />

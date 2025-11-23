@@ -13,6 +13,7 @@ import ContentCardSkeleton from "./ContentCardSkeleton";
 import { fetchContent } from "@/lib/supabase"; // Import fetchContent
 import { Button } from "@/components/ui/button"; // Import Button
 import { Link } from "react-router-dom"; // Import Link
+import { dummyEvents } from "@/data/dummyContent"; // Import dummy content
 
 interface ContentItem {
   id: string;
@@ -57,6 +58,8 @@ const UpcomingEventsCarousel = () => {
     );
   }
 
+  const contentToDisplay = events.length > 0 ? events : dummyEvents;
+
   return (
     <section className="py-12 bg-neutral-900 text-white">
       <div className="container mx-auto px-4">
@@ -75,8 +78,7 @@ const UpcomingEventsCarousel = () => {
             className="w-full"
           >
             <CarouselContent className="-ml-4">
-              {events.length > 0 ? (
-                events.map((event) => (
+              {contentToDisplay.map((event) => (
                   <CarouselItem key={event.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
                     <ContentCard
                       type="event"
@@ -88,9 +90,7 @@ const UpcomingEventsCarousel = () => {
                     />
                   </CarouselItem>
                 ))
-              ) : (
-                <div className="w-full text-center py-8">No upcoming events available.</div>
-              )}
+              }
             </CarouselContent>
             <CarouselPrevious className="left-4 bg-neutral-800 text-white hover:bg-neutral-700" />
             <CarouselNext className="right-4 bg-neutral-800 text-white hover:bg-neutral-700" />

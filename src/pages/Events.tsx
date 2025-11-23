@@ -14,6 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { dummyEvents } from "@/data/dummyContent"; // Import dummy content
 
 interface ContentItem {
   id: string;
@@ -76,6 +77,8 @@ const Events = () => {
     );
   }
 
+  const contentToDisplay = events.length > 0 ? events : dummyEvents.slice(0, ITEMS_PER_PAGE); // Use dummy content if no real data
+
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Header />
@@ -87,10 +90,10 @@ const Events = () => {
               <ContentCardSkeleton key={index} />
             ))}
           </div>
-        ) : events.length > 0 ? (
+        ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {events.map((event) => (
+              {contentToDisplay.map((event) => (
                 <ContentCard
                   key={event.id}
                   type="event"
@@ -131,8 +134,6 @@ const Events = () => {
               </Pagination>
             )}
           </>
-        ) : (
-          <p className="text-xl text-gray-300 text-center">No events available.</p>
         )}
       </main>
       <Footer />

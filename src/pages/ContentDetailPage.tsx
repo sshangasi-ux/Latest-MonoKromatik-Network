@@ -14,6 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import ContentCard from "@/components/ContentCard";
+import { allDummyContent } from "@/data/dummyContent"; // Import all dummy content
 
 interface ContentItem {
   id: string;
@@ -141,7 +142,10 @@ const ContentDetailPage = () => {
     );
   }
 
-  if (!contentItem) {
+  // If contentItem is not found, try to use a dummy item for visual purposes
+  const displayItem = contentItem || allDummyContent.find(item => item.link_slug === id && item.type === (type === 'news' ? 'article' : type === 'watch' ? 'video' : type === 'shows' ? 'show' : type === 'events' ? 'event' : undefined));
+
+  if (!displayItem) {
     return (
       <div className="min-h-screen flex flex-col bg-black text-white">
         <Header />
@@ -161,8 +165,12 @@ const ContentDetailPage = () => {
     );
   }
 
-  const shareUrl = `${window.location.origin}${contentItem.link}`;
-  const shareText = `Check out this ${contentItem.type} on MonoKromatik Network: ${contentItem.title}`;
+  const relatedContentToDisplay = relatedContent.length > 0 ? relatedContent : allDummyContent.filter(
+    (item) => item.category === displayItem.category && item.id !== displayItem.id
+  ).slice(0, 3); // Show up to 3 dummy related items
+
+  const shareUrl = `${window.location.origin}${displayItem.link}`;
+  const shareText = `Check out this ${displayItem.type} on MonoKromatik Network: ${displayItem.title}`;
 
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
@@ -170,23 +178,23 @@ const ContentDetailPage = () => {
       <main className="flex-grow container mx-auto p-8">
         <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden border border-neutral-800">
           <img
-            src={contentItem.image_url}
-            alt={contentItem.title}
+            src={displayItem.image_url}
+            alt={displayItem.title}
             className="w-full h-64 object-cover md:h-96"
           />
           <div className="p-6">
             <Badge className="bg-red-600 hover:bg-red-700 text-white uppercase text-sm px-3 py-1 self-start mb-4">
-              {contentItem.category}
+              {displayItem.category}
             </Badge>
             <h1 className="text-4xl font-bold text-white mb-4">
-              {contentItem.title}
+              {displayItem.title}
             </h1>
             <p className="text-lg text-gray-300 mb-6">
-              {contentItem.description}
+              {displayItem.description}
             </p>
             <div className="flex space-x-4 mb-8">
               <Button className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3 rounded-lg uppercase font-bold transition-colors">
-                {contentItem.type === "article" ? "Read Article" : "Watch Now"}
+                {displayItem.type === "article" ? "Read Article" : "Watch Now"}
               </Button>
               <Popover>
                 <PopoverTrigger asChild>
@@ -220,22 +228,22 @@ const ContentDetailPage = () => {
               </Popover>
             </div>
 
-            {contentItem.full_content && (
+            {displayItem.full_content && (
               <div
                 className="prose dark:prose-invert max-w-none text-gray-200 prose-p:text-gray-200 prose-h3:text-white prose-h2:text-white prose-a:text-red-500 hover:prose-a:text-red-400"
-                dangerouslySetInnerHTML={{ __html: contentItem.full_content }}
+                dangerouslySetInnerHTML={{ __html: displayItem.full_content }}
               />
             )}
           </div>
         </div>
 
-        {relatedContent.length > 0 && (
+        {relatedContentToDisplay.length > 0 && (
           <section className="mt-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center uppercase">
               More Like This
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedContent.map((item) => (
+              {relatedContentToDisplay.map((item) => (
                 <ContentCard
                   key={`${item.type}-${item.id}`}
                   type={item.type}
