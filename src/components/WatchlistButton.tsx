@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { addWatchlistItem, removeWatchlistItem, checkWatchlistStatus } from "@/lib/supabase";
+import { addContentToWatchlist, removeContentFromWatchlist, isContentInWatchlist } from "@/lib/supabase"; // Corrected imports
 import { toast } from "sonner";
 
 interface WatchlistButtonProps {
@@ -27,7 +27,7 @@ const WatchlistButton: React.FC<WatchlistButtonProps> = ({ contentId, contentTyp
       }
       setLoading(true);
       try {
-        const status = await checkWatchlistStatus(user.id, contentId);
+        const status = await isContentInWatchlist(user.id, contentId); // Corrected function call
         setIsInWatchlist(status);
       } catch (err) {
         console.error("Failed to check watchlist status:", err);
@@ -48,11 +48,11 @@ const WatchlistButton: React.FC<WatchlistButtonProps> = ({ contentId, contentTyp
     setLoading(true);
     try {
       if (isInWatchlist) {
-        await removeWatchlistItem(user.id, contentId);
+        await removeContentFromWatchlist(user.id, contentId); // Corrected function call
         setIsInWatchlist(false);
         toast.success(`Removed from ${contentType} watchlist!`);
       } else {
-        await addWatchlistItem(user.id, contentId);
+        await addContentToWatchlist(user.id, contentId); // Corrected function call
         setIsInWatchlist(true);
         toast.success(`Added to ${contentType} watchlist!`);
       }

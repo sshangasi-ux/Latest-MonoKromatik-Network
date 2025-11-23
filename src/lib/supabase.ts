@@ -204,6 +204,67 @@ export const updateUserPreferredCategories = async (categories: string[]) => {
   return data.user;
 };
 
+// Watchlist Functions
+export const addContentToWatchlist = async (userId: string, contentId: string) => {
+  const { data, error } = await supabase
+    .from('user_watchlist')
+    .insert([{ user_id: userId, content_id: contentId }])
+    .select();
+
+  if (error) {
+    console.error('Error adding content to watchlist:', error);
+    throw error;
+  }
+  return data;
+};
+
+export const removeContentFromWatchlist = async (userId: string, contentId: string) => {
+  const { error } = await supabase
+    .from('user_watchlist')
+    .delete()
+    .eq('user_id', userId)
+    .eq('content_id', contentId);
+
+  if (error) {
+    console.error('Error removing content from watchlist:', error);
+    throw error;
+  }
+  return true;
+};
+
+export const fetchUserWatchlist = async (userId: string) => {
+  const { data, error } = await supabase
+    .from('user_watchlist')
+    .select(`
+      content_id,
+      content:content_id (
+        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url
+      )
+    `)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error fetching user watchlist:', error);
+    throw error;
+  }
+  return data.map(item => item.content); // Return only the content objects
+};
+
+export const isContentInWatchlist = async (userId: string, contentId: string) => {
+  const { data, error } = await supabase
+    .from('user_watchlist')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('content_id', contentId)
+    .single();
+
+  if (error && error.code !== 'PGRST116') { // PGRST116 means "no rows found"
+    console.error('Error checking watchlist status:', error);
+    throw error;
+  }
+  return !!data; // Returns true if data exists, false otherwise
+};
+
 // Interface for a Comment
 export interface Comment {
   id: string;
@@ -212,7 +273,7 @@ export interface Comment {
   content_id: string;
   comment_text: string;
   parent_comment_id?: string | null;
-  profiles?: {
+  profiles?: { // Assuming a 'profiles' table linked by user_id
     full_name: string;
     avatar_url?: string | null;
   } | null;
@@ -257,94 +318,4 @@ export const addComment = async (userId: string, contentId: string, commentText:
     throw error;
   }
   return data[0];
-};
-
-// Interface for Watchlist Item
-export interface WatchlistItem {
-  id: string;
-  created_at: string;
-  user_id: string;
-  content_id: string;
-  content: { // Nested content details
-    id: string;
-    title: string;
-    description: string;
-    image_url: string;
-    category: string;
-    link_slug: string;
-    type: "show" | "video" | "article" | "event" | "sponsored" | "music_show";
-    link?: string; // Added link property as it's constructed in WatchlistPage
-  } | null; // Content can be null if deleted
-}
-
-// Function to add an item to the user's watchlist
-export const addWatchlistItem = async (userId: string, contentId: string) => {
-  const { data, error } = await supabase
-    .from('user_watchlist')
-    .insert({ user_id: userId, content_id: contentId })
-    .select();
-
-  if (error) {
-    console.error('Error adding to watchlist:', error);
-    throw error;
-  }
-  return data[0];
-};
-
-// Function to remove an item from the user's watchlist
-export const removeWatchlistItem = async (userId: string, contentId: string) => {
-  const { error } = await supabase
-    .from('user_watchlist')
-    .delete()
-    .eq('user_id', userId)
-    .eq('content_id', contentId);
-
-  if (error) {
-    console.error('Error removing from watchlist:', error);
-    throw error;
-  }
-  return true;
-};
-
-// Function to check if an item is in the user's watchlist
-export const checkWatchlistStatus = async (userId: string, contentId: string): Promise<boolean> => {
-  const { data, error } = await supabase
-    .from('user_watchlist')
-    .select('id')
-    .eq('user_id', userId)
-    .eq('content_id', contentId)
-    .single();
-
-  if (error && error.code !== 'PGRST116') { // PGRST116 means "no rows found"
-    console.error('Error checking watchlist status:', error);
-    throw error;
-  }
-  return !!data; // Returns true if data exists, false otherwise
-};
-
-// Function to fetch all watchlist items for a user
-export const fetchWatchlist = async (userId: string): Promise<WatchlistItem[]> => {
-  const { data, error } = await supabase
-    .from('user_watchlist')
-    .select(`
-      id,
-      created_at,
-      user_id,
-      content_id,
-      content:content_id (
-        id, title, description, image_url, category, link_slug, type
-      )
-    `)
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('Error fetching watchlist:', error);
-    throw error;
-  }
-  // Map the data to ensure 'content' is a single object or null, not an array
-  return (data || []).map(item => ({
-    ...item,
-    content: item.content && Array.isArray(item.content) && item.content.length > 0 ? item.content[0] : null
-  })) as WatchlistItem[];
 };

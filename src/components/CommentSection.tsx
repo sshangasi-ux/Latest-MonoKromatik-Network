@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
-import { Link } from "react-router-dom"; // Imported Link
+import { Link } from "react-router-dom";
 
 interface CommentSectionProps {
   contentId: string;

@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/carousel";
 import { useAuth } from "@/context/AuthContext";
 import CommentSection from "@/components/CommentSection";
-import WatchlistButton from "@/components/WatchlistButton"; // Import WatchlistButton
+import WatchlistButton from "@/components/WatchlistButton"; // Added import for WatchlistButton
 
 interface ContentItem {
   id: string;
@@ -343,13 +343,13 @@ const ContentDetailPage = () => {
               {relatedContentToDisplay.map((item) => (
                 <ContentCard
                   key={`${item.type}-${item.id}`}
+                  id={item.id}
                   type={item.type}
                   title={item.title}
                   description={item.description}
                   imageUrl={item.image_url}
                   category={item.category}
                   link={item.link}
-                  contentId={item.id} // Pass contentId
                 />
               ))}
             </div>
