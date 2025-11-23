@@ -13,6 +13,8 @@ interface ContentItem {
   video_url?: string; // New field for video content
   image_gallery_urls?: string[]; // New field for image galleries
   music_embed_url?: string; // New field for music embeds (Spotify, Apple Music, YouTube)
+  creator_id?: string; // New field for creator's user ID
+  creator_name?: string; // New field for creator's name
 }
 
 interface MusicTrack {
@@ -53,6 +55,8 @@ const generateDummyContent = (type: "show" | "video" | "article" | "event" | "sp
     const category = ["Music", "Tech", "Fashion", "Sports", "Culture", "Nature", "News", "Entertainment", "Documentary"][Math.floor(Math.random() * 9)];
     const linkSlug = `${type}-slug-${i}`;
     const fullContent = `<h2>Full Content for ${title}</h2><p>This is the detailed content for ${type} item ${i}. It includes more extensive text to simulate a full article or show description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>`;
+    const creatorId = `creator-${(i % 3) + 1}`; // Assign dummy creator IDs
+    const creatorName = `Creator ${(i % 3) + 1}`; // Assign dummy creator names
 
     const item: ContentItem = {
       id,
@@ -64,6 +68,8 @@ const generateDummyContent = (type: "show" | "video" | "article" | "event" | "sp
       type,
       full_content: fullContent,
       link: `${linkPrefix}/${linkSlug}`,
+      creator_id: creatorId,
+      creator_name: creatorName,
     };
 
     if (type === "video") {

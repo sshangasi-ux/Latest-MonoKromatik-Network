@@ -9,9 +9,20 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Interface for a Creator Profile
+export interface CreatorProfile {
+  id: string;
+  full_name: string;
+  avatar_url?: string | null;
+  bio?: string | null;
+  website_url?: string | null;
+  social_links?: { [key: string]: string } | null;
+  is_creator?: boolean;
+}
+
 // Function to fetch content from the 'content' table with optional type, limit, offset, and category for pagination and filtering
 export const fetchContent = async (type?: string, limit?: number, offset?: number, category?: string) => {
-  let query = supabase.from('content').select('*, video_url, image_gallery_urls, music_embed_url', { count: 'exact' }); // Request exact count for pagination and select new fields
+  let query = supabase.from('content').select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)', { count: 'exact' }); // Request exact count for pagination and select new fields, including creator info
 
   if (type) {
     query = query.eq('type', type);
@@ -33,7 +44,12 @@ export const fetchContent = async (type?: string, limit?: number, offset?: numbe
     console.error('Error fetching content:', error);
     throw error;
   }
-  return { data, count }; // Return data and count for pagination
+  // Map data to include creator_name directly
+  const mappedData = data?.map(item => ({
+    ...item,
+    creator_name: item.profiles?.full_name || null,
+  }));
+  return { data: mappedData, count }; // Return data and count for pagination
 };
 
 // Function to fetch ticker messages from the 'ticker_messages' table
@@ -58,7 +74,7 @@ export const searchContent = async (query: string, limit: number = 5) => {
 
   const { data, error } = await supabase
     .from('content')
-    .select('*, video_url, image_gallery_urls, music_embed_url') // Select new fields
+    .select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)') // Select new fields, including creator info
     .or(`title.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`)
     .limit(limit);
 
@@ -66,14 +82,19 @@ export const searchContent = async (query: string, limit: number = 5) => {
     console.error('Error searching content:', error);
     throw error;
   }
-  return { data, error };
+  // Map data to include creator_name directly
+  const mappedData = data?.map(item => ({
+    ...item,
+    creator_name: item.profiles?.full_name || null,
+  }));
+  return { data: mappedData, error };
 };
 
 // New function to fetch a single content item by its link_slug and type
 export const fetchContentBySlugAndType = async (slug: string, type: string) => {
   const { data, error } = await supabase
     .from('content')
-    .select('*, video_url, image_gallery_urls, music_embed_url') // Select new fields
+    .select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)') // Select new fields, including creator info
     .eq('link_slug', slug)
     .eq('type', type)
     .single(); // Use .single() to expect one row
@@ -82,7 +103,9 @@ export const fetchContentBySlugAndType = async (slug: string, type: string) => {
     console.error(`Error fetching content with slug ${slug} and type ${type}:`, error);
     throw error;
   }
-  return data;
+  // Map data to include creator_name directly
+  const mappedData = data ? { ...data, creator_name: data.profiles?.full_name || null } : null;
+  return mappedData;
 };
 
 // Interface for user progress data
@@ -148,7 +171,7 @@ export const fetchUserProgress = async (userId: string, limit: number = 5) => {
     .select(`
       *,
       content:content_id (
-        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url
+        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)
       )
     `)
     .eq('user_id', userId)
@@ -159,7 +182,15 @@ export const fetchUserProgress = async (userId: string, limit: number = 5) => {
     console.error('Error fetching user progress:', error);
     throw error;
   }
-  return data;
+  // Map data to include creator_name directly in content object
+  const mappedData = data?.map(progressItem => ({
+    ...progressItem,
+    content: progressItem.content ? {
+      ...progressItem.content,
+      creator_name: (progressItem.content as any).profiles?.full_name || null,
+    } : null,
+  }));
+  return mappedData;
 };
 
 // Interface for Contact Info
@@ -238,7 +269,7 @@ export const fetchUserWatchlist = async (userId: string) => {
     .select(`
       content_id,
       content:content_id (
-        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url
+        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)
       )
     `)
     .eq('user_id', userId);
@@ -247,7 +278,15 @@ export const fetchUserWatchlist = async (userId: string) => {
     console.error('Error fetching user watchlist:', error);
     throw error;
   }
-  return data.map(item => item.content); // Return only the content objects
+  // Map data to include creator_name directly in content object
+  const mappedData = data?.map(item => ({
+    ...item,
+    content: item.content ? {
+      ...item.content,
+      creator_name: (item.content as any).profiles?.full_name || null,
+    } : null,
+  }));
+  return mappedData.map(item => item.content); // Return only the content objects
 };
 
 export const isContentInWatchlist = async (userId: string, contentId: string) => {
@@ -318,4 +357,44 @@ export const addComment = async (userId: string, contentId: string, commentText:
     throw error;
   }
   return data[0];
+};
+
+// New function to fetch a creator's profile
+export const fetchCreatorProfile = async (creatorId: string): Promise<CreatorProfile | null> => {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, full_name, avatar_url, bio, website_url, social_links, is_creator')
+    .eq('id', creatorId)
+    .single();
+
+  if (error && error.code !== 'PGRST116') {
+    console.error('Error fetching creator profile:', error);
+    throw error;
+  }
+  return data;
+};
+
+// New function to fetch content by a specific creator
+export const fetchContentByCreator = async (creatorId: string, limit?: number, offset?: number) => {
+  let query = supabase.from('content').select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name)', { count: 'exact' });
+
+  query = query.eq('creator_id', creatorId);
+
+  if (limit !== undefined) {
+    const start = offset !== undefined ? offset : 0;
+    const end = start + limit - 1;
+    query = query.range(start, end);
+  }
+
+  const { data, error, count } = await query.order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching content by creator:', error);
+    throw error;
+  }
+  const mappedData = data?.map(item => ({
+    ...item,
+    creator_name: item.profiles?.full_name || null,
+  }));
+  return { data: mappedData, count };
 };

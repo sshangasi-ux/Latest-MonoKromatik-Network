@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Play, BookOpen, Calendar, Star, LinkIcon } from "lucide-react";
+import { Heart, Play, BookOpen, Calendar, Star, LinkIcon, User } from "lucide-react"; // Import User icon
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { cn } from "@/lib/utils";
 
@@ -17,10 +17,12 @@ interface ContentCardProps {
   category: string;
   link: string; // The actual navigation link
   className?: string;
+  creatorId?: string; // New prop for creator's user ID
+  creatorName?: string; // New prop for creator's name
 }
 
 const ContentCard: React.FC<ContentCardProps> = ({
-  contentId, // Changed from 'id' to 'contentId'
+  contentId,
   type,
   title,
   description,
@@ -28,9 +30,11 @@ const ContentCard: React.FC<ContentCardProps> = ({
   category,
   link,
   className,
+  creatorId, // Destructure new prop
+  creatorName, // Destructure new prop
 }) => {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist, userId } = useWatchlist();
-  const onWatchlist = isInWatchlist(contentId); // Using contentId
+  const onWatchlist = isInWatchlist(contentId);
 
   const handleWatchlistToggle = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigating to the content detail page
@@ -40,9 +44,9 @@ const ContentCard: React.FC<ContentCardProps> = ({
       return;
     }
     if (onWatchlist) {
-      removeFromWatchlist(contentId, title); // Using contentId
+      removeFromWatchlist(contentId, title);
     } else {
-      addToWatchlist(contentId, title); // Using contentId
+      addToWatchlist(contentId, title);
     }
   };
 
@@ -58,7 +62,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
       case "sponsored":
         return <Star className="h-4 w-4 mr-1" />;
       case "music_show":
-        return <Play className="h-4 w-4 mr-1" />; // Music shows can also use play icon
+        return <Play className="h-4 w-4 mr-1" />;
       default:
         return <LinkIcon className="h-4 w-4 mr-1" />;
     }
@@ -100,11 +104,19 @@ const ContentCard: React.FC<ContentCardProps> = ({
         <CardContent className="flex-grow text-sm text-foreground line-clamp-3">
           {description}
         </CardContent>
-        <CardFooter className="pt-2">
+        <CardFooter className="pt-2 flex flex-col items-start space-y-2">
           <Button variant="secondary" size="sm" className="w-full">
             {renderIcon()}
             View Details
           </Button>
+          {creatorId && creatorName && (
+            <Button asChild variant="link" size="sm" className="w-full justify-start p-0 h-auto text-muted-foreground hover:text-primary">
+              <Link to={`/creators/${creatorId}`} className="flex items-center text-xs uppercase font-semibold">
+                <User className="h-3 w-3 mr-1" />
+                By {creatorName}
+              </Link>
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </Link>
