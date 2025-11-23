@@ -4,10 +4,10 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchContent, fetchContentBySlugAndType, saveUserProgress, getLikeCount, getAverageRating } from "@/lib/supabase"; // Import getAverageRating
+import { fetchContent, fetchContentBySlugAndType, saveUserProgress, getLikeCount, getAverageRating } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Share2, MapPin, Star } from "lucide-react"; // Import Star icon
+import { Share2, MapPin, Star, User } from "lucide-react"; // Import User icon
 import {
   Popover,
   PopoverContent,
@@ -27,7 +27,7 @@ import CommentSection from "@/components/CommentSection";
 import WatchlistButton from "@/components/WatchlistButton";
 import AddToPlaylistButton from "@/components/AddToPlaylistButton";
 import LikeButton from "@/components/LikeButton";
-import ReviewSection from "@/components/ReviewSection"; // Import ReviewSection
+import ReviewSection from "@/components/ReviewSection";
 
 interface ContentItem {
   id: string;
@@ -41,6 +41,9 @@ interface ContentItem {
   link: string;
   video_url?: string;
   image_gallery_urls?: string[];
+  music_embed_url?: string; // Added music_embed_url
+  creator_id?: string; // Added creator_id
+  creator_name?: string; // Added creator_name
   region?: string;
 }
 
@@ -52,8 +55,8 @@ const ContentDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [initialLikes, setInitialLikes] = useState(0);
-  const [averageRating, setAverageRating] = useState(0); // State for average rating
-  const [reviewCount, setReviewCount] = useState(0); // State for review count
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
 
   const handleSaveProgress = useCallback(async (progressData: any) => {
     if (user && contentItem) {
@@ -312,6 +315,17 @@ const ContentDetailPage = () => {
                 <span>{averageRating.toFixed(1)} ({reviewCount} reviews)</span>
               </div>
             )}
+            {displayItem.creator_id && displayItem.creator_name && (
+              <div className="flex items-center space-x-3 mb-6 p-4 bg-secondary rounded-lg border border-border">
+                <User className="h-6 w-6 text-primary" />
+                <p className="text-foreground font-semibold uppercase text-sm">
+                  Creator:{" "}
+                  <Link to={`/creators/${displayItem.creator_id}`} className="text-primary hover:underline">
+                    {displayItem.creator_name}
+                  </Link>
+                </p>
+              </div>
+            )}
             <p className="text-lg text-muted-foreground mb-6 font-sans">
               {displayItem.description}
             </p>
@@ -397,7 +411,7 @@ const ContentDetailPage = () => {
         </div>
 
         {displayItem.id && <CommentSection contentId={displayItem.id} />}
-        {displayItem.id && <ReviewSection contentId={displayItem.id} />} {/* New: Integrate ReviewSection */}
+        {displayItem.id && <ReviewSection contentId={displayItem.id} />}
 
         {relatedContentToDisplay.length > 0 && (
           <section className="mt-12">
