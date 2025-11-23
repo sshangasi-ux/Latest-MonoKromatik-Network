@@ -36,6 +36,23 @@ interface MusicPlaylist {
   tracks?: MusicTrack[]; // Optional list of tracks
 }
 
+// Interface for Innovator Spotlight data (matching src/lib/misc.ts)
+interface InnovatorProfile {
+  id: string;
+  full_name: string;
+  avatar_url?: string | null;
+  bio?: string | null;
+}
+
+interface InnovatorSpotlight {
+  id: string;
+  tagline: string;
+  profile_id: string;
+  profiles: InnovatorProfile;
+  spotlight_content_id?: string | null;
+  content?: ContentItem | null;
+}
+
 const generateDummyContent = (type: "show" | "video" | "article" | "event" | "sponsored" | "music_show", count: number): ContentItem[] => {
   const items: ContentItem[] = [];
   const linkPrefix = {
@@ -179,4 +196,74 @@ export const dummyTickerMessages = [
   "New Music Release: Afrobeat sensation drops new album!",
   "Fashion Week Highlights: Latest trends from Lagos!",
   "Upcoming Event: Cultural Festival in Accra next month!",
+];
+
+// Dummy Innovators Spotlight data
+export const dummyInnovators: InnovatorSpotlight[] = [
+  {
+    id: "innovator-1",
+    profile_id: "creator-1", // Matches a dummy creator ID
+    tagline: "Award-winning filmmaker and storyteller.",
+    profiles: {
+      id: "creator-1",
+      full_name: "Aisha Khan",
+      avatar_url: "https://via.placeholder.com/150/C1272D/FFFFFF?text=AK",
+      bio: "Aisha is known for her compelling documentaries on African heritage.",
+    },
+    spotlight_content_id: "article-1", // Matches a dummy article ID
+    content: {
+      id: "article-1",
+      title: "Article Title 1",
+      description: "This is a dummy description for article item number 1. It provides a brief overview of the content to fill the space.",
+      image_url: "https://via.placeholder.com/400x250/1a202c/FFFFFF?text=Article+1",
+      category: "News",
+      link_slug: "article-slug-1",
+      type: "article",
+      link: "/news/article-slug-1",
+    },
+  },
+  {
+    id: "innovator-2",
+    profile_id: "creator-2",
+    tagline: "Tech visionary building solutions for Africa.",
+    profiles: {
+      id: "creator-2",
+      full_name: "Kwame Nkrumah",
+      avatar_url: "https://via.placeholder.com/150/1F1F1F/FFFFFF?text=KN",
+      bio: "Kwame is a software engineer and entrepreneur focused on sustainable tech.",
+    },
+    spotlight_content_id: "video-2",
+    content: {
+      id: "video-2",
+      title: "Video Title 2",
+      description: "This is a dummy description for video item number 2. It provides a brief overview of the content to fill the space.",
+      image_url: "https://via.placeholder.com/400x250/1a202c/FFFFFF?text=Video+2",
+      category: "Tech",
+      link_slug: "video-slug-2",
+      type: "video",
+      link: "/watch/video-slug-2",
+    },
+  },
+  {
+    id: "innovator-3",
+    profile_id: "creator-3",
+    tagline: "Fashion designer blending tradition with modern aesthetics.",
+    profiles: {
+      id: "creator-3",
+      full_name: "Zola Mkhize",
+      avatar_url: "https://via.placeholder.com/150/9CA3AF/FFFFFF?text=ZM",
+      bio: "Zola's designs are inspired by vibrant African textiles and contemporary trends.",
+    },
+    spotlight_content_id: "show-3",
+    content: {
+      id: "show-3",
+      title: "Show Title 3",
+      description: "This is a dummy description for show item number 3. It provides a brief overview of the content to fill the space.",
+      image_url: "https://via.placeholder.com/400x250/1a202c/FFFFFF?text=Show+3",
+      category: "Fashion",
+      link_slug: "show-slug-3",
+      type: "show",
+      link: "/shows/show-slug-3",
+    },
+  },
 ];

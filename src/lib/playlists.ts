@@ -117,17 +117,57 @@ export const fetchPlaylistItems = async (playlistId: string): Promise<PlaylistIt
     throw error;
   }
 
-  const mappedData: PlaylistItem[] = (data || []).map((item: any) => ({
-    id: item.id,
-    created_at: item.created_at,
-    playlist_id: item.playlist_id,
-    content_id: item.content_id,
-    position: item.position,
-    content: item.content ? {
-      ...item.content,
+  const mappedData: PlaylistItem[] = (data || []).map((item: any) => {
+    if (!item.content) {
+      return {
+        id: item.id,
+        created_at: item.created_at,
+        playlist_id: item.playlist_id,
+        content_id: item.content_id,
+        position: item.position,
+        content: null,
+      };
+    }
+
+    // Explicitly construct ContentItem, mapping profiles.full_name to creator_name
+    const content: ContentItem = {
+      id: item.content.id,
+      title: item.content.title,
+      description: item.content.description,
+      image_url: item.content.image_url,
+      category: item.content.category,
+      link_slug: item.content.link_slug,
+      type: item.content.type,
+      video_url: item.content.video_url,
+      image_gallery_urls: item.content.image_gallery_urls,
+      music_embed_url: item.content.music_embed_url,
+      creator_id: item.content.creator_id,
       creator_name: (item.content as any).profiles?.full_name || null,
-    } as ContentItem : null,
-  }));
+      link: '', // Will be set below
+    };
+
+    // Derive the 'link' property based on content type
+    let linkPrefix = '';
+    switch (content.type) {
+      case 'show': linkPrefix = '/shows'; break;
+      case 'video': linkPrefix = '/watch'; break;
+      case 'article': linkPrefix = '/news'; break;
+      case 'event': linkPrefix = '/events'; break;
+      case 'sponsored': linkPrefix = '/sponsored'; break;
+      case 'music_show': linkPrefix = '/music/shows'; break;
+      default: linkPrefix = '';
+    }
+    content.link = `${linkPrefix}/${content.link_slug}`;
+
+    return {
+      id: item.id,
+      created_at: item.created_at,
+      playlist_id: item.playlist_id,
+      content_id: item.content_id,
+      position: item.position,
+      content: content,
+    };
+  });
 
   return mappedData;
 };
