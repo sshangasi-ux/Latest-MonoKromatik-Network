@@ -24,8 +24,9 @@ import LogoutPage from "./pages/LogoutPage";
 import WatchlistPage from "./pages/WatchlistPage";
 import CreatorProfilePage from "./pages/CreatorProfilePage";
 import UserPlaylistsPage from "./pages/UserPlaylistsPage";
-import MasterclassesListingPage from "./pages/MasterclassesListingPage"; // Import new page
-import MasterclassDetailPage from "./pages/MasterclassDetailPage"; // Import new page
+import MasterclassesListingPage from "./pages/MasterclassesListingPage";
+import MasterclassDetailPage from "./pages/MasterclassDetailPage";
+import MembershipPage from "./pages/MembershipPage"; // Import new page
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -46,8 +47,9 @@ const App = () => (
             <Route path="/watch" element={<WatchListingPage />} />
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/events" element={<EventsListingPage />} />
-            <Route path="/masterclasses" element={<MasterclassesListingPage />} /> {/* New Masterclasses Listing Route */}
-            <Route path="/masterclasses/:slug" element={<MasterclassDetailPage />} /> {/* New Masterclass Detail Route */}
+            <Route path="/masterclasses" element={<MasterclassesListingPage />} />
+            <Route path="/masterclasses/:slug" element={<MasterclassDetailPage />} />
+            <Route path="/membership" element={<MembershipPage />} /> {/* New Membership Route */}
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/about" element={<AboutUsPage />} />
             <Route path="/contact" element={<ContactUsPage />} />
