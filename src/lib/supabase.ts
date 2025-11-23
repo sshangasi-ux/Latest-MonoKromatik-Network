@@ -11,7 +11,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Function to fetch content from the 'content' table with optional type, limit, offset, and category for pagination and filtering
 export const fetchContent = async (type?: string, limit?: number, offset?: number, category?: string) => {
-  let query = supabase.from('content').select('*, video_url, image_gallery_urls', { count: 'exact' }); // Request exact count for pagination and select new fields
+  let query = supabase.from('content').select('*, video_url, image_gallery_urls, music_embed_url', { count: 'exact' }); // Request exact count for pagination and select new fields
 
   if (type) {
     query = query.eq('type', type);
@@ -58,7 +58,7 @@ export const searchContent = async (query: string, limit: number = 5) => {
 
   const { data, error } = await supabase
     .from('content')
-    .select('*, video_url, image_gallery_urls') // Select new fields
+    .select('*, video_url, image_gallery_urls, music_embed_url') // Select new fields
     .or(`title.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`)
     .limit(limit);
 
@@ -73,7 +73,7 @@ export const searchContent = async (query: string, limit: number = 5) => {
 export const fetchContentBySlugAndType = async (slug: string, type: string) => {
   const { data, error } = await supabase
     .from('content')
-    .select('*, video_url, image_gallery_urls') // Select new fields
+    .select('*, video_url, image_gallery_urls, music_embed_url') // Select new fields
     .eq('link_slug', slug)
     .eq('type', type)
     .single(); // Use .single() to expect one row
@@ -148,7 +148,7 @@ export const fetchUserProgress = async (userId: string, limit: number = 5) => {
     .select(`
       *,
       content:content_id (
-        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls
+        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url
       )
     `)
     .eq('user_id', userId)
