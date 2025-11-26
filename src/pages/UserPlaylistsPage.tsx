@@ -14,6 +14,7 @@ import CreatePlaylistDialog from "@/components/CreatePlaylistDialog";
 import ContentCard from "@/components/ContentCard";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
 import { toast } from "sonner";
+import PlaylistTabsSkeleton from "@/components/PlaylistTabsSkeleton"; // New import
 
 const UserPlaylistsPage: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
@@ -111,7 +112,7 @@ const UserPlaylistsPage: React.FC = () => {
         </div>
 
         {loadingPlaylists ? (
-          <p className="text-muted-foreground text-center font-sans">Loading your playlists...</p>
+          <PlaylistTabsSkeleton />
         ) : errorPlaylists ? (
           <p className="text-destructive text-center font-sans">{errorPlaylists}</p>
         ) : playlists.length === 0 ? (
