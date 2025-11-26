@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, User, Heart, ListMusic, GraduationCap, Menu } from "lucide-react"; // Import Menu icon
+import { Search, User, Heart, ListMusic, GraduationCap, Menu } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import {
   Sheet,
@@ -15,21 +15,22 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { useIsMobile } from "@/hooks/use-mobile"; // Import useIsMobile hook
+import { useIsMobile } from "@/hooks/use-mobile";
+import { ThemeToggle } from "./ThemeToggle"; // Import ThemeToggle
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isSheetOpen, setIsSheetOpen] = useState(false); // State to control sheet open/close
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
-  const isMobile = useIsMobile(); // Use the hook to detect mobile
+  const isMobile = useIsMobile();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
       setSearchTerm("");
-      if (isMobile) setIsSheetOpen(false); // Close sheet after search on mobile
+      if (isMobile) setIsSheetOpen(false);
     }
   };
 
@@ -39,11 +40,11 @@ const Header = () => {
     } else {
       navigate("/login");
     }
-    if (isMobile) setIsSheetOpen(false); // Close sheet after action on mobile
+    if (isMobile) setIsSheetOpen(false);
   };
 
   const handleNavLinkClick = () => {
-    if (isMobile) setIsSheetOpen(false); // Close sheet when a nav link is clicked
+    if (isMobile) setIsSheetOpen(false);
   };
 
   const navLinks = (
@@ -101,6 +102,7 @@ const Header = () => {
             <Search className="h-5 w-5" />
           </Button>
         </form>
+        <ThemeToggle /> {/* Add ThemeToggle here */}
         {isAuthenticated && (
           <>
             <Button asChild variant="ghost" size="icon" className="text-foreground hover:bg-secondary hover:text-primary">
