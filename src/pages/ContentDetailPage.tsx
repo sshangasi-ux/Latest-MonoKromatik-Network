@@ -4,10 +4,10 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchContent, fetchContentBySlugAndType, saveUserProgress, getLikeCount, getAverageRating } from "@/lib/supabase";
+import { fetchContent, fetchContentBySlugAndType, saveUserProgress, getLikeCount, getAverageRating, fetchUserProgress } from "@/lib/supabase"; // Import fetchUserProgress
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Share2, MapPin, Star, User } from "lucide-react"; // Import User icon
+import { Share2, MapPin, Star, User, PlayCircle } from "lucide-react"; // Import PlayCircle icon
 import {
   Popover,
   PopoverContent,
@@ -28,6 +28,7 @@ import WatchlistButton from "@/components/WatchlistButton";
 import AddToPlaylistButton from "@/components/AddToPlaylistButton";
 import LikeButton from "@/components/LikeButton";
 import ReviewSection from "@/components/ReviewSection";
+import { Progress } from "@/components/ui/progress"; // Import Progress component
 
 interface ContentItem {
   id: string;
@@ -49,7 +50,7 @@ interface ContentItem {
 
 const ContentDetailPage = () => {
   const { type, id } = useParams<{ type: string; id: string }>();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth(); // Use isAuthenticated
   const [contentItem, setContentItem] = useState<ContentItem | undefined>(undefined);
   const [relatedContent, setRelatedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,8 +58,9 @@ const ContentDetailPage = () => {
   const [initialLikes, setInitialLikes] = useState(0);
   const [averageRating, setAverageRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
+  const [userProgress, setUserProgress] = useState<{ time?: number; percentage?: number } | null>(null); // New state for user progress
 
-  const handleSaveProgress = useCallback(async (progressData: any) => {
+  const handleSaveProgress = useCallback(async (progressData: { time?: number; percentage?: number }) => {
     if (user && contentItem) {
       try {
         await saveUserProgress({
@@ -67,6 +69,7 @@ const ContentDetailPage = () => {
           content_type: contentItem.type,
           progress_data: progressData,
         });
+        setUserProgress(progressData); // Update local state
       } catch (err) {
         console.error("Failed to save user progress:", err);
       }
@@ -117,11 +120,19 @@ const ContentDetailPage = () => {
           setAverageRating(avg);
           setReviewCount(count);
 
-          if (user) {
-            if (fullContentItem.type === "video") {
-              handleSaveProgress({ time: 0 });
-            } else if (fullContentItem.type === "article") {
-              handleSaveProgress({ percentage: 0 });
+          if (isAuthenticated && user) {
+            // Fetch user's specific progress for this content item
+            const userProgressData = await fetchUserProgress(user.id, 1); // Fetch only 1 item, specific to this content
+            const currentContentProgress = userProgressData.find(p => p.content_id === fullContentItem.id);
+            if (currentContentProgress) {
+              setUserProgress(currentContentProgress.progress_data || null);
+            } else {
+              // If no progress, save initial progress (0%)
+              if (fullContentItem.type === "video") {
+                handleSaveProgress({ time: 0 });
+              } else if (fullContentItem.type === "article") {
+                handleSaveProgress({ percentage: 0 });
+              }
             }
           }
 
@@ -158,10 +169,10 @@ const ContentDetailPage = () => {
     };
 
     fetchContentData();
-  }, [type, id, user, handleSaveProgress]);
+  }, [type, id, isAuthenticated, user, handleSaveProgress]);
 
   useEffect(() => {
-    if (!contentItem || contentItem.type !== "article" || !user) return;
+    if (!contentItem || contentItem.type !== "article" || !isAuthenticated || !user) return;
 
     const handleScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -172,7 +183,7 @@ const ContentDetailPage = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [contentItem, user, handleSaveProgress]);
+  }, [contentItem, isAuthenticated, user, handleSaveProgress]);
 
 
   if (loading) {
@@ -240,6 +251,12 @@ const ContentDetailPage = () => {
 
   const shareUrl = `${window.location.origin}${displayItem.link}`;
   const shareText = `Check out this ${displayItem.type} on MonoKromatik Network: ${displayItem.title}`;
+
+  const progressValue = userProgress?.percentage !== undefined
+    ? Math.round(userProgress.percentage * 100)
+    : userProgress?.time !== undefined && userProgress.time > 0
+      ? 10 // Placeholder for video progress, indicating it's started
+      : 0;
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -330,7 +347,18 @@ const ContentDetailPage = () => {
               {displayItem.description}
             </p>
             <div className="flex space-x-4 mb-8">
-              {displayItem.type === "event" ? (
+              {isAuthenticated && userProgress && progressValue > 0 && progressValue < 100 ? (
+                <div className="flex flex-col space-y-2 w-full max-w-xs">
+                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-6 py-3 rounded-lg uppercase font-semibold transition-all hover:scale-[1.02] hover:shadow-primary/20">
+                    <PlayCircle className="h-5 w-5 mr-2" />
+                    Continue {displayItem.type === "article" ? "Reading" : "Watching"}
+                  </Button>
+                  <Progress value={progressValue} className="h-2 bg-muted" indicatorClassName="bg-primary" />
+                  <p className="text-xs text-muted-foreground font-sans">
+                    {displayItem.type === "article" ? `${progressValue}% Read` : "Started"}
+                  </p>
+                </div>
+              ) : displayItem.type === "event" ? (
                 <Button
                   className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-6 py-3 rounded-lg uppercase font-semibold transition-all hover:scale-[1.02] hover:shadow-primary/20"
                   onClick={() => window.open("https://example.com/buy-tickets", "_blank")}
