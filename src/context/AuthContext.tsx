@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { supabase, updateUserPreferredCategories as supabaseUpdateUserPreferredCategories } from "@/lib/supabase";
+import { supabase, updateUserPreferredCategories as supabaseUpdateUserPreferredCategories, fetchUserSubscription, UserSubscription } from "@/lib/supabase"; // Import fetchUserSubscription and UserSubscription
 import { User } from "@supabase/supabase-js";
 
 // Extend the User type to include preferred_categories in user_metadata
@@ -16,13 +16,15 @@ interface CustomUser extends User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: CustomUser | null;
+  userSubscription: UserSubscription | null; // New: User's subscription details
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   updateUserProfile: (fullName: string, avatarUrl: string | null) => Promise<void>;
   updateUserEmail: (newEmail: string) => Promise<void>;
   updateUserPassword: (newPassword: string) => Promise<void>;
-  updateUserPreferredCategories: (categories: string[]) => Promise<void>; // New function
+  updateUserPreferredCategories: (categories: string[]) => Promise<void>;
+  refreshSubscription: () => Promise<void>; // New: Function to manually refresh subscription status
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,8 +32,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<CustomUser | null>(null);
+  const [userSubscription, setUserSubscription] = useState<UserSubscription | null>(null); // New state
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  // Modified refreshSubscription to use the user from state
+  const refreshSubscription = async () => {
+    if (user?.id) { // Use user.id from the state
+      try {
+        const subscription = await fetchUserSubscription(user.id);
+        setUserSubscription(subscription);
+      } catch (err) {
+        console.error("Failed to fetch user subscription:", err);
+        setUserSubscription(null);
+      }
+    } else {
+      setUserSubscription(null);
+    }
+  };
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -39,9 +57,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (session) {
           setIsAuthenticated(true);
           setUser(session.user as CustomUser); // Cast to CustomUser
+          // Call refreshSubscription with the new user ID
+          try {
+            const subscription = await fetchUserSubscription(session.user.id);
+            setUserSubscription(subscription);
+          } catch (err) {
+            console.error("Failed to fetch user subscription:", err);
+            setUserSubscription(null);
+          }
         } else {
           setIsAuthenticated(false);
           setUser(null);
+          setUserSubscription(null); // Clear subscription on logout
         }
         setLoading(false);
       }
@@ -52,9 +79,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (session) {
         setIsAuthenticated(true);
         setUser(session.user as CustomUser); // Cast to CustomUser
+        // Call refreshSubscription with the initial user ID
+        try {
+          const subscription = await fetchUserSubscription(session.user.id);
+          setUserSubscription(subscription);
+        } catch (err) {
+          console.error("Failed to fetch user subscription:", err);
+          setUserSubscription(null);
+        }
       } else {
         setIsAuthenticated(false);
         setUser(null);
+        setUserSubscription(null);
       }
       setLoading(false);
     };
@@ -64,7 +100,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, []); // Removed user from dependency array to prevent infinite loop with refreshSubscription
 
   const login = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -162,7 +198,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, signup, updateUserProfile, updateUserEmail, updateUserPassword, updateUserPreferredCategories }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, userSubscription, login, logout, signup, updateUserProfile, updateUserEmail, updateUserPassword, updateUserPreferredCategories, refreshSubscription }}>
       {children}
     </AuthContext.Provider>
   );
