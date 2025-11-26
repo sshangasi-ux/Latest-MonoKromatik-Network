@@ -28,6 +28,7 @@ import UserPlaylistsPage from "./pages/UserPlaylistsPage";
 import MasterclassesListingPage from "./pages/MasterclassesListingPage";
 import MasterclassDetailPage from "./pages/MasterclassDetailPage";
 import MembershipPage from "./pages/MembershipPage";
+import SubmitContentPage from "./pages/SubmitContentPage"; // New import
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -63,6 +64,7 @@ const App = () => (
               <Route path="/watchlist" element={<WatchlistPage />} />
               <Route path="/playlists" element={<UserPlaylistsPage />} />
               <Route path="/creators/:creatorId" element={<CreatorProfilePage />} />
+              <Route path="/submit-content" element={<SubmitContentPage />} /> {/* New route */}
               <Route path="/music/shows/:id" element={<ContentDetailPage />} />
               <Route path="/sponsored/:id" element={<ContentDetailPage />} />
               <Route path="/:type/:id" element={<ContentDetailPage />} />
