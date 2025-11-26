@@ -15,7 +15,7 @@ import SponsoredContentSection from "@/components/SponsoredContentSection";
 import LatestContentCarousel from "@/components/LatestContentCarousel";
 import InnovatorsSpotlightSection from "@/components/InnovatorsSpotlightSection";
 import MasterclassesSection from "@/components/MasterclassesSection";
-import SupabaseConnectionTest from "@/components/SupabaseConnectionTest"; // Added import
+// import SupabaseConnectionTest from "@/components/SupabaseConnectionTest"; // Removed import
 
 const Index = () => {
   return (
@@ -23,7 +23,7 @@ const Index = () => {
       <Header />
       <LiveTicker />
       <main className="flex-grow">
-        <SupabaseConnectionTest /> {/* Added temporary test component */}
+        {/* <SupabaseConnectionTest /> Removed temporary test component */}
         <HeroSection />
         <ContinueContentSection />
         <SmartPicksSection />
