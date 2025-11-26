@@ -16,7 +16,7 @@ interface MasterclassCardProps {
 const MasterclassCard: React.FC<MasterclassCardProps> = ({ masterclass, className }) => {
   return (
     <Link to={masterclass.link} className={cn("block h-full", className)}>
-      <Card className="h-full flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 bg-card text-card-foreground">
+      <Card className="h-full flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:scale-[1.02] bg-card text-card-foreground">
         <div className="relative w-full h-48 overflow-hidden">
           <img
             src={masterclass.image_url}
