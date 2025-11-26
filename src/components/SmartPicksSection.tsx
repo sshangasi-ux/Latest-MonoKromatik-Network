@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { fetchUserProgress, fetchContent } from "@/lib/supabase";
+import { fetchUserProgress, fetchContent, fetchUserWatchlist, fetchUserLikedContent } from "@/lib/supabase"; // Import new functions
 import ContentCard from "./ContentCard";
 import ContentCardSkeleton from "./ContentCardSkeleton";
 import {
@@ -24,6 +24,7 @@ interface ContentItem {
   link_slug: string;
   type: "show" | "video" | "article" | "event" | "sponsored" | "music_show"; // Added 'music_show'
   link: string;
+  region?: string; // Added region property
 }
 
 const SmartPicksSection = () => {
@@ -37,29 +38,55 @@ const SmartPicksSection = () => {
       setLoading(true);
       setError(null);
       try {
-        let targetCategories: string[] = [];
+        let interestCategories: string[] = [];
+        const interactedContentIds = new Set<string>();
 
         if (isAuthenticated && user) {
-          // Prioritize explicit preferred categories from user_metadata
+          // 1. Explicit Preferred Categories
           if (user.user_metadata?.preferred_categories && user.user_metadata.preferred_categories.length > 0) {
-            targetCategories = user.user_metadata.preferred_categories;
-          } else {
-            // Fallback to recent progress categories if no explicit preferences
-            const userProgress = await fetchUserProgress(user.id, 5); // Get recent progress
-            const recentCategories = userProgress
-              .filter(p => p.content?.category)
-              .map(p => p.content.category)
-              .filter((value, index, self) => self.indexOf(value) === index); // Unique categories
-            targetCategories = recentCategories;
+            interestCategories.push(...user.user_metadata.preferred_categories);
           }
+
+          // 2. Recent Progress Categories
+          const userProgress = await fetchUserProgress(user.id, 10); // Fetch more recent progress
+          userProgress.forEach(p => {
+            if (p.content?.category) interestCategories.push(p.content.category);
+            if (p.content?.id) interactedContentIds.add(p.content.id);
+          });
+
+          // 3. Watchlist Categories
+          const userWatchlist = await fetchUserWatchlist(user.id);
+          userWatchlist.forEach(item => {
+            if (item.category) interestCategories.push(item.category);
+            if (item.id) interactedContentIds.add(item.id);
+          });
+
+          // 4. Liked Content Categories
+          const userLikedContent = await fetchUserLikedContent(user.id);
+          userLikedContent.forEach(item => {
+            if (item.category) interestCategories.push(item.category);
+            if (item.id) interactedContentIds.add(item.id);
+          });
         }
 
+        // Create a frequency map for categories
+        const categoryFrequency: { [key: string]: number } = {};
+        interestCategories.forEach(cat => {
+          categoryFrequency[cat] = (categoryFrequency[cat] || 0) + 1;
+        });
+
+        // Sort categories by frequency (most interested first)
+        const sortedCategories = Object.keys(categoryFrequency).sort(
+          (a, b) => categoryFrequency[b] - categoryFrequency[a]
+        );
+
         let fetchedContent: ContentItem[] = [];
-        if (targetCategories.length > 0) {
-          // Fetch content based on user's preferred categories
-          // For simplicity, we'll fetch a general set and filter client-side
-          // In a real app, you'd have a more sophisticated backend query
-          const { data } = await fetchContent(undefined, 20); // Fetch more content to filter from
+        const uniqueRecommendedIds = new Set<string>();
+
+        // Fetch content based on sorted categories
+        for (const category of sortedCategories) {
+          if (fetchedContent.length >= 6) break; // Stop if we have enough
+          const { data } = await fetchContent(undefined, 10, 0, category); // Fetch more per category
           const mappedContent: ContentItem[] = (data as ContentItem[]).map(item => {
             let linkPrefix = '';
             switch (item.type) {
@@ -68,30 +95,26 @@ const SmartPicksSection = () => {
               case 'article': linkPrefix = '/news'; break;
               case 'event': linkPrefix = '/events'; break;
               case 'sponsored': linkPrefix = '/sponsored'; break;
-              case 'music_show': linkPrefix = '/music/shows'; break; // Added 'music_show'
+              case 'music_show': linkPrefix = '/music/shows'; break;
               default: linkPrefix = '';
             }
             return { ...item, link: `${linkPrefix}/${item.link_slug}` };
           });
 
-          // Filter for items in target categories, prioritize new items
-          const categoryFiltered = mappedContent.filter(item => targetCategories.includes(item.category));
-          // Shuffle and take a few
-          fetchedContent = categoryFiltered.sort(() => 0.5 - Math.random()).slice(0, 6);
+          mappedContent.forEach(item => {
+            // Add only if not already interacted with and not already in recommendations
+            if (!interactedContentIds.has(item.id) && !uniqueRecommendedIds.has(item.id) && fetchedContent.length < 6) {
+              fetchedContent.push(item);
+              uniqueRecommendedIds.add(item.id);
+            }
+          });
+        }
 
-          // If not enough category-specific items, fill with general popular ones
-          if (fetchedContent.length < 6) {
-            const remaining = 6 - fetchedContent.length;
-            const generalPicks = mappedContent.filter(item => !fetchedContent.some(rec => rec.id === item.id))
-                                              .sort(() => 0.5 - Math.random())
-                                              .slice(0, remaining);
-            fetchedContent = [...fetchedContent, ...generalPicks];
-          }
-
-        } else {
-          // Fallback for non-authenticated users or no preferences: general popular content
-          const { data } = await fetchContent(undefined, 6);
-          fetchedContent = (data as ContentItem[]).map(item => {
+        // If still not enough, fill with general popular content (excluding interacted ones)
+        if (fetchedContent.length < 6) {
+          const remaining = 6 - fetchedContent.length;
+          const { data: generalData } = await fetchContent(undefined, remaining * 2); // Fetch more to ensure enough unique items
+          const mappedGeneralContent: ContentItem[] = (generalData as ContentItem[]).map(item => {
             let linkPrefix = '';
             switch (item.type) {
               case 'show': linkPrefix = '/shows'; break;
@@ -99,13 +122,20 @@ const SmartPicksSection = () => {
               case 'article': linkPrefix = '/news'; break;
               case 'event': linkPrefix = '/events'; break;
               case 'sponsored': linkPrefix = '/sponsored'; break;
-              case 'music_show': linkPrefix = '/music/shows'; break; // Added 'music_show'
+              case 'music_show': linkPrefix = '/music/shows'; break;
               default: linkPrefix = '';
             }
             return { ...item, link: `${linkPrefix}/${item.link_slug}` };
           });
+
+          const generalPicks = mappedGeneralContent.filter(item =>
+            !interactedContentIds.has(item.id) && !uniqueRecommendedIds.has(item.id)
+          ).sort(() => 0.5 - Math.random()).slice(0, remaining);
+          fetchedContent = [...fetchedContent, ...generalPicks];
         }
+
         setRecommendedItems(fetchedContent);
+
       } catch (err) {
         console.error("Failed to fetch recommendations:", err);
         setError("Failed to load smart picks. Please try again later.");
@@ -118,7 +148,7 @@ const SmartPicksSection = () => {
             case 'article': linkPrefix = '/news'; break;
             case 'event': linkPrefix = '/events'; break;
             case 'sponsored': linkPrefix = '/sponsored'; break;
-            case 'music_show': linkPrefix = '/music/shows'; break; // Added 'music_show'
+            case 'music_show': linkPrefix = '/music/shows'; break;
             default: linkPrefix = '';
           }
           return { ...item, link: `${linkPrefix}/${item.link_slug}` };
@@ -174,6 +204,7 @@ const SmartPicksSection = () => {
                     category={item.category}
                     link={item.link}
                     contentId={item.id} // Added contentId prop
+                    region={item.region} // Pass region to ContentCard
                   />
                 </CarouselItem>
               ))}

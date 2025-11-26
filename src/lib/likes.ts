@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { ContentItem } from './content'; // Import ContentItem for nested content
 
 // Function to add a like to content
 export const addLike = async (userId: string, contentId: string) => {
@@ -63,4 +64,63 @@ export const hasUserLiked = async (userId: string, contentId: string): Promise<b
     throw error;
   }
   return !!data;
+};
+
+// New function to fetch all content items liked by a specific user
+export const fetchUserLikedContent = async (userId: string): Promise<ContentItem[]> => {
+  const { data, error } = await supabase
+    .from('content_likes')
+    .select(`
+      content_id,
+      content:content_id (
+        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region
+      )
+    `)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error fetching user liked content:', error);
+    throw error;
+  }
+
+  const mappedData = (data || [])
+    .map((item: any) => {
+      const actualContent = item.content?.[0] || null; // Assuming content is an array as per previous observations
+
+      if (!actualContent) return null;
+
+      const content: ContentItem = {
+        id: actualContent.id,
+        title: actualContent.title,
+        description: actualContent.description,
+        image_url: actualContent.image_url,
+        category: actualContent.category,
+        link_slug: actualContent.link_slug,
+        type: actualContent.type,
+        video_url: actualContent.video_url,
+        image_gallery_urls: actualContent.image_gallery_urls,
+        music_embed_url: actualContent.music_embed_url,
+        creator_id: actualContent.creator_id,
+        creator_name: actualContent.profiles?.[0]?.full_name || null,
+        region: actualContent.region,
+        link: '', // Will be set below
+      };
+
+      let linkPrefix = '';
+      switch (content.type) {
+        case 'show': linkPrefix = '/shows'; break;
+        case 'video': linkPrefix = '/watch'; break;
+        case 'article': linkPrefix = '/news'; break;
+        case 'event': linkPrefix = '/events'; break;
+        case 'sponsored': linkPrefix = '/sponsored'; break;
+        case 'music_show': linkPrefix = '/music/shows'; break;
+        default: linkPrefix = '';
+      }
+      content.link = `${linkPrefix}/${content.link_slug}`;
+
+      return content;
+    })
+    .filter(Boolean) as ContentItem[];
+
+  return mappedData;
 };
