@@ -16,6 +16,7 @@ interface ContentItem {
   creator_id?: string; // New field for creator's user ID
   creator_name?: string; // New field for creator's name
   region?: string; // New field for regional focus
+  requires_membership?: boolean; // New field for membership protection
 }
 
 interface MusicTrack {
@@ -103,6 +104,7 @@ const generateDummyContent = (type: "show" | "video" | "article" | "event" | "sp
     const fullContent = `<h2>Deep Dive into ${title}</h2><p>This detailed content for ${type} item ${i} offers an immersive experience into the heart of African culture. From the bustling markets of ${city} to the serene landscapes of ${region}, every aspect is explored with passion and authenticity. Discover the untold stories and vibrant traditions that shape our continent.</p><p>We bring you closer to the creators and the communities, ensuring a rich and meaningful engagement with every piece of content. Join us on this journey of discovery and celebration.</p>`;
     const creatorId = `creator-${(i % 3) + 1}`;
     const creatorName = `Creator ${(i % 3) + 1}`;
+    const requiresMembership = i % 2 === 0; // Mark every other item as requiring membership
 
     const item: ContentItem = {
       id,
@@ -117,6 +119,7 @@ const generateDummyContent = (type: "show" | "video" | "article" | "event" | "sp
       creator_id: creatorId,
       creator_name: creatorName,
       region: region,
+      requires_membership: requiresMembership,
     };
 
     if (type === "video") {
@@ -252,6 +255,7 @@ export const dummyInnovators: InnovatorSpotlight[] = [
       type: "article",
       link: "/news/article-slug-1",
       region: "Southern Africa",
+      requires_membership: false,
     },
   },
   {
@@ -276,6 +280,7 @@ export const dummyInnovators: InnovatorSpotlight[] = [
       type: "video",
       link: "/watch/video-slug-2",
       region: "West Africa",
+      requires_membership: true,
     },
   },
   {
@@ -300,6 +305,7 @@ export const dummyInnovators: InnovatorSpotlight[] = [
       type: "show",
       link: "/shows/show-slug-3",
       region: "East Africa",
+      requires_membership: false,
     },
   },
 ];

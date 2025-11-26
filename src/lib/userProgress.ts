@@ -62,7 +62,7 @@ export const fetchUserProgress = async (userId: string, limit: number = 5) => {
     .select(`
       *,
       content:content_id (
-        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region
+        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region, requires_membership
       )
     `)
     .eq('user_id', userId)

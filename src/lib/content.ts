@@ -17,11 +17,12 @@ export interface ContentItem {
   creator_id?: string;
   creator_name?: string; // Added for direct access
   region?: string; // New field for regional focus
+  requires_membership?: boolean; // New field for membership protection
 }
 
 // Function to fetch content from the 'content' table with optional type, limit, offset, and category for pagination and filtering
 export const fetchContent = async (type?: string, limit?: number, offset?: number, category?: string, region?: string, creatorId?: string) => {
-  let query = supabase.from('content').select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region', { count: 'exact' });
+  let query = supabase.from('content').select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region, requires_membership', { count: 'exact' });
 
   if (type) {
     query = query.eq('type', type);
@@ -66,7 +67,7 @@ export const searchContent = async (query: string, limit: number = 5, region?: s
 
   let queryBuilder = supabase
     .from('content')
-    .select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region')
+    .select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region, requires_membership')
     .or(`title.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`);
 
   if (region && region !== 'all') {
@@ -94,7 +95,7 @@ export const searchContent = async (query: string, limit: number = 5, region?: s
 export const fetchContentBySlugAndType = async (slug: string, type: string) => {
   const { data, error } = await supabase
     .from('content')
-    .select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region')
+    .select('*, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region, requires_membership')
     .eq('link_slug', slug)
     .eq('type', type)
     .single();

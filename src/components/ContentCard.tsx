@@ -4,12 +4,13 @@ import React, { useEffect, useState } from "react"; // Import useEffect and useS
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Play, BookOpen, Calendar, Star, LinkIcon, User, MapPin } from "lucide-react";
+import { Play, BookOpen, Calendar, Star, LinkIcon, User, MapPin, Lock } from "lucide-react"; // Import Lock icon
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { cn } from "@/lib/utils";
 import AddToPlaylistButton from "./AddToPlaylistButton";
 import LikeButton from "./LikeButton"; // Import LikeButton
 import { getLikeCount, getAverageRating } from "@/lib/supabase"; // Import getLikeCount and getAverageRating
+import { Badge } from "@/components/ui/badge"; // Import Badge
 
 interface ContentCardProps {
   contentId: string;
@@ -23,6 +24,7 @@ interface ContentCardProps {
   creatorId?: string;
   creatorName?: string;
   region?: string;
+  requiresMembership?: boolean; // New prop for membership protection
 }
 
 const ContentCard: React.FC<ContentCardProps> = ({
@@ -37,6 +39,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
   creatorId,
   creatorName,
   region,
+  requiresMembership, // Destructure new prop
 }) => {
   const { userId } = useWatchlist(); // Only need userId for watchlist button
   const [initialLikes, setInitialLikes] = useState(0);
@@ -97,9 +100,16 @@ const ContentCard: React.FC<ContentCardProps> = ({
             <AddToPlaylistButton contentId={contentId} contentTitle={title} />
             <LikeButton contentId={contentId} initialLikes={initialLikes} /> {/* Integrate LikeButton */}
           </div>
-          <span className="absolute bottom-2 left-2 bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded-full capitalize">
-            {category}
-          </span>
+          <div className="absolute bottom-2 left-2 flex items-center space-x-2">
+            <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-xs px-2 py-1 self-start font-semibold">
+              {category}
+            </Badge>
+            {requiresMembership && (
+              <Badge className="bg-yellow-600 hover:bg-yellow-700 text-white uppercase text-xs px-2 py-1 self-start font-semibold">
+                <Lock className="h-3 w-3 mr-1" /> Premium
+              </Badge>
+            )}
+          </div>
         </div>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold line-clamp-2">{title}</CardTitle>

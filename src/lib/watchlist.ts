@@ -48,7 +48,7 @@ export const fetchUserWatchlist = async (userId: string) => {
     .select(`
       content_id,
       content:content_id (
-        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region
+        id, title, description, image_url, category, link_slug, type, video_url, image_gallery_urls, music_embed_url, creator_id, profiles(full_name), region, requires_membership
       )
     `)
     .eq('user_id', userId);
@@ -83,6 +83,7 @@ export const fetchUserWatchlist = async (userId: string) => {
       creator_id: actualContent.creator_id,
       creator_name: actualContent.profiles?.[0]?.full_name || null, // Access the first element of the profiles array
       region: actualContent.region, // Include region
+      requires_membership: actualContent.requires_membership, // Include requires_membership
       link: '', // Will be set below
     };
 

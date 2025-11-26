@@ -93,7 +93,7 @@ export const fetchInnovatorsSpotlight = async (limit: number = 3): Promise<Innov
       ),
       spotlight_content_id,
       content:spotlight_content_id (
-        id, title, description, image_url, category, link_slug, type, creator_id, profiles(full_name), region
+        id, title, description, image_url, category, link_slug, type, creator_id, profiles(full_name), region, requires_membership
       )
     `)
     .limit(limit)
